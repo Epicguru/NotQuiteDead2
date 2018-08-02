@@ -195,6 +195,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 141003565}
+  - component: {fileID: 141003566}
+  - component: {fileID: 141003567}
   m_Layer: 0
   m_Name: Liberator
   m_TagString: Untagged
@@ -216,6 +218,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &141003566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 141003564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9a6b738c247c08448442f52794b26e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Anim: {fileID: 2102444375}
+  Gun: {fileID: 141003567}
+  Stored: 0
+  Aiming: 0
+  Reloading: 0
+  CheckingMag: 0
+  Empty: 0
+--- !u!114 &141003567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 141003564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29043245161f3e4d95ac944a94350ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Anim: {fileID: 141003566}
+  MagCapacity: 31
+  CurrentMagCount: 31
+  RPM: 500
+  Shoot: 0
+  Reload: 0
+  CheckMag: 0
+  Aim: 0
+  ShootKey: 323
+  AimKey: 324
+  ReloadKey: 114
+  CheckMagKey: 102
 --- !u!1 &212183364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1975,6 +2018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2102444373}
   - component: {fileID: 2102444375}
+  - component: {fileID: 2102444374}
   m_Layer: 0
   m_Name: Graphics
   m_TagString: Untagged
@@ -1997,6 +2041,32 @@ Transform:
   m_Father: {fileID: 141003565}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2102444374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2102444372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5deac89833484ad499656cf1e60b7026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UponEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 141003566}
+        m_MethodName: AnimationCallback
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: AnimCallback, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!95 &2102444375
 Animator:
   serializedVersion: 3
