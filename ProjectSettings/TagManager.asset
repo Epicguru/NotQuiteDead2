@@ -41,6 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Dropped Items
+    uniqueID: 1444906431
+    locked: 0
   - name: Agents
     uniqueID: 1929339007
     locked: 0
