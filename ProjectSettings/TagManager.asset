@@ -47,3 +47,6 @@ TagManager:
   - name: Agents
     uniqueID: 1929339007
     locked: 0
+  - name: Equipped Items
+    uniqueID: 1216088593
+    locked: 0

@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Items
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 23b0753ecf8385945a624ca4ea983304, type: 3}
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: da07dc91aec664440b7406384a7bda6e, type: 3}
+  - {fileID: 21300000, guid: ebd23906e2627744eadb235547fd0a82, type: 3}
+  - {fileID: 21300000, guid: 57ba3e0668a8c9949b11428e52d49d34, type: 3}
+  - {fileID: 21300000, guid: 49cf2e665e9957f4ea1d4fa11e5b558e, type: 3}
+  - {fileID: 21300000, guid: cf272ff63ab80514c8af801f6777052a, type: 3}
+  - {fileID: 21300000, guid: 53d98c5e8d906c94192720753bb974f0, type: 3}
+  - {fileID: 21300000, guid: 5d9cb02fe5ae5914d93d2a1ab8daee9d, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Liberator Bolt
+  - Liberator Body
+  - Liberator Flap
+  - Liberator Cover
+  - Liberator Magazine
+  - Liberator Insides
+  - Liberator Trigger
+  m_Tag: Items
+  m_IsVariant: 0

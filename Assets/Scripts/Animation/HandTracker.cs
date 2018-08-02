@@ -1,0 +1,111 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(SpriteRenderer))]
+public class HandTracker : MonoBehaviour
+{
+    public SpriteRenderer Renderer;
+    public Hand Hand;
+
+    public Vector3 IdlePosition;
+
+    public HandPosition TargetExposed;
+
+    [HideInInspector]
+    public HandPosition Target;
+
+    public float ReturnToIdleSpeed = 0.5f;
+    public float TimeToTarget = 0.5f;
+
+    private float timerToTarget = 0f;
+    private Vector3 oldPos;
+    private Vector3 oldScale;
+    private Quaternion oldRotation;
+
+    private const string AGENT_LAYER = "Agents";
+    private const string ITEM_LAYER = "Equipped Items";
+
+    public void LateUpdate()
+    {
+        if(TargetExposed != Target)
+        {
+            Target = TargetExposed;
+            StartTimeToTarget();
+        }
+
+        timerToTarget += Time.deltaTime;
+        float targetP = Mathf.Clamp01(timerToTarget / TimeToTarget);
+
+        if(Target != null)
+        {
+            if(Target.Hand == this.Hand)
+            {
+                // Transform...
+                transform.position = Vector3.Lerp(oldPos, Target.transform.position, targetP);
+                transform.rotation = Quaternion.Lerp(oldRotation, Target.transform.rotation, targetP);
+                transform.localScale = Vector3.Lerp(oldScale, Target.transform.localScale, targetP);
+
+                // Layer and order...
+                if (Target.BehindItem)
+                {
+                    // This hand is supposed to be behind the item, so we go to the agent layer...
+                    if(Renderer.sortingLayerName != AGENT_LAYER)
+                    {
+                        Renderer.sortingLayerName = AGENT_LAYER;
+                        Renderer.sortingOrder = 1000;
+                    }
+                }
+                else
+                {
+                    // Hand goes in front of the item, put it in that layer and make sure the order is higher than anything on the item.
+                    if(Renderer.sortingLayerName != ITEM_LAYER)
+                    {
+                        Renderer.sortingLayerName = ITEM_LAYER;
+                        Renderer.sortingOrder = 1000;
+                    }
+                }
+
+                // Flip or not...
+                bool normal = Hand == Hand.RIGHT;
+                bool targetFlip = Target.Flipped ? !normal : normal;
+                if (Renderer.flipX != targetFlip)
+                {
+                    Renderer.flipX = targetFlip;
+                }
+                
+            }
+            else
+            {
+                Debug.LogError("Wrong hand assigned to HandTracker! Expected {0}, got {1}".Form(this.Hand, Target.Hand));
+            }
+        }
+        else
+        {
+            Vector3 idleTarget = transform.parent.position + IdlePosition;
+            transform.position = Vector3.Lerp(transform.position, idleTarget, Time.deltaTime * ReturnToIdleSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * ReturnToIdleSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, Time.deltaTime * ReturnToIdleSpeed);
+
+            bool flipped = Hand == Hand.RIGHT;
+            if(Renderer.flipX != flipped)
+            {
+                Renderer.flipX = flipped;
+            }
+
+            if (Renderer.sortingLayerName != AGENT_LAYER)
+            {
+                Renderer.sortingLayerName = AGENT_LAYER;
+                Renderer.sortingOrder = 10;
+            }
+        }
+    }
+
+    public void StartTimeToTarget()
+    {
+        timerToTarget = 0f;
+        oldPos = transform.position;
+        oldScale = transform.localScale;
+        oldRotation = transform.rotation;
+    }
+}
