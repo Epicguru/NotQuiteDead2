@@ -12,25 +12,40 @@ public class GunAnimator : MonoBehaviour
 
     public bool Reloading;
     public bool CheckingMag;
-    public bool Empty;
+    public bool CheckingChamber;
+    public bool ChamberEmpty;
+    public bool MagEmpty;
 
     public const string SHOOT_NAME = "Shoot";
     public const string STORED_NAME = "Stored";
     public const string AIM_NAME = "Aim";
-    public const string EMPTY_NAME = "Empty";
+    public const string CHAMBER_EMPTY_NAME = "Chamber Empty";
+    public const string MAG_EMPTY_NAME = "Mag Empty";
     public const string RELOAD_NAME = "Reload";
     public const string CHECK_MAG_NAME = "Check Mag";
+    public const string CHECK_CHAMBER_NAME = "Check Chamber";
 
     public const string SHOOT_CALLBACK = "Shoot";
     public const string RELOAD_CALLBACK = "Reload";
     public const string CHECK_MAG_CALLBACK = "Check Mag";
+    public const string CHECK_CHAMBER_CALLBACK = "Check Chamber";
 
     public static readonly int SHOOT_ID = Animator.StringToHash(SHOOT_NAME);
     public static readonly int STORED_ID = Animator.StringToHash(STORED_NAME);
     public static readonly int AIMING_ID = Animator.StringToHash(AIM_NAME);
-    public static readonly int EMPTY_ID = Animator.StringToHash(EMPTY_NAME);
+    public static readonly int CHAMBER_EMPTY_ID = Animator.StringToHash(CHAMBER_EMPTY_NAME);
+    public static readonly int MAG_EMPTY_ID = Animator.StringToHash(MAG_EMPTY_NAME);
     public static readonly int RELOAD_ID = Animator.StringToHash(RELOAD_NAME);
     public static readonly int CHECK_MAG_ID = Animator.StringToHash(CHECK_MAG_NAME);
+    public static readonly int CHECK_CHAMBER_ID = Animator.StringToHash(CHECK_CHAMBER_NAME);
+
+    public bool CurrentlyStored
+    {
+        get
+        {
+            return Anim.GetCurrentAnimatorStateInfo(0).IsTag("Stored");
+        }
+    }
 
     public void AnimationCallback(AnimationEvent e)
     {
@@ -47,6 +62,10 @@ public class GunAnimator : MonoBehaviour
         {
             CheckingMag = false;
         }
+        if (e.stringParameter == CHECK_CHAMBER_CALLBACK)
+        {
+            CheckingChamber = false;
+        }
     }
 
     public void Trigger(int id)
@@ -57,12 +76,17 @@ public class GunAnimator : MonoBehaviour
                 return;
             Reloading = true;
         }
-
         if (id == CHECK_MAG_ID)
         {
             if (CheckingMag)
                 return;
             CheckingMag = true;
+        }
+        if (id == CHECK_CHAMBER_ID)
+        {
+            if (CheckingChamber)
+                return;
+            CheckingChamber = true;
         }
 
         Anim.SetTrigger(id);
@@ -72,7 +96,7 @@ public class GunAnimator : MonoBehaviour
     {
         Anim.SetBool(STORED_ID, Stored);
         Anim.SetBool(AIMING_ID, Aiming);
-        Anim.SetBool(AIMING_ID, Aiming);
-        Anim.SetBool(EMPTY_ID, Empty);
+        Anim.SetBool(MAG_EMPTY_ID, MagEmpty);
+        Anim.SetBool(CHAMBER_EMPTY_ID, ChamberEmpty);
     }
 }

@@ -10,10 +10,22 @@ public class HandTracker : MonoBehaviour
 
     public Vector3 IdlePosition;
 
-    public HandPosition TargetExposed;
+    public HandPosition Target
+    {
+        get
+        {
+            return _target;
+        }
+        set
+        {
+            if (value == _target)
+                return;
 
-    [HideInInspector]
-    public HandPosition Target;
+            StartTimeToTarget();
+            _target = value;
+        }
+    }
+    private HandPosition _target;
 
     public float ReturnToIdleSpeed = 0.5f;
     public float TimeToTarget = 0.5f;
@@ -28,12 +40,6 @@ public class HandTracker : MonoBehaviour
 
     public void LateUpdate()
     {
-        if(TargetExposed != Target)
-        {
-            Target = TargetExposed;
-            StartTimeToTarget();
-        }
-
         timerToTarget += Time.deltaTime;
         float targetP = Mathf.Clamp01(timerToTarget / TimeToTarget);
 

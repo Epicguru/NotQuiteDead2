@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ignore Dynamic Layering
   layers:
   - Default
   - TransparentFX
@@ -43,6 +44,9 @@ TagManager:
     locked: 0
   - name: Dropped Items
     uniqueID: 1444906431
+    locked: 0
+  - name: Behind Equipped Items
+    uniqueID: 2317016343
     locked: 0
   - name: Agents
     uniqueID: 1929339007
