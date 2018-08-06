@@ -158,7 +158,7 @@ MonoBehaviour:
   Anim: {fileID: 30235472}
   MagCapacity: 21
   CurrentMagCount: 21
-  RPM: 400
+  RPM: 900
   Shoot: 0
   Reload: 0
   CheckMag: 0
@@ -193,6 +193,7 @@ MonoBehaviour:
   CheckingChamber: 0
   ChamberEmpty: 0
   MagEmpty: 0
+  Blocked: 0
 --- !u!1 &47865973
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +319,7 @@ MonoBehaviour:
   CheckingChamber: 0
   ChamberEmpty: 0
   MagEmpty: 0
+  Blocked: 0
 --- !u!114 &141003567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3176,7 +3178,7 @@ GameObject:
   - component: {fileID: 2079394232}
   m_Layer: 0
   m_Name: Potshot 57 Magazine Upper
-  m_TagString: Untagged
+  m_TagString: Ignore Dynamic Layering
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3226,9 +3228,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1216088593
-  m_SortingLayer: 4
-  m_SortingOrder: 1
+  m_SortingLayerID: -1977950953
+  m_SortingLayer: 2
+  m_SortingOrder: -10
   m_Sprite: {fileID: 21300000, guid: 01f85a23c4a1ea84ea1ac7e18c45adfb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -45,7 +45,7 @@ public class HandManager : MonoBehaviour
                 // This will cause the equip animation to play.
                 bool held = Left.AtTarget && Right.AtTarget;
 
-                if (held)
+                if (held && currentlyHolding.Anim.Stored)
                 {
                     currentlyHolding.Anim.Stored = false;
                 }
@@ -69,7 +69,6 @@ public class HandManager : MonoBehaviour
             
             // The fourth option should never happen, because if the currently held item is destroyed or removed, then
             // so should the exposed Holding value be, making both of them null.
-
             
             if(Holding != null && currentlyHolding != null) // 1. Are they both not null?
             {
@@ -77,11 +76,20 @@ public class HandManager : MonoBehaviour
                 // Store the current item by setting it's state to stored. Once it is completely stored,
                 // set the value of currentlyHolding to Holding. This causes the hands to move towards the target item,
                 // and equip it by setting it's state to not stored.
-                currentlyHolding.Anim.Stored = true;
-                if (currentlyHolding.Anim.CurrentlyStored)
+
+                // Sometimes, the animation and code don't link up quite perfectly. For a few frames, once the hands reach
+                // the item and the Stored state is set to false, the animation state will still be 'stored'. This slightly
+                // confuses the script and causes the gun to equip and dequip with no hands following it.
+                // To prevent this, we check the conflicted flag. If it is conflicting, then we don't equip the new item yet.
+                bool conflicted = !currentlyHolding.Anim.Stored && currentlyHolding.Anim.CurrentlyStored;
+
+                if(!conflicted)
+                    currentlyHolding.Anim.Stored = true;
+
+                if (currentlyHolding.Anim.CurrentlyStored && !conflicted)
                 {
-                    // Now the item is completely stored on the player (on back, waist, invisible, whatever) so
-                    // we set the current item to null.
+                    // Now the item is completely stored on the player (on back, waist, invisible, whatever).
+                    // Now set the current item to the target (Holding) item, which causes it to be equipped.
                     currentlyHolding = Holding;
                 }
             }

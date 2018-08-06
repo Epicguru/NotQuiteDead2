@@ -89,6 +89,9 @@ public class Gun : MonoBehaviour
         if (CheckMag || Anim.CheckingMag || CheckChamber || Anim.CheckingChamber)
             Anim.Aiming = false;
 
+        // Update rotation of item.
+        UpdateRotation();
+
         // Update shooting timer...
         gunTimer += Time.deltaTime;
 
@@ -125,7 +128,13 @@ public class Gun : MonoBehaviour
         Anim.Blocked = IsBlocked();
     }
 
-    public void OnGUI()
+    private void UpdateRotation()
+    {
+        float angle = (InputManager.MousePos - (Vector2)transform.position).ToAngle();
+        Debug.Log(angle);
+    }
+
+    private void OnGUI()
     {
         GUILayout.Label("Bullets: {0}".Form(CurrentMagCount));
     }
