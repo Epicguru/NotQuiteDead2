@@ -5,6 +5,7 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     public GunAnimator Anim;
+    public AgentDirection Direction;
 
     public int MagCapacity = 31;
     public int CurrentMagCount = 31;
@@ -21,21 +22,24 @@ public class Gun : MonoBehaviour
 
     public bool AllowCheckingWhenChamberEmpty = true;
 
+    public float AimTime = 0.15f;
+
     public KeyCode ShootKey = KeyCode.Mouse0;
     public KeyCode AimKey = KeyCode.Mouse1;
     public KeyCode ReloadKey = KeyCode.R;
     public KeyCode CheckMagKey = KeyCode.F;
     public KeyCode CheckChamberKey = KeyCode.T;
 
+    [HideInInspector]
+    public HandPosition LeftHand, RightHand;
+
+    private float aimTimer = 0f;
     private float gunTimer = 100f;
 
     private List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
     private int currentSpriteLayer = -1;
     private static int BEHIND_PLAYER_ID;
     private static int IN_FRONT_OF_PLAYER_ID;
-
-    [HideInInspector]
-    public HandPosition LeftHand, RightHand;
 
     private void Start()
     {
@@ -74,14 +78,14 @@ public class Gun : MonoBehaviour
 
         if (Reload && !CanReload())
             Reload = false;
-        if (Aim && !CanAim())
-            Aim = false;
         if (CheckMag && !CanCheckMag())
             CheckMag = false;
         if (CheckChamber && !CanCheckChamber())
             CheckChamber = false;
         if (Shoot && !CanShoot())
             Shoot = false;
+        if (Aim && !CanAim())
+            Aim = false;
 
         if (Reload || Anim.Reloading)
             Anim.Aiming = false;
@@ -91,6 +95,7 @@ public class Gun : MonoBehaviour
 
         // Update rotation of item.
         UpdateRotation();
+        UpdateAgentDirection();
 
         // Update shooting timer...
         gunTimer += Time.deltaTime;
@@ -130,8 +135,38 @@ public class Gun : MonoBehaviour
 
     private void UpdateRotation()
     {
-        float angle = (InputManager.MousePos - (Vector2)transform.position).ToAngle();
-        Debug.Log(angle);
+        Vector2 mouseOffset = InputManager.MousePos - (Vector2)transform.position;
+        if (!Direction.Right) mouseOffset.x *= -1f;
+        float aimAngle = mouseOffset.ToAngle();
+        float change = Time.deltaTime;
+
+        if (Aim)
+        {
+            aimTimer += change;
+        }
+        else
+        {
+            aimTimer -= change;
+        }
+
+        aimTimer = Mathf.Clamp(aimTimer, 0f, AimTime);
+        float aimP = aimTimer / AimTime;
+        float x = aimP;
+
+        // Curve...?
+        float finalAngle = Mathf.LerpAngle(0f, aimAngle, x);
+
+        var a = transform.localEulerAngles;
+        a.z = finalAngle;
+        transform.localEulerAngles = a;
+    }
+
+    private void UpdateAgentDirection()
+    {
+        if (Anim.Stored || !Aim)
+            return;
+
+        Direction.Right = InputManager.MousePos.x >= transform.position.x;
     }
 
     private void OnGUI()

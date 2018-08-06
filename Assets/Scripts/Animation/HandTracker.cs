@@ -8,7 +8,7 @@ public class HandTracker : MonoBehaviour
     public SpriteRenderer Renderer;
     public Hand Hand;
 
-    public Vector3 IdlePosition;
+    public Transform IdleTarget;
 
     public HandPosition Target
     {
@@ -98,7 +98,7 @@ public class HandTracker : MonoBehaviour
         }
         else
         {
-            Vector3 idleTarget = transform.parent.position + IdlePosition;
+            Vector3 idleTarget = IdleTarget.transform.position;
             transform.position = Vector3.Lerp(transform.position, idleTarget, Time.deltaTime * ReturnToIdleSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime * ReturnToIdleSpeed);
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, Time.deltaTime * ReturnToIdleSpeed);
