@@ -15,6 +15,7 @@ public class GunAnimator : MonoBehaviour
     public bool CheckingChamber;
     public bool ChamberEmpty;
     public bool MagEmpty;
+    public bool Blocked;
 
     public const string SHOOT_NAME = "Shoot";
     public const string STORED_NAME = "Stored";
@@ -24,11 +25,7 @@ public class GunAnimator : MonoBehaviour
     public const string RELOAD_NAME = "Reload";
     public const string CHECK_MAG_NAME = "Check Mag";
     public const string CHECK_CHAMBER_NAME = "Check Chamber";
-
-    public const string SHOOT_CALLBACK = "Shoot";
-    public const string RELOAD_CALLBACK = "Reload";
-    public const string CHECK_MAG_CALLBACK = "Check Mag";
-    public const string CHECK_CHAMBER_CALLBACK = "Check Chamber";
+    public const string BLOCKED_NAME = "Blocked";    
 
     public static readonly int SHOOT_ID = Animator.StringToHash(SHOOT_NAME);
     public static readonly int STORED_ID = Animator.StringToHash(STORED_NAME);
@@ -38,6 +35,12 @@ public class GunAnimator : MonoBehaviour
     public static readonly int RELOAD_ID = Animator.StringToHash(RELOAD_NAME);
     public static readonly int CHECK_MAG_ID = Animator.StringToHash(CHECK_MAG_NAME);
     public static readonly int CHECK_CHAMBER_ID = Animator.StringToHash(CHECK_CHAMBER_NAME);
+    public static readonly int BLOCKED_ID = Animator.StringToHash(BLOCKED_NAME);
+
+    public const string SHOOT_CALLBACK = "Shoot";
+    public const string RELOAD_CALLBACK = "Reload";
+    public const string CHECK_MAG_CALLBACK = "Check Mag";
+    public const string CHECK_CHAMBER_CALLBACK = "Check Chamber";
 
     public bool CurrentlyStored
     {
@@ -98,5 +101,6 @@ public class GunAnimator : MonoBehaviour
         Anim.SetBool(AIMING_ID, Aiming);
         Anim.SetBool(MAG_EMPTY_ID, MagEmpty);
         Anim.SetBool(CHAMBER_EMPTY_ID, ChamberEmpty);
+        Anim.SetBool(BLOCKED_ID, Blocked);
     }
 }

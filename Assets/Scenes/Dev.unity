@@ -186,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Anim: {fileID: 518689790}
   Gun: {fileID: 30235471}
-  Stored: 0
+  Stored: 1
   Aiming: 0
   Reloading: 0
   CheckingMag: 0
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Anim: {fileID: 2102444375}
   Gun: {fileID: 141003567}
-  Stored: 0
+  Stored: 1
   Aiming: 0
   Reloading: 0
   CheckingMag: 0
@@ -1299,13 +1299,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9ae6eca3d5e3945888150ce55a17a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Guns:
+  Equipped:
   - {fileID: 141003567}
   - {fileID: 30235471}
-  EquippedGunIndex: -1
-  Hands:
-  - {fileID: 1109376646}
-  - {fileID: 1982578680}
+  - {fileID: 0}
+  Holding: {fileID: 0}
+  Left: {fileID: 1109376646}
+  Right: {fileID: 1982578680}
 --- !u!1 &922246015
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,10 +1688,32 @@ MonoBehaviour:
   Renderer: {fileID: 1109376645}
   Hand: 0
   IdlePosition: {x: -0.381, y: 0, z: 0}
-  TargetExposed: {fileID: 2143755986}
-  Target: {fileID: 0}
   ReturnToIdleSpeed: 8
-  TimeToTarget: 0.15
+  TimeToTarget: 0.2
+  CurveToTarget:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1265246003
 GameObject:
   m_ObjectHideFlags: 0
@@ -3042,10 +3064,32 @@ MonoBehaviour:
   Renderer: {fileID: 1982578679}
   Hand: 1
   IdlePosition: {x: 0.381, y: 0, z: 0}
-  TargetExposed: {fileID: 1709072599}
-  Target: {fileID: 0}
   ReturnToIdleSpeed: 8
-  TimeToTarget: 0.15
+  TimeToTarget: 0.2
+  CurveToTarget:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2012211026
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,6 +29,15 @@ public class HandTracker : MonoBehaviour
 
     public float ReturnToIdleSpeed = 0.5f;
     public float TimeToTarget = 0.5f;
+    public AnimationCurve CurveToTarget = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+    public bool AtTarget
+    {
+        get
+        {
+            return Target != null && timerToTarget / TimeToTarget >= 1f;
+        }
+    }
 
     private float timerToTarget = 0f;
     private Vector3 oldPos;
@@ -48,9 +57,10 @@ public class HandTracker : MonoBehaviour
             if(Target.Hand == this.Hand)
             {
                 // Transform...
-                transform.position = Vector3.Lerp(oldPos, Target.transform.position, targetP);
-                transform.rotation = Quaternion.Lerp(oldRotation, Target.transform.rotation, targetP);
-                transform.localScale = Vector3.Lerp(oldScale, Target.transform.localScale, targetP);
+                float curved = CurveToTarget.Evaluate(targetP);
+                transform.position = Vector3.Lerp(oldPos, Target.transform.position, curved);
+                transform.rotation = Quaternion.Lerp(oldRotation, Target.transform.rotation, curved);
+                transform.localScale = Vector3.Lerp(oldScale, Target.transform.localScale, curved);
 
                 // Layer and order...
                 if (Target.BehindItem)
