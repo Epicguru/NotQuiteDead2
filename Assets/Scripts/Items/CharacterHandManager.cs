@@ -1,20 +1,20 @@
 ﻿
 using UnityEngine;
 
-public class HandManager : MonoBehaviour
+public class CharacterHandManager : MonoBehaviour
 {
     [Header("Controls")]
-    // All the equipped items. Equipped items are displayed on the player. They might be invisible,
-    // but they are always instantiated and children of the player.
+    // All the equipped items. Equipped items are displayed on the character. They might be invisible,
+    // but they are always instantiated and children of the character.
     public Gun[] Equipped;
     private int index;
 
     // The currently held item. A held item is, unsuprisingly, held in the hands as opposed to just
-    // sitting somewhere on the players body.
+    // sitting somewhere on the characters body.
     public Gun Holding;
 
-    // The item that is really held by the player. Unlike Holding, this value is hidden.
-    // This is used to remove items from the player hands with correct animations and interpolation.
+    // The item that is really held by the character. Unlike Holding, this value is hidden.
+    // This is used to remove items from the character hands with correct animations and interpolation.
     // Both the item in Holding and in CurrentlyHolding must be in the Equiped array.
     private Gun currentlyHolding;
 
@@ -32,7 +32,7 @@ public class HandManager : MonoBehaviour
         }
 
         // First, check if the Holding value is the same as the currentlyHolding value.
-        // If they are the same, ensure that the player's hands are moving towards the currentlyHolding.
+        // If they are the same, ensure that the character's hands are moving towards the currentlyHolding.
         if(currentlyHolding == Holding)
         {
             // Only if the item is not null.
@@ -88,7 +88,7 @@ public class HandManager : MonoBehaviour
 
                 if (currentlyHolding.Anim.CurrentlyStored && !conflicted)
                 {
-                    // Now the item is completely stored on the player (on back, waist, invisible, whatever).
+                    // Now the item is completely stored on the character (on back, waist, invisible, whatever).
                     // Now set the current item to the target (Holding) item, which causes it to be equipped.
                     currentlyHolding = Holding;
                 }
@@ -107,7 +107,7 @@ public class HandManager : MonoBehaviour
                 currentlyHolding.Anim.Stored = true;
                 if (currentlyHolding.Anim.CurrentlyStored)
                 {
-                    // Now the item is completely stored on the player (on back, waist, invisible, whatever) so
+                    // Now the item is completely stored on the character (on back, waist, invisible, whatever) so
                     // we set the current item to null.
                     currentlyHolding = null;
                 }

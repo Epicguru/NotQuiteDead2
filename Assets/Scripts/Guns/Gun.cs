@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     public GunAnimator Anim;
-    public AgentDirection Direction;
+    public CharacterDirection Direction;
 
     public int MagCapacity = 31;
     public int CurrentMagCount = 31;
@@ -95,7 +95,7 @@ public class Gun : MonoBehaviour
 
         // Update rotation of item.
         UpdateRotation();
-        UpdateAgentDirection();
+        UpdateCharacterDirection();
 
         // Update shooting timer...
         gunTimer += Time.deltaTime;
@@ -161,7 +161,7 @@ public class Gun : MonoBehaviour
         transform.localEulerAngles = a;
     }
 
-    private void UpdateAgentDirection()
+    private void UpdateCharacterDirection()
     {
         if (Anim.Stored || !Aim)
             return;

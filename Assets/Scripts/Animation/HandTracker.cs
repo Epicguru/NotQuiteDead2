@@ -44,7 +44,7 @@ public class HandTracker : MonoBehaviour
     private Vector3 oldScale;
     private Quaternion oldRotation;
 
-    private const string AGENT_LAYER = "Agents";
+    private const string CHARACTER_LAYER = "Characters";
     private const string ITEM_LAYER = "Equipped Items";
 
     public void LateUpdate()
@@ -65,10 +65,10 @@ public class HandTracker : MonoBehaviour
                 // Layer and order...
                 if (Target.BehindItem)
                 {
-                    // This hand is supposed to be behind the item, so we go to the agent layer...
-                    if(Renderer.sortingLayerName != AGENT_LAYER)
+                    // This hand is supposed to be behind the item, so we go to the character layer...
+                    if(Renderer.sortingLayerName != CHARACTER_LAYER)
                     {
-                        Renderer.sortingLayerName = AGENT_LAYER;
+                        Renderer.sortingLayerName = CHARACTER_LAYER;
                         Renderer.sortingOrder = 1000;
                     }
                 }
@@ -109,9 +109,9 @@ public class HandTracker : MonoBehaviour
                 Renderer.flipX = flipped;
             }
 
-            if (Renderer.sortingLayerName != AGENT_LAYER)
+            if (Renderer.sortingLayerName != CHARACTER_LAYER)
             {
-                Renderer.sortingLayerName = AGENT_LAYER;
+                Renderer.sortingLayerName = CHARACTER_LAYER;
                 Renderer.sortingOrder = 10;
             }
         }

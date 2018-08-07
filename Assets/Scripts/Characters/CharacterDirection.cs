@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AgentDirection : MonoBehaviour
+public class CharacterDirection : MonoBehaviour
 {
     public bool Right
     {

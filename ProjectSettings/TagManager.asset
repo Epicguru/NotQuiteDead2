@@ -48,7 +48,7 @@ TagManager:
   - name: Behind Equipped Items
     uniqueID: 2317016343
     locked: 0
-  - name: Agents
+  - name: Characters
     uniqueID: 1929339007
     locked: 0
   - name: Equipped Items
