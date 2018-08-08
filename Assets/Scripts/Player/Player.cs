@@ -44,6 +44,38 @@ public class Player : NetworkBehaviour
             All.Add(this);
     }
 
+    public void Update()
+    {
+        // TODO - how do we send input from client's to the server? Authorative actions, such as direction change,
+        // weapon manipulation or item use can only be done on the server, but the remote clients are the players controlling
+        // this server - side implementation...
+
+        if (!isServer)
+            return;
+
+        if (!isLocalPlayer)
+            return;
+
+        // If we have a target to control, normally the player object...
+        if(Manipulator.Target != null)
+        {
+            // Get keyboard input...
+            Vector2 rawInput = Vector2.zero;
+
+            if (InputManager.IsPressed("Right"))
+                rawInput.x += 1;
+            if (InputManager.IsPressed("Left"))
+                rawInput.x -= 1;
+            if (InputManager.IsPressed("Up"))
+                rawInput.y += 1;
+            if (InputManager.IsPressed("Down"))
+                rawInput.y -= 1;
+
+            // Send this raw input to the movement controller.
+            Manipulator.Target.Movement.NormalizedInputDirection = rawInput;
+        }
+    }
+
     public void OnDestroy()
     {
         if(All.Contains(this))

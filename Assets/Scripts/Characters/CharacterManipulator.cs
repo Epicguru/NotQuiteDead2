@@ -12,11 +12,6 @@ public class CharacterManipulator : NetworkBehaviour
         }
         set
         {
-            if (!isServer)
-            {
-                Debug.LogError("Not on server, cannot set manipulator target!");
-                return;
-            }
             if (value == _target)
                 return;
 
@@ -26,7 +21,8 @@ public class CharacterManipulator : NetworkBehaviour
             }
             else
             {
-                _target.AssignManipulator(null);
+                if(_target != null)
+                    _target.AssignManipulator(null);
                 value.AssignManipulator(this);
             }
             _target = value;

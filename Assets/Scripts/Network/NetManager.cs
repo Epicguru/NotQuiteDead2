@@ -5,6 +5,8 @@ using UnityEngine.Networking;
 
 public class NetManager : NetworkManager
 {
+    public Character PlayerCharacter;
+
     public override void OnServerConnect(NetworkConnection conn)
     {
         base.OnServerConnect(conn);
@@ -21,7 +23,8 @@ public class NetManager : NetworkManager
 
         // Here we might load player data from disk and instantiate a character based on the data.
         // For now, just make them a new character.
-        // TODO
+        var spawned = Instantiate(PlayerCharacter, Vector3.zero, Quaternion.identity);
+        player.Manipulator.Target = spawned;
 
         NetworkServer.AddPlayerForConnection(conn, go, playerControllerId);
     }
