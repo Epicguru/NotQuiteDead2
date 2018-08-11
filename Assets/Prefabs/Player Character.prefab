@@ -1701,6 +1701,12 @@ MonoBehaviour:
   ChamberEmpty: 0
   MagEmpty: 0
   Blocked: 0
+  FallingMagazineInfo:
+    RealMag: {fileID: 0}
+    Velocity: {x: 1, y: -5}
+    AngularVelocity: 30
+    Lifetime: 3
+    UseGravity: 1
 --- !u!114 &114044819132642672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2078,6 +2084,12 @@ MonoBehaviour:
   ChamberEmpty: 0
   MagEmpty: 0
   Blocked: 0
+  FallingMagazineInfo:
+    RealMag: {fileID: 212902632442294350}
+    Velocity: {x: 1, y: -5}
+    AngularVelocity: 30
+    Lifetime: 3
+    UseGravity: 1
 --- !u!114 &114915074816816788
 MonoBehaviour:
   m_ObjectHideFlags: 1

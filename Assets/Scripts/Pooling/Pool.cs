@@ -43,9 +43,9 @@ public class Pool : MonoBehaviour
 
         InvokeRepeating("DrainOne", 0f, DrainInterval);
 
-        DebugView.CreateGraph(POOLED, "Pooled Objects", "Seconds Ago", "Object Count", 120);
-        DebugView.CreateGraph(SPAWNED, "Pool Spawned Objects", "Frames Ago", "Spawn Count", 1000).MinAutoScale = 20;
-        DebugView.CreateGraph(BORROWED, "Pool Borrowed Objects", "Frames Ago", "Borrow Count", 1000).MinAutoScale = 20;
+        //DebugView.CreateGraph(POOLED, "Pooled Objects", "Seconds Ago", "Object Count", 120);
+        //DebugView.CreateGraph(SPAWNED, "Pool Spawned Objects", "Frames Ago", "Spawn Count", 1000).MinAutoScale = 20;
+        //DebugView.CreateGraph(BORROWED, "Pool Borrowed Objects", "Frames Ago", "Borrow Count", 1000).MinAutoScale = 20;
     }
 
     public void OnDestroy()
@@ -87,16 +87,16 @@ public class Pool : MonoBehaviour
             }
         }
 
-        if (DebugView.IsEnabled)
-        {
-            DebugView.AddGraphSample(SPAWNED, SpawnedPerFrame);
-            DebugView.AddGraphSample(BORROWED, BorrowedPerFrame);
+        //if (DebugView.IsEnabled)
+        //{
+        //    DebugView.AddGraphSample(SPAWNED, SpawnedPerFrame);
+        //    DebugView.AddGraphSample(BORROWED, BorrowedPerFrame);
 
-            if (fire)
-            {
-                DebugView.AddGraphSample(POOLED, CurrentlyPooled);
-            }
-        }
+        //    if (fire)
+        //    {
+        //        DebugView.AddGraphSample(POOLED, CurrentlyPooled);
+        //    }
+        //}
 
         BorrowedPerFrame = 0;
         SpawnedPerFrame = 0;

@@ -59,6 +59,18 @@ public class GunAnimator : MonoBehaviour
     public const string RELOAD_CALLBACK = "Reload";
     public const string CHECK_MAG_CALLBACK = "Check Mag";
     public const string CHECK_CHAMBER_CALLBACK = "Check Chamber";
+    public const string DROP_MAG_CALLBACK = "Drop Mag";
+
+    public FallingMagInfo FallingMagazineInfo;
+    [System.Serializable]
+    public class FallingMagInfo
+    {
+        public SpriteRenderer RealMag;
+        public Vector2 Velocity = new Vector2(1f, -5f);
+        public float AngularVelocity = 30f;
+        public float Lifetime = 1.5f;
+        public bool UseGravity = true;
+    }
 
     public bool CurrentlyStored
     {
@@ -86,6 +98,17 @@ public class GunAnimator : MonoBehaviour
         if (e.stringParameter == CHECK_CHAMBER_CALLBACK)
         {
             CheckingChamber = false;
+        }
+        if (e.stringParameter == DROP_MAG_CALLBACK)
+        {
+            // Drop magazine.
+            if(FallingMagazineInfo.RealMag != null)
+            {
+                var spawned = Pool.Get(Spawnables.I.GunFallingPart).GetComponent<GunFallingPart>();
+                spawned.Mimic(FallingMagazineInfo.RealMag);
+                spawned.SetVelocity(FallingMagazineInfo.Velocity, FallingMagazineInfo.AngularVelocity, FallingMagazineInfo.UseGravity);
+                spawned.StartLife(FallingMagazineInfo.Lifetime);
+            }            
         }
     }
 
