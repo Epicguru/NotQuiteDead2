@@ -2,9 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Item))]
+[RequireComponent(typeof(GunAnimator))]
 public class Gun : MonoBehaviour
 {
-    public GunAnimator Anim;
+    public GunAnimator Anim
+    {
+        get
+        {
+            if (_anim == null)
+                _anim = GetComponent<GunAnimator>();
+            return _anim;
+        }
+    }
+    private GunAnimator _anim;
+
+    public Item Item
+    {
+        get
+        {
+            if (_item == null)
+                _item = GetComponent<Item>();
+            return _item;
+        }
+    }
+    private Item _item;
+
     public CharacterDirection Direction;
 
     public int MagCapacity = 31;
@@ -69,7 +92,7 @@ public class Gun : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         // Collect raw input. The input must then be validated.
         CollectInput();
@@ -94,8 +117,8 @@ public class Gun : MonoBehaviour
             Anim.Aiming = false;
 
         // Update rotation of item.
-        UpdateRotation();
         UpdateCharacterDirection();
+        UpdateRotation();
 
         // Update shooting timer...
         gunTimer += Time.deltaTime;
@@ -163,9 +186,9 @@ public class Gun : MonoBehaviour
 
     private void UpdateCharacterDirection()
     {
-        if (Anim.Stored || !Aim)
+        if (Item.Stored || !Aim)        
             return;
-
+        
         Direction.Right = InputManager.MousePos.x >= transform.position.x;
     }
 
@@ -201,12 +224,12 @@ public class Gun : MonoBehaviour
 
     public bool CanAim()
     {
-        return !Anim.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
+        return !Item.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
     }
 
     public bool CanReload()
     {
-        return !Anim.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
+        return !Item.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
     }
 
     public bool CanCheckMag()
@@ -214,7 +237,7 @@ public class Gun : MonoBehaviour
         if (Anim.ChamberEmpty && !AllowCheckingWhenChamberEmpty)
             return false;
 
-        return !Anim.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
+        return !Item.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
     }
 
     public bool CanCheckChamber()
@@ -222,12 +245,12 @@ public class Gun : MonoBehaviour
         if (Anim.ChamberEmpty && !AllowCheckingWhenChamberEmpty)
             return false;
 
-        return !Anim.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
+        return !Item.Stored && !IsBlocked() && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
     }
 
     public bool CanShoot()
     {
-        return !Anim.Stored && !IsBlocked() && Anim.Aiming && this.CurrentMagCount > 0 && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
+        return !Item.Stored && !IsBlocked() && Anim.Aiming && this.CurrentMagCount > 0 && !Anim.Reloading && !Anim.CheckingMag && !Anim.CheckingChamber;
     }
 
     public bool IsBlocked()

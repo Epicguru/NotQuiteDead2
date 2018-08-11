@@ -10,11 +10,15 @@ public class UnityContractResolver : DefaultContractResolver
     {
         JsonProperty property = base.CreateProperty(member, memberSerialization);
 
+
         // Ignore all properties, because they commonly have self referencing loops in Unity types such as Vectors and Rects.
         if (member.MemberType == MemberTypes.Property)
         {
-            property.Ignored = true;
-            return property;
+            if (!member.IsDefined(typeof(SerializePropertyAttribute)))
+            {
+                property.Ignored = true;
+                return property;
+            }
         }
 
         return property;

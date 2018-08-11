@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class CharacterDirection : MonoBehaviour
+public class CharacterDirection : NetworkBehaviour
 {
     public bool Right
     {
@@ -12,11 +13,11 @@ public class CharacterDirection : MonoBehaviour
         }
         set
         {
-            if (value == _right)
-                return;
-
-            _right = value;
-            UpdateScale(_right);
+            if (value != _right)
+            {
+                _right = value;
+                UpdateScale(_right);
+            }
         }
     }
     private bool _right = true;

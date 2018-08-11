@@ -1,22 +1,22 @@
 ﻿
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class CharacterHandManager : MonoBehaviour
+public class CharacterHandManager : NetworkBehaviour
 {
     [Header("Controls")]
     // All the equipped items. Equipped items are displayed on the character. They might be invisible,
     // but they are always instantiated and children of the character.
-    public Gun[] Equipped;
-    private int index;
+    public Item[] Equipped;
 
     // The currently held item. A held item is, unsuprisingly, held in the hands as opposed to just
     // sitting somewhere on the characters body.
-    public Gun Holding;
+    public Item Holding;
 
     // The item that is really held by the character. Unlike Holding, this value is hidden.
     // This is used to remove items from the character hands with correct animations and interpolation.
     // Both the item in Holding and in CurrentlyHolding must be in the Equiped array.
-    private Gun currentlyHolding;
+    private Item currentlyHolding;
 
     [Header("References")]
     public HandTracker Left;
@@ -24,13 +24,6 @@ public class CharacterHandManager : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            index++;
-            if (index == Equipped.Length) index = 0;
-            Holding = Equipped[index];
-        }
-
         // First, check if the Holding value is the same as the currentlyHolding value.
         // If they are the same, ensure that the character's hands are moving towards the currentlyHolding.
         if(currentlyHolding == Holding)
@@ -45,9 +38,9 @@ public class CharacterHandManager : MonoBehaviour
                 // This will cause the equip animation to play.
                 bool held = Left.AtTarget && Right.AtTarget;
 
-                if (held && currentlyHolding.Anim.Stored)
+                if (held && currentlyHolding.Stored)
                 {
-                    currentlyHolding.Anim.Stored = false;
+                    currentlyHolding.Stored = false;
                 }
             }
             else
@@ -81,12 +74,12 @@ public class CharacterHandManager : MonoBehaviour
                 // the item and the Stored state is set to false, the animation state will still be 'stored'. This slightly
                 // confuses the script and causes the gun to equip and dequip with no hands following it.
                 // To prevent this, we check the conflicted flag. If it is conflicting, then we don't equip the new item yet.
-                bool conflicted = !currentlyHolding.Anim.Stored && currentlyHolding.Anim.CurrentlyStored;
+                bool conflicted = !currentlyHolding.Stored && currentlyHolding.CurrentlyStored;
 
                 if(!conflicted)
-                    currentlyHolding.Anim.Stored = true;
+                    currentlyHolding.Stored = true;
 
-                if (currentlyHolding.Anim.CurrentlyStored && !conflicted)
+                if (currentlyHolding.CurrentlyStored && !conflicted)
                 {
                     // Now the item is completely stored on the character (on back, waist, invisible, whatever).
                     // Now set the current item to the target (Holding) item, which causes it to be equipped.
@@ -104,8 +97,8 @@ public class CharacterHandManager : MonoBehaviour
                 // We set the current item state to stored, to play the dequip animation.
                 // Once the item is completely stored (we can check that), then we set the currentlyHolding to
                 // null. This makes both Holding and currentlyHolding null, causing the hands to move to an idle position.
-                currentlyHolding.Anim.Stored = true;
-                if (currentlyHolding.Anim.CurrentlyStored)
+                currentlyHolding.Stored = true;
+                if (currentlyHolding.CurrentlyStored)
                 {
                     // Now the item is completely stored on the character (on back, waist, invisible, whatever) so
                     // we set the current item to null.

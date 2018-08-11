@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Auto Component Getter</Title>
+      <Author>James Billy</Author>
+      <Description>A way to add an auto-getter property to a monobehaviour class.</Description>
+      <Shortcut>autoget</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="CSharp" Kind="method decl">
+        <![CDATA[public $CompClass$ $CompClass$
+        {
+          get
+          {
+            if($PrivName$ == null)            
+              $PrivName$ = GetComponent<$CompClass$>();            
+            return $PrivName$;
+          }
+        }
+        private $CompClass$ $PrivName$;]]>
+      </Code>
+      <Imports>
+        <Import>
+          <Namespace>UnityEngine</Namespace>
+        </Import>
+      </Imports>
+      <Declarations>
+        <Object>
+          <ID>PrivName</ID>
+          <ToolTip>Replace with the private variable name. Recommended style: '_className'</ToolTip>
+          <Default>_hiddenVar</Default>
+        </Object>
+        <Object>
+          <ID>CompClass</ID>
+          <Type>UnityEngine.MonoBehaviour</Type>
+          <ToolTip>Replace with the desired component type.</ToolTip>
+          <Default>MonoBehaviour</Default>
+        </Object>
+      </Declarations>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

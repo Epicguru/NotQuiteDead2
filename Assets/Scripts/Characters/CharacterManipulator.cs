@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -21,7 +22,7 @@ public class CharacterManipulator : NetworkBehaviour
             }
             else
             {
-                if(_target != null)
+                if (_target != null)
                     _target.AssignManipulator(null);
                 value.AssignManipulator(this);
             }
@@ -30,4 +31,16 @@ public class CharacterManipulator : NetworkBehaviour
     }
     [SerializeField]
     private Character _target;
+
+    public Player Player
+    {
+        get
+        {
+            if (_player == null)
+                _player = GetComponentInParent<Player>();
+            return _player;
+        }
+    }
+    private Player _player;
+
 }

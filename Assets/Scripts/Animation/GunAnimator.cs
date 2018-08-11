@@ -2,12 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Gun))]
+[RequireComponent(typeof(Animator))]
 public class GunAnimator : MonoBehaviour
 {
-    public Animator Anim;
-    public Gun Gun;
+    public Animator Anim
+    {
+        get
+        {
+            if (_anim == null)
+                _anim = GetComponentInChildren<Animator>();
+            return _anim;
+        }
+    }
+    private Animator _anim;
 
-    public bool Stored;
+    public Gun Gun
+    {
+        get
+        {
+            if (_gun == null)
+                _gun = GetComponent<Gun>();
+            return _gun;
+        }
+    }
+    private Gun _gun;
+
     public bool Aiming;
 
     public bool Reloading;
@@ -18,7 +38,6 @@ public class GunAnimator : MonoBehaviour
     public bool Blocked;
 
     public const string SHOOT_NAME = "Shoot";
-    public const string STORED_NAME = "Stored";
     public const string AIM_NAME = "Aim";
     public const string CHAMBER_EMPTY_NAME = "Chamber Empty";
     public const string MAG_EMPTY_NAME = "Mag Empty";
@@ -28,7 +47,6 @@ public class GunAnimator : MonoBehaviour
     public const string BLOCKED_NAME = "Blocked";    
 
     public static readonly int SHOOT_ID = Animator.StringToHash(SHOOT_NAME);
-    public static readonly int STORED_ID = Animator.StringToHash(STORED_NAME);
     public static readonly int AIMING_ID = Animator.StringToHash(AIM_NAME);
     public static readonly int CHAMBER_EMPTY_ID = Animator.StringToHash(CHAMBER_EMPTY_NAME);
     public static readonly int MAG_EMPTY_ID = Animator.StringToHash(MAG_EMPTY_NAME);
@@ -97,7 +115,6 @@ public class GunAnimator : MonoBehaviour
 
     public void Update()
     {
-        Anim.SetBool(STORED_ID, Stored);
         Anim.SetBool(AIMING_ID, Aiming);
         Anim.SetBool(MAG_EMPTY_ID, MagEmpty);
         Anim.SetBool(CHAMBER_EMPTY_ID, ChamberEmpty);
