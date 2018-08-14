@@ -33,54 +33,54 @@ SpriteAtlas:
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: da07dc91aec664440b7406384a7bda6e, type: 3}
-  - {fileID: 21300000, guid: 5542d0e1a6d9d3c4b89af446a04727de, type: 3}
-  - {fileID: 21300000, guid: 936e3232a02578249b08aeecf61787e4, type: 3}
-  - {fileID: 21300000, guid: 01f85a23c4a1ea84ea1ac7e18c45adfb, type: 3}
-  - {fileID: 21300000, guid: 87c58bf31f4f68b43b9a5f57b430bf5d, type: 3}
-  - {fileID: 21300000, guid: 7f956b04fad79a5489da091a1ae7c0cc, type: 3}
-  - {fileID: 21300000, guid: ae306c24b0c451849bbd69bf7582d104, type: 3}
-  - {fileID: 21300000, guid: ebd23906e2627744eadb235547fd0a82, type: 3}
-  - {fileID: 21300000, guid: 57ba3e0668a8c9949b11428e52d49d34, type: 3}
-  - {fileID: 21300000, guid: 49cf2e665e9957f4ea1d4fa11e5b558e, type: 3}
-  - {fileID: 21300000, guid: 60503786587d98d4587d4f5a66dbadcb, type: 3}
-  - {fileID: 21300000, guid: 8298d2f6f5bdb9d4bbc2dbb06bb35a40, type: 3}
-  - {fileID: 21300000, guid: cf272ff63ab80514c8af801f6777052a, type: 3}
-  - {fileID: 21300000, guid: f8c57147caa9aea4183042a8a486a3a8, type: 3}
   - {fileID: 21300000, guid: 8c9733888a6a6c641a7a97a779cf3c28, type: 3}
   - {fileID: 21300000, guid: fbbc0e49aa1e0174092cd6029b73e930, type: 3}
-  - {fileID: 21300000, guid: 7798ec4a317206241890314551a09fd6, type: 3}
-  - {fileID: 21300000, guid: e11dcaabbb1c9364e9b84e7b0bf0e851, type: 3}
-  - {fileID: 21300000, guid: f37bdc1cc1688ff4eb4c0a2daed5fc51, type: 3}
-  - {fileID: 21300000, guid: 53d98c5e8d906c94192720753bb974f0, type: 3}
+  - {fileID: 21300000, guid: ebd23906e2627744eadb235547fd0a82, type: 3}
+  - {fileID: 21300000, guid: ae306c24b0c451849bbd69bf7582d104, type: 3}
+  - {fileID: 21300000, guid: 936e3232a02578249b08aeecf61787e4, type: 3}
+  - {fileID: 21300000, guid: 60503786587d98d4587d4f5a66dbadcb, type: 3}
+  - {fileID: 21300000, guid: 7f956b04fad79a5489da091a1ae7c0cc, type: 3}
+  - {fileID: 21300000, guid: cf272ff63ab80514c8af801f6777052a, type: 3}
   - {fileID: 21300000, guid: 111bdb8e279631d4298d751def48c6e6, type: 3}
-  - {fileID: 21300000, guid: 922f980f36ff463468d1a8753035a248, type: 3}
-  - {fileID: 21300000, guid: 5d9cb02fe5ae5914d93d2a1ab8daee9d, type: 3}
+  - {fileID: 21300000, guid: f37bdc1cc1688ff4eb4c0a2daed5fc51, type: 3}
+  - {fileID: 21300000, guid: 8298d2f6f5bdb9d4bbc2dbb06bb35a40, type: 3}
+  - {fileID: 21300000, guid: 87c58bf31f4f68b43b9a5f57b430bf5d, type: 3}
+  - {fileID: 21300000, guid: f8c57147caa9aea4183042a8a486a3a8, type: 3}
   - {fileID: 21300000, guid: fee9feef65fbb214bb4bdd4d3b855002, type: 3}
+  - {fileID: 21300000, guid: 53d98c5e8d906c94192720753bb974f0, type: 3}
+  - {fileID: 21300000, guid: 5d9cb02fe5ae5914d93d2a1ab8daee9d, type: 3}
+  - {fileID: 21300000, guid: 49cf2e665e9957f4ea1d4fa11e5b558e, type: 3}
+  - {fileID: 21300000, guid: 5542d0e1a6d9d3c4b89af446a04727de, type: 3}
+  - {fileID: 21300000, guid: 01f85a23c4a1ea84ea1ac7e18c45adfb, type: 3}
+  - {fileID: 21300000, guid: 922f980f36ff463468d1a8753035a248, type: 3}
+  - {fileID: 21300000, guid: e11dcaabbb1c9364e9b84e7b0bf0e851, type: 3}
+  - {fileID: 21300000, guid: da07dc91aec664440b7406384a7bda6e, type: 3}
+  - {fileID: 21300000, guid: 7798ec4a317206241890314551a09fd6, type: 3}
+  - {fileID: 21300000, guid: 57ba3e0668a8c9949b11428e52d49d34, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Liberator Bolt
-  - Potshot 57 Magazine Cover
-  - Quaternion Body
-  - Potshot 57 Magazine Upper
-  - Quaternion Iron Sights
-  - Potshot 57 Body
-  - Quaternion Icon
-  - Liberator Body
-  - Liberator Flap
-  - Liberator Cover
-  - Potshot 57 Icon
-  - Potshot 57 Slide
-  - Liberator Magazine
-  - Potshot 57 Insides
   - Spin Blur
   - Liberator Icon
-  - Quaternion Trigger
-  - Quaternion Cover
-  - Potshot 57 Magazine
-  - Liberator Insides
+  - Liberator Body
+  - Quaternion Icon
+  - Quaternion Body
+  - Potshot 57 Icon
+  - Potshot 57 Body
+  - Liberator Magazine
   - Quaternion Magazine
-  - Potshot 57 Trigger
-  - Liberator Trigger
+  - Potshot 57 Magazine
+  - Potshot 57 Slide
+  - Quaternion Iron Sights
+  - Potshot 57 Insides
   - Potshot 57 Slide Lower
+  - Liberator Insides
+  - Liberator Trigger
+  - Liberator Cover
+  - Potshot 57 Magazine Cover
+  - Potshot 57 Magazine Upper
+  - Potshot 57 Trigger
+  - Quaternion Cover
+  - Liberator Bolt
+  - Quaternion Trigger
+  - Liberator Flap
   m_Tag: Items
   m_IsVariant: 0

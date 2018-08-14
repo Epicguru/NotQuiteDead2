@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -19,6 +20,7 @@ public class Item : NetworkBehaviour
     }
     private Animator _anim;
 
+    [NonSerialized]
     public ItemData Data;
 
     [Header("State")]
