@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using UnityEngine;
 
-[System.Serializable]
 public class ItemData
 {
     // This class stores data about the current state of an Item.
@@ -17,7 +16,7 @@ public class ItemData
 
     public static T FromJson<T>(string json) where T : ItemData
     {
-        if(json == null || string.IsNullOrWhiteSpace(json))
+        if(string.IsNullOrWhiteSpace(json))
         {
             Debug.LogError("Invalid input json string: null or empty!");
             return null;

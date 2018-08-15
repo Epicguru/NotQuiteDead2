@@ -4,8 +4,38 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PoolableObject))]
 public class UIWindow : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
+    [Header("References")]
+    [SerializeField]
+    private Text titleText;
+    [SerializeField]
+    private RectTransform content;
+
+    public PoolableObject PoolableObject
+    {
+        get
+        {
+            if (_poolable == null)
+                _poolable = GetComponent<PoolableObject>();
+            return _poolable;
+        }
+    }
+    private PoolableObject _poolable;
+
+    public Vector2 ContentSize
+    {
+        get
+        {
+            return content.rect.size;
+        }
+    }
+
+    [Header("Controls")]
+    public Vector2 MinSize = new Vector2(120, 150);
+    public Vector2 MaxSize = new Vector2(600, 800);
+
     public Vector2 TargetSize
     {
         get
@@ -31,12 +61,20 @@ public class UIWindow : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
             UpdateSize();
         }
     }
-    [SerializeField]
-    [ReadOnly]
     private Vector2 _targetSize = new Vector2(500, 500);
 
-    public Vector2 MinSize = new Vector2(120, 150);
-    public Vector2 MaxSize = new Vector2(600, 800);
+    public string Title
+    {
+        get
+        {
+            return titleText.text;
+        }
+        set
+        {
+            if (titleText.text != value)
+                titleText.text = value;
+        }
+    }
 
     private Vector2 lastPointerPos;
 

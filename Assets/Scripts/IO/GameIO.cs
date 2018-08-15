@@ -89,15 +89,10 @@ public static class GameIO
         File.WriteAllText(fullPath, json);
     }
 
-    public static T JsonToObject<T>(string json, bool unitySafe = true)
+    public static T JsonToObject<T>(string json)
     {
         if (jss == null)
             jss = new JsonSerializerSettings();
-
-        if (unitySafe && jss.ContractResolver == null)
-            jss.ContractResolver = new UnityContractResolver();
-        else if (!unitySafe)
-            jss.ContractResolver = null;
 
         T obj = JsonConvert.DeserializeObject<T>(json, jss);
         return obj;
@@ -139,8 +134,7 @@ public static class GameIO
             try
             {
                 string json = File.ReadAllText(path);
-                T obj = JsonConvert.DeserializeObject<T>(json);
-                return obj;
+                return JsonToObject<T>(json);
             }
             catch (Exception e)
             {
