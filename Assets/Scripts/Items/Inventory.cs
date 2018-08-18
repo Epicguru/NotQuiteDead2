@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory
+public class Inventory : ScriptableObject
 {
     // An inventory holds InventoryItems which contain ItemData and some positioning and references.
     // Inventories have limited space, and are a grid-like structure. Inventories can be fully serialized.
@@ -11,6 +11,49 @@ public class Inventory
     public List<InventoryItem> Items = new List<InventoryItem>();
 
     public Vector2Int Size = new Vector2Int(10, 10);
+    public Vector2Int TempItem = new Vector2Int(1, 1);
+    public Vector2Int TempPos = new Vector2Int(0, 0);
+    public bool TempRotation = false;
+
+    public bool InsertItem(ItemData data, Vector2Int position, bool rotated)
+    {
+        // Make new InventoryItem...
+
+        if(data == null)
+        {
+            Debug.LogError("Null itemdata, cannot add item!");
+            return false;
+        }
+
+        if (!SpaceInBounds(position.x, position.y))
+        {
+            Debug.LogError("Inventory position {0} is out of this inventory's bounds! ({1})".Form(position, Size));
+            return false;
+        }
+
+        var size = data.Dimensions;
+        RectInt space = new RectInt(position, size);
+        if (rotated)
+            space = space.Rotated();
+
+        if (CanFit(space))
+        {
+            // Place inside the inventory.
+            InventoryItem item = new InventoryItem();
+            item.CurrentInventory = this;
+            item.Data = data;
+            item.Rotated = rotated;
+            item.Position = position;
+
+            Items.Add(item);
+            return true;
+        }
+        else
+        {
+            Debug.LogError("Space {0} inside this inventory is occupied or cannot fit the item. {1}".Form(space, rotated ? "(Item was rotated)" : ""));
+            return false;
+        }
+    }
 
     public bool SpaceInBounds(int x, int y)
     {
@@ -45,11 +88,16 @@ public class Inventory
         if (!CanBasicFit(bounds.size))
             return false;
 
+        if (!SpaceInBounds(bounds.min.x, bounds.min.y))
+            return false;
+        if (!SpaceInBounds(bounds.max.x - 1, bounds.max.y - 1))
+            return false;
+
         foreach (var item in Items)
         {
             var space = item.Space;
-
-            if (space.Intersects(bounds))
+            
+            if (bounds.Intersects(space))
                 return false;
         }
 
@@ -58,6 +106,8 @@ public class Inventory
 
     public bool CanBasicFit(Vector2Int size)
     {
+        // Check if on a basic level an item of 'size' can fit inside the inventory, just based on the total size
+        // of the inventory.
         if(size.x <= Size.x)
         {
             if (size.y <= Size.y)

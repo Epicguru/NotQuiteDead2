@@ -30,6 +30,26 @@ public class UIWindow : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDrag
         {
             return content.rect.size;
         }
+        set
+        {
+            if (ContentSize == value)
+                return;
+
+            Vector2 difference = Size - ContentSize;
+            Size = value + difference;
+        }
+    }
+
+    public Vector2 Size
+    {
+        get
+        {
+            return ((RectTransform)transform).sizeDelta;
+        }
+        set
+        {
+            ((RectTransform)transform).sizeDelta = value;
+        }
     }
 
     [Header("Controls")]
