@@ -14,11 +14,26 @@ public class UnityContractResolver : DefaultContractResolver
         // Ignore all properties, because they commonly have self referencing loops in Unity types such as Vectors and Rects.
         if (member.MemberType == MemberTypes.Property)
         {
+            // Serialze the following property names:
+            string[] excluded = new string[]
+            {
+                "x",
+                "y"
+            };
+
+            foreach (var name in excluded)
+            {
+                if (member.Name == name)
+                {
+                    return property;
+                }
+            }
+
             if (!member.IsDefined(typeof(SerializePropertyAttribute)))
             {
                 property.Ignored = true;
                 return property;
-            }
+            }            
         }
 
         return property;

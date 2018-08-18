@@ -5,8 +5,11 @@ using UnityEngine;
 public class InventoryItem
 {
     // An inventory item is the combination of ItemData and some data about position and rotation, a reference to the inventory that contains it.
-
+    
     public Inventory CurrentInventory { get; set; }
+    public UI_InventoryItem UIItem { get; set; }
+
+    [SerializeProperty]
     public ItemData Data { get; set; }
     public Vector2Int Position;
     public bool Rotated;
@@ -24,7 +27,7 @@ public class InventoryItem
         get
         {
             if (Data == null)
-                return Vector2Int.zero;
+                return Vector2Int.one;
 
             if (!Rotated)
             {

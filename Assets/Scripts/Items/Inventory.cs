@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Inventory : ScriptableObject
 {
@@ -10,10 +11,87 @@ public class Inventory : ScriptableObject
 
     public List<InventoryItem> Items = new List<InventoryItem>();
 
-    public Vector2Int Size = new Vector2Int(10, 10);
-    public Vector2Int TempItem = new Vector2Int(1, 1);
+    public Vector2Int Size = new Vector2Int(5, 5);
+
+    [JsonIgnore]
+    public ItemData OriginalData;
+    [JsonIgnore]
     public Vector2Int TempPos = new Vector2Int(0, 0);
+    [JsonIgnore]
     public bool TempRotation = false;
+
+    [JsonIgnore]
+    public InventoryChangeEvent UponChange = new InventoryChangeEvent();
+
+    private List<InventoryItem> tempItems = new List<InventoryItem>();
+
+    public InventoryItem GetItem(ushort id)
+    {
+        // Finds the first occurence of item of ID, or returns null if none could be found.
+        foreach (var item in Items)
+        {
+            if (item.Data.ID == id)
+                return item;
+        }
+
+        return null;
+    }
+
+    public List<InventoryItem> GetItems(ushort id)
+    {
+        // Returns a list of items of Id within the inventory.
+        // The item list MUST be coppied if it will be in use beyond the immediate future.
+
+        tempItems.Clear();
+        foreach (var item in Items)
+        {
+            if(item.Data.ID == id)
+            {
+                tempItems.Add(item);
+            }
+        }
+
+        return tempItems;
+    }
+
+    public void RemoveItem(InventoryItem item)
+    {
+        if (item == null)
+            return;
+
+        if (!Items.Contains(item))
+            return;
+
+        Items.Remove(item);
+        item.CurrentInventory = null;
+
+        UponChange.Invoke(this, InventoryChangeType.ITEM_REMOVED, item);
+    }
+
+    public bool MoveItem(InventoryItem item, Vector2Int newPos, bool rotated)
+    {
+        if (item == null)
+            return false;
+
+        if (!Items.Contains(item))
+            return false;
+
+        RectInt bounds = new RectInt(newPos, new Vector2Int(rotated ? item.Data.Dimensions.y : item.Data.Dimensions.x, rotated ? item.Data.Dimensions.x : item.Data.Dimensions.y));
+
+        if (CanFit(bounds))
+        {
+            item.Position = newPos;
+            item.Rotated = rotated;
+
+            UponChange.Invoke(this, InventoryChangeType.ITEM_MOVED, item);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     public bool InsertItem(ItemData data, Vector2Int position, bool rotated)
     {
@@ -46,6 +124,12 @@ public class Inventory : ScriptableObject
             item.Position = position;
 
             Items.Add(item);
+
+            if(UponChange != null)
+            {
+                UponChange.Invoke(this, InventoryChangeType.ITEM_ADDED, item);
+            }
+
             return true;
         }
         else
@@ -129,7 +213,24 @@ public class Inventory : ScriptableObject
 
     public string ToJson()
     {
-        return GameIO.ObjectToJson(this, Formatting.None, true);
+        return GameIO.ObjectToJson(this, Formatting.Indented, true);
+    }
+
+    public void MergeJson(string json)
+    {
+        Items.Clear();
+        JsonConvert.PopulateObject(json, this);
+
+        if (UponChange != null)
+        {
+            UponChange.Invoke(this, InventoryChangeType.INVENTORY_REFRESH, null);
+        }
+    }
+
+    public void Dispose()
+    {
+        UponChange.Invoke(this, InventoryChangeType.INVENTORY_DISPOSED, null);
+        UponChange.RemoveAllListeners();
     }
 
     public static Inventory FromJson(string json)
@@ -142,4 +243,18 @@ public class Inventory : ScriptableObject
 
         return GameIO.JsonToObject<Inventory>(json);
     }
+}
+
+public enum InventoryChangeType : byte
+{
+    ITEM_ADDED,
+    ITEM_REMOVED,
+    ITEM_MOVED,
+    INVENTORY_REFRESH,
+    INVENTORY_DISPOSED
+}
+
+public class InventoryChangeEvent : UnityEvent<Inventory, InventoryChangeType, InventoryItem>
+{
+
 }
