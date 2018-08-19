@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Gun))]
-[RequireComponent(typeof(Animator))]
 public class GunAnimator : MonoBehaviour
 {
     public Animator Anim
@@ -12,6 +11,8 @@ public class GunAnimator : MonoBehaviour
         {
             if (_anim == null)
                 _anim = GetComponentInChildren<Animator>();
+            if (_anim == null)
+                Debug.LogError("No animator component found for this Item Animator!");
             return _anim;
         }
     }
