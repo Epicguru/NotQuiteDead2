@@ -20,9 +20,6 @@ public class Item : NetworkBehaviour
     }
     private Animator _anim;
 
-    [NonSerialized]
-    public ItemData Data;
-
     [Header("State")]
     [SyncVar]
     public bool Stored = true;    
