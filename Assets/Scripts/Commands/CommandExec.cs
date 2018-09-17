@@ -6,7 +6,7 @@ using UnityEngine;
 
 public static class CommandExec
 {
-    private static void GetCommandAttributes()
+    public static void GetCommandAttributes()
     {
         Assembly a = typeof(CommandExec).Assembly;
         Console.WriteLine("Searching for custom commands and variables in assembly '{0}'".Form(a));
@@ -15,7 +15,7 @@ public static class CommandExec
         var found = from t in a.GetTypes().AsParallel()
             let attributes = t.GetCustomAttributes(typeof(DebugCommandAttribute), true)
             where attributes != null && attributes.Length > 0
-            select new { Type = t, Methods = from x in t.GetMethods() where x.IsDefined(typeof(DebugCommandAttribute), true), Attributes = attributes.Cast<DebugCommandAttribute>() };
+            select new { Type = t, Methods = from x in t.GetMethods() where x.IsDefined(typeof(DebugCommandAttribute), true) select x, Attributes = attributes.Cast<DebugCommandAttribute>() };
 
         foreach (var attr in found)
         {
