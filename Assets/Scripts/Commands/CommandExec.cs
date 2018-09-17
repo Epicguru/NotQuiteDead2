@@ -9,21 +9,31 @@ public static class CommandExec
     public static void GetCommandAttributes()
     {
         Assembly a = typeof(CommandExec).Assembly;
-        Console.WriteLine("Searching for custom commands and variables in assembly '{0}'".Form(a));
+        Debug.Log("Searching for custom commands and variables in assembly '{0}'".Form(a));
 
         // Partition on the type list initially.
+        var def = typeof(DebugCommandAttribute);
         var found = from t in a.GetTypes().AsParallel()
-            let attributes = t.GetCustomAttributes(typeof(DebugCommandAttribute), true)
-            where attributes != null && attributes.Length > 0
-            select new { Type = t, Methods = from x in t.GetMethods() where x.IsDefined(typeof(DebugCommandAttribute), true) select x, Attributes = attributes.Cast<DebugCommandAttribute>() };
+            let methods = t.GetMethods()
+            from m in methods
+                where m.IsDefined(def, true)
+                    select new { Type = t, Method = m, Attribute = m.GetCustomAttribute<DebugCommandAttribute>() };
 
-        foreach (var attr in found)
+        Debug.Log("Found {0} classes with commands in them:".Form(found.Count()));
+
+        foreach (var cmd in found)
         {
-            var type = attr.Type;
-            var methods = attr.Methods;
-            var attributes = attr.Attributes;
+            var type = cmd.Type;
+            var method = cmd.Method;
+            var attr = cmd.Attribute;
 
-            Debug.Log("Type '{0}' has {1} attributes with {2} methods:\n".Form(type.FullName, attributes.Count(), methods.Count()));
+            Debug.Log("Class: {0}, Method: {1}, Description: {2}".Form(type.FullName, method.Name, attr.Description));
         }
+    }
+
+    [DebugCommand("Clears the command window.", Parameters = "FLOAT:X:The x position, FLOAT:Y:The y position")]
+    public static void TestCommand()
+    {
+
     }
 }
