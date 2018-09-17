@@ -13,6 +13,8 @@ public class DebugCommandAttribute : Attribute
 
     public DebugCommandAttribute(string description)
     {
+        if (string.IsNullOrWhiteSpace(description))
+            throw new ArgumentNullException("description", "The command description cannot be null or whitespace!");
         Description = description;
     }
 
@@ -30,7 +32,7 @@ public class DebugCommandAttribute : Attribute
             if (!string.IsNullOrWhiteSpace(part))
             {
                 string error;
-                var p = DCP.Create(this.Parameters, out error);
+                var p = DCP.Create(part, out error);
                 if(p == null)
                 {
                     Debug.LogError("Debug command param parse error: '{0}'".Form(error));

@@ -57,7 +57,7 @@ public class AssetLoader : MonoBehaviour
 
             List<KeyValuePair<string, Run>> actions = new List<KeyValuePair<string, Run>>();
             //actions.Add(new KeyValuePair<string, Run>("Loading: Item Data...", () => { ItemData.LoadAll(); }));
-            actions.Add(new KeyValuePair<string, Run>("Loading: Commands...", () => { CommandExec.GetCommandAttributes(); }));
+            actions.Add(new KeyValuePair<string, Run>("Loading: Commands...", () => { CommandExec.LoadCommands(); }));
 
 
             int total = actions.Count;

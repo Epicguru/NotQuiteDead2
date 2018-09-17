@@ -31,7 +31,7 @@ public class DCP
         int sepCount = paramChunk.Count<char>(x => x == ':');
         if (sepCount != 2)
         {
-            error = "Invalid param format: Must be in the format 'TYPE:name:description'";
+            error = "Invalid param format: Must be in the format 'TYPE:name:description' ({0}, {1})".Form(paramChunk, sepCount);
             return null;
         }
 
@@ -66,6 +66,11 @@ public class DCP
         }
 
         return new DCP(parsedType, name, desc);
+    }
+
+    public bool SameAs(DCP other)
+    {
+        return other != null && other.Type == this.Type;
     }
 
     public override string ToString()
