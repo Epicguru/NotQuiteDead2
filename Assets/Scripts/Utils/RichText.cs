@@ -16,7 +16,7 @@ public static class RichText
 
     public static string InColour(string text, Color colour)
     {
-        str.Length = 0;
+        str.Clear();
         str.Append(COLOUR_START);
         str.Append(HASHTAG);
         str.Append(ColorUtility.ToHtmlStringRGBA(colour));
@@ -29,7 +29,7 @@ public static class RichText
 
     public static string InSize(string text, float size)
     {
-        str.Length = 0;
+        str.Clear();
         str.Append(SIZE_START);
         str.Append(size);
         str.Append(CLOSE_TAG);
@@ -41,7 +41,7 @@ public static class RichText
 
     public static string InBold(string text)
     {
-        str.Length = 0;
+        str.Clear();
         str.Append(BOLD_START);
         str.Append(text);
         str.Append(BOLD_END);
@@ -51,10 +51,43 @@ public static class RichText
 
     public static string InItalics(string text)
     {
-        str.Length = 0;
+        str.Clear();
         str.Append(ITALICS_START);
         str.Append(text);
         str.Append(ITALICS_END);
+
+        return str.ToString();
+    }
+
+    public static string Highlight(string text, string part, Color colour, bool bold = false)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return text;
+
+        if (!text.Contains(part))
+            return text;
+
+        int start = text.IndexOf(part);
+        string before = text.Substring(0, start);
+        string after = text.Substring(start + part.Length);
+
+        str.Clear();
+        str.Append(before);
+
+        if (bold)
+            str.Append(BOLD_START);
+
+        str.Append(COLOUR_START);
+        str.Append(HASHTAG);
+        str.Append(ColorUtility.ToHtmlStringRGBA(colour));
+        str.Append(CLOSE_TAG);
+        str.Append(part);
+        str.Append(COLOUR_END);
+
+        if (bold)
+            str.Append(BOLD_END);
+
+        str.Append(after);
 
         return str.ToString();
     }
