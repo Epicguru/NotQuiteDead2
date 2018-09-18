@@ -775,7 +775,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 15
   m_Viewport: {fileID: 1145334211}
   m_HorizontalScrollbar: {fileID: 50565415}
   m_VerticalScrollbar: {fileID: 1559524362}
@@ -1220,6 +1220,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1370267514}
+  - component: {fileID: 1370267518}
   - component: {fileID: 1370267517}
   - component: {fileID: 1370267516}
   - component: {fileID: 1370267515}
@@ -1303,7 +1304,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1370267518}
+        m_MethodName: UponTyped
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.InputField+OnChangeEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
@@ -1347,6 +1359,20 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1370267513}
   m_CullTransparentMesh: 0
+--- !u!114 &1370267518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1370267513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0c571940d128324d82dba1a4cc07539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Output: {fileID: 1730076730}
+  Suggestions: {fileID: 1518510101}
+  Input: {fileID: 1370267515}
 --- !u!1001 &1392529537
 Prefab:
   m_ObjectHideFlags: 0
@@ -1576,6 +1602,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  Keyword: 
+  Matches: []
 --- !u!1 &1559524360
 GameObject:
   m_ObjectHideFlags: 0
@@ -2146,6 +2174,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Open: 0
+  Text: {fileID: 672825324}
+  Bars:
+  - {fileID: 1970333397}
+  - {fileID: 1965061300}
   Rect: {fileID: 1730076727}
   TargetHeight: 250
   TransitionTime: 0.15
