@@ -81,6 +81,75 @@ public static class Commands
         }
     }
 
+    private static object[] ParseArgsFromInput(string input, DebugCmd cmd, out string error)
+    {
+        // The input string where the command part (/something) has been removed from it.
+        // Exctract the inputs from the string, based on a command.
+
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            error = "Null or empty string!";
+            return null;
+        }
+
+        const char SEP = ',';
+        var parts = input.Split(SEP);
+        if(parts.Length != cmd.ParameterCount)
+        {
+            error = "Expected {0} parameters, got {1}!".Form(cmd.ParameterCount, parts.Length);
+            return null;
+        }
+
+        int i = 0;
+        foreach (var param in cmd.Parameters)
+        {
+            string part = parts[i++];
+            var type = param.Type;
+            object result = null;
+            switch (type)
+            {
+                case DCPType.STRING:
+                    if(!string.IsNullOrWhiteSpace(part))
+                        result = part.Trim();
+                    break;
+                case DCPType.FLOAT:
+                    float resF;
+                    bool workedF = float.TryParse(part.Trim(), out resF);
+                    if (workedF)
+                        result = resF;
+                    break;
+                case DCPType.INT:
+                    int resI;
+                    bool workedI = int.TryParse(part.Trim(), out resI);
+                    if (workedI)
+                        result = resI;
+                    break;
+                default:
+                    result = null;
+                    break;
+            }
+
+            if(result == null)
+            {
+                // Something went wrong!
+
+            }
+        }
+    }
+
+    private static void ExecuteCmd(DebugCmd cmd, params object[] args)
+    {
+        try
+        {
+            // Assume it is static, so invoke using a null object.
+            cmd.Method.Invoke(null, args);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Exception while executing command '{0}', See: {1}".Form(cmd.Name, e.ToString()));
+        }
+    }
+
     [DebugCommand("Does absolutely nothing at all.", GodModeOnly = false)]
     public static void TestCommand()
     {

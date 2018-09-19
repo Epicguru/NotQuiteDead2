@@ -27,6 +27,7 @@ public class DebugCmd
         }
     }
     public DCP[] Parameters { get; private set; }
+    public MethodInfo Method { get; private set; }
 
     public DebugCmd(DebugCommandAttribute attr, MethodInfo method)
     {
@@ -37,6 +38,8 @@ public class DebugCmd
         Name = method.Name.Trim().ToLower();
         // Description.
         Attribute.Description.Trim();
+        // Method.
+        this.Method = method;
         // Parameters.
         if (string.IsNullOrWhiteSpace(Attribute.Parameters)) Attribute.Parameters = null;
         this.Parameters = Attribute.GetParameters();
