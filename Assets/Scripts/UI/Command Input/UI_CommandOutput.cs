@@ -59,4 +59,9 @@ public class UI_CommandOutput : MonoBehaviour
     {
         Text.text += lines.Trim() + '\n';
     }
+
+    public void ClearLog()
+    {
+        Text.text = "";
+    }
 }

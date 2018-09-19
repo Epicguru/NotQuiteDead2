@@ -10,6 +10,7 @@ public class DebugCommandAttribute : Attribute
 
     public string Parameters { get; set; } = null;
     public bool GodModeOnly { get; set; } = true;
+    public bool ServerOnly { get; set; } = false;
 
     public DebugCommandAttribute(string description)
     {

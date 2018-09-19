@@ -11,6 +11,7 @@ public class Player : NetworkBehaviour
     // It can control characters: normally it only controls it's own player object.
 
     public static List<Player> All = new List<Player>();
+    public static Player Local;
 
     public string Name
     {
@@ -40,8 +41,17 @@ public class Player : NetworkBehaviour
 
     public void Awake()
     {
-        if(!All.Contains(this))
+        if (!All.Contains(this))
+        {
             All.Add(this);
+        }
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        // Double ultra check.
+        if(isLocalPlayer)
+            Local = this;
     }
 
     public void Update()

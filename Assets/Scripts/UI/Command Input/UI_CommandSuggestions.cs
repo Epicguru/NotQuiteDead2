@@ -17,7 +17,7 @@ public class UI_CommandSuggestions : MonoBehaviour
     public AnimationCurve Curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     public string Keyword;
-    public List<string> Matches = new List<string>();
+    public List<DebugCmd> Matches = new List<DebugCmd>();
 
     private float timer;
     private StringBuilder str = new StringBuilder();
@@ -55,7 +55,10 @@ public class UI_CommandSuggestions : MonoBehaviour
             {
                 if (cmd.Contains(Keyword))
                 {
-                    Matches.Add(cmd);
+                    foreach (var variant in Commands.Loaded[cmd])
+                    {
+                        Matches.Add(variant);
+                    }
                 }
             }
 
@@ -64,7 +67,7 @@ public class UI_CommandSuggestions : MonoBehaviour
 
             foreach (var item in Matches)
             {
-                str.Append(RichText.Highlight(item, Keyword, Color.black, true));
+                str.Append(RichText.Highlight(item.ToString(), Keyword, Color.black, true));
                 str.Append(WHITESPACE);
             }
 

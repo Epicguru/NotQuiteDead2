@@ -45,6 +45,54 @@ public class DebugCmd
         this.Parameters = Attribute.GetParameters();
     }
 
+    public string GetError()
+    {
+        var paramz = Method.GetParameters();
+        if(paramz != null)
+        {
+            if (ParameterCount != paramz.Length)
+            {
+                return "Method has {0} parameters, but command expects {1} arguments".Form(paramz.Length, ParameterCount);
+            }
+        }
+        else
+        {
+            if(ParameterCount != 0)
+            {
+                return "Method has no parameters, but command expects {0} arguments".Form(ParameterCount);
+            }
+        }
+
+        for (int i = 0; i < ParameterCount; i++)
+        {
+            var param = paramz[i];
+            var expected = Parameters[i];
+
+            switch (expected.Type)
+            {
+                case DCPType.STRING:
+                    if (param.ParameterType != typeof(string))
+                        return "Parameter {0}, expected type {1}, method has parameter of type '{2}'".Form(i, expected.Type, param.ParameterType.FullName);
+                    break;
+
+                case DCPType.INT:
+                    if (param.ParameterType != typeof(int))
+                        return "Parameter {0}, expected type {1}, method has parameter of type '{2}'".Form(i, expected.Type, param.ParameterType.FullName);
+                    break;
+
+                case DCPType.FLOAT:
+                    if (param.ParameterType != typeof(float))
+                        return "Parameter {0}, expected type {1}, method has parameter of type '{2}'".Form(i, expected.Type, param.ParameterType.FullName);
+                    break;
+
+                default:
+                    return "Error, type {0} is not implemented! IMPLEMENT ME!!!".Form(expected.Type);
+            }
+        }
+
+        return null;
+    }
+
     public bool IsVariationOf(DebugCmd other)
     {
         return other != null && other.Name == this.Name;
@@ -72,17 +120,17 @@ public class DebugCmd
         return true;
     }
 
-    public string GetHelp()
+    public string GetHelp(bool forPrint = false)
     {
         str.Clear();
 
-        const string INDENT = "  > ";
+        const string INDENT = "  * ";
         const string SEP = ", ";
         const string TYPE_START = " (";
         const string TYPE_END = ") - ";
         const string WHITESPACE = "  ";
 
-        str.Append(Name);
+        str.Append(forPrint ? RichText.InBold(Name) : Name);
         str.Append(WHITESPACE);
         for (int i = 0; i < ParameterCount; i++)
         {
@@ -94,7 +142,7 @@ public class DebugCmd
             }
         }
         str.AppendLine();
-        str.Append(Description);
+        str.Append(forPrint ? RichText.InItalics(Description) : Description);
         str.AppendLine();
         for (int i = 0; i < ParameterCount; i++)
         {
@@ -116,6 +164,20 @@ public class DebugCmd
         }
 
         return str.ToString().TrimEnd();
+    }
+
+    public override string ToString()
+    {
+        str.Clear();
+        for (int i = 0; i < ParameterCount; i++)
+        {
+            var p = Parameters[i];
+            str.Append(p.Name);
+            if(i != ParameterCount - 1)
+                str.Append(", ");
+        }           
+        
+        return "{0}({1})".Form(Name, str.ToString());
     }
 }
 

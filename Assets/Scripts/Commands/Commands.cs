@@ -9,6 +9,7 @@ using UnityEngine;
 public static class Commands
 {
     public static Dictionary<string, List<DebugCmd>> Loaded = new Dictionary<string, List<DebugCmd>>();
+    private static List<object> tempParams = new List<object>();
 
     public static void LoadCommands()
     {
@@ -39,14 +40,36 @@ public static class Commands
                 continue;
             }
 
-            DebugCmd c;
-            AddCmd(c = new DebugCmd(attr, method));
+            DebugCmd c = new DebugCmd(attr, method);
+            string error = c.GetError();
+            if(error != null)
+            {
+                Debug.LogError("Error with debug command {0}: {1}".Form(c.ToString(), error));
+                continue;
+            }
+            AddCmd(c);
 
-            str.Append("Class: {0}, Method: {1}, Info:\n{2}".Form(type.FullName, method.Name, c.GetHelp()));
+            str.Append("Class: {0}, Method: {1}, Info:\n{2}\n".Form(type.FullName, method.Name, c.GetHelp()));
             count++;
         }
 
-        Debug.Log("Found {0} debug commands:\n{1}".Form(count, str.ToString()));
+        Debug.Log("Found {0} debug commands:\n{1}\n".Form(count, str.ToString()));
+    }
+
+    public static void Log(string output)
+    {
+        if(UI_CommandInput.Instance != null)
+        {
+            UI_CommandInput.Instance.Output.Log(output.Trim());
+        }
+    }
+
+    public static void ClearLog()
+    {
+        if (UI_CommandInput.Instance != null)
+        {
+            UI_CommandInput.Instance.Output.ClearLog();
+        }
     }
 
     private static bool AddCmd(DebugCmd cmd)
@@ -81,6 +104,85 @@ public static class Commands
         }
     }
 
+    public static bool TryExecute(string input, out string error)
+    {
+        // Returns true to clear the command line, or false to leave as-is.
+
+        error = null;
+        input = input.Trim();
+
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            error = "No command typed!";
+            return false;
+        }
+
+        // Format is:
+        // /cmdname x, y, z
+        try
+        {
+            string cmd = input.Split(' ')[0].Replace("/", "");
+            int length = cmd.Length + 1;
+            string args = input.Substring(length);
+            var cmdObject = GetCommand(cmd, args);
+            if(cmdObject == null)
+            {
+                // Did not find command for that name or those args.
+                error = "Could not find command '{0}' using args ({1})".Form(cmd, args);
+                return false;
+            }
+            else
+            {
+                bool worked = ExecuteFromLine(cmdObject, input);
+
+                if (worked)
+                {
+                    return true;
+                }
+                else
+                {
+                    error = "Internal error executing command: possible exception in command execution code?";
+                    return false;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Unknown error parsing and executing command: " + e);
+            error = "Unknown internal error: " + e.Message.Trim();
+            return false;
+        }
+    }
+
+    private static DebugCmd GetCommand(string name, string args)
+    {
+        // For now, only the number of arguments is examined.
+        // Therefore it is assumed that commands with the same name should have different numbers of arguments.
+        // TODO fix this to allow OOP-like method overloading.
+        int argCount = args.Count(x => x == ',') + 1;
+        if (string.IsNullOrWhiteSpace(args))
+            argCount = 0;
+
+        if (!Loaded.ContainsKey(name))
+        {
+            return null;
+        }
+        else
+        {
+            var list = Loaded[name];
+            foreach (var cmd in list)
+            {
+                if(cmd.ParameterCount == argCount)
+                {
+                    return cmd;
+                }
+            }
+
+            Debug.LogWarning("Found commands for name '{0}', but none of them had the correct arguments (type or position)!".Form(name));
+            return null;
+        }
+    }
+
     private static object[] ParseArgsFromInput(string input, DebugCmd cmd, out string error)
     {
         // The input string where the command part (/something) has been removed from it.
@@ -92,6 +194,7 @@ public static class Commands
             return null;
         }
 
+        tempParams.Clear();
         const char SEP = ',';
         var parts = input.Split(SEP);
         if(parts.Length != cmd.ParameterCount)
@@ -132,39 +235,60 @@ public static class Commands
             if(result == null)
             {
                 // Something went wrong!
-
+                error = "Error when parsing parameter '{0}': Expected type {1}".Form(param.Name, param.Type.ToString());
+                return null;
             }
+            else
+            {
+                tempParams.Add(result);
+            }
+        }
+
+        error = null;
+        return tempParams.ToArray();
+    }
+
+    private static bool ExecuteFromLine(DebugCmd cmd, string fullCommand)
+    {
+        // Assume both command and args are valid...
+
+        var argsString = fullCommand.Remove(0, cmd.Name.Length + 1);
+        if (string.IsNullOrWhiteSpace(argsString))
+        {
+            // No args, lets just do command anyway.
+            return ExecuteCmd(cmd);
+        }
+        else
+        {
+            // Has args, turn input in parameters and pass them to command.
+
+            string error;
+            object[] paramz = ParseArgsFromInput(argsString.Trim(), cmd, out error);
+
+            if(paramz == null || error != null)
+            {
+                Debug.LogError("Command execution [{1}] failed, argument parsing gave error! Error: '{0}'".Form(error, cmd));
+                return false;
+            }
+
+            return ExecuteCmd(cmd, paramz);
         }
     }
 
-    private static void ExecuteCmd(DebugCmd cmd, params object[] args)
+    private static bool ExecuteCmd(DebugCmd cmd, params object[] args)
     {
+        // Assume both command and args are valid...
+
         try
         {
             // Assume it is static, so invoke using a null object.
             cmd.Method.Invoke(null, args);
+            return true;
         }
         catch (Exception e)
         {
-            Debug.LogError("Exception while executing command '{0}', See: {1}".Form(cmd.Name, e.ToString()));
+            Debug.LogError("Exception while executing command '{0}', See: {1}".Form(cmd, e.ToString()));
+            return false;
         }
-    }
-
-    [DebugCommand("Does absolutely nothing at all.", GodModeOnly = false)]
-    public static void TestCommand()
-    {
-        Debug.Log("Whoo! Nothing!");
-    }
-
-    [DebugCommand("Does absolutely nothing at all, second edition.", GodModeOnly = false, Parameters = "STRING:thing:A random parameter.")]
-    public static void TestCommand(string input)
-    {
-        Debug.Log("Whoo! Nothing!");
-    }
-
-    [DebugCommand("Another test.")]
-    public static void CoolFing()
-    {
-
     }
 }

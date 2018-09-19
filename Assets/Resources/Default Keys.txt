@@ -10,5 +10,8 @@
   ],
   "Down": [
     115
+  ],
+  "Enter Command": [
+    13
   ]
 }
