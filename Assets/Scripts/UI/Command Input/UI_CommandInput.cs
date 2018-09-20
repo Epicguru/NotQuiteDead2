@@ -11,6 +11,8 @@ public class UI_CommandInput : MonoBehaviour
     public UI_CommandSuggestions Suggestions;
     public InputField Input;
 
+    private int autoIndex = 0;
+
     public void Awake()
     {
         Instance = this;
@@ -28,11 +30,8 @@ public class UI_CommandInput : MonoBehaviour
         string key = Input.text.Trim().ToLower().Split(' ')[0].Replace("/", "");
         s.Keyword = string.IsNullOrWhiteSpace(key) ? "NOTTHISFORSURESERIOUSLY" : key;        
         s.UpdateSuggestions();
-    }
 
-    public void UponEndType()
-    {
-        //Debug.Log("End Type!");
+        autoIndex = 0;
     }
 
     public void Update()
@@ -47,12 +46,13 @@ public class UI_CommandInput : MonoBehaviour
         
         if(InputManager.IsDown("Complete Command"))
         {
-            if (isCmd)
+            if (isCmd && Suggestions.Matches.Count > 0)
             {
-                string complete = this.Suggestions.Matches[Suggestions.SelectedIndex].Name;
+                string complete = this.Suggestions.Matches[autoIndex++].Name;
                 if(typed.Length - 1 < complete.Length)
                 {
                     Input.text = '/' + complete;
+                    Input.caretPosition = Input.text.Length;
                 }
             }
         }
@@ -67,8 +67,10 @@ public class UI_CommandInput : MonoBehaviour
 
                 if (clear)
                 {
+                    // Assume this means it executed successfuly.
+                    Commands.AddCommandAsExectued(Input.text);
                     Input.text = "";
-                    Suggestions.SelectedIndex = 0;
+                    autoIndex = 0;
                 }
 
                 if (!string.IsNullOrWhiteSpace(error))

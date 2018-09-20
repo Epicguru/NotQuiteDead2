@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UI_CommandSuggestions : MonoBehaviour
 {
+    public UI_CommandInput Input;
     public bool Open;
 
     public RectTransform Rect;
@@ -18,7 +19,6 @@ public class UI_CommandSuggestions : MonoBehaviour
 
     public string Keyword;
     public List<DebugCmd> Matches = new List<DebugCmd>();
-    public int SelectedIndex;
 
     private float timer;
     private StringBuilder str = new StringBuilder();
@@ -68,8 +68,8 @@ public class UI_CommandSuggestions : MonoBehaviour
             int index = 0;
             foreach (var item in Matches)
             {
-                bool selected = index == SelectedIndex;
-                string comm = RichText.Highlight(selected ? RichText.InColour(item.ToString(), Color.green) : item.ToString(), Keyword, Color.black, true);
+                string text = item.ToString();
+                string comm = RichText.Highlight(text, Keyword, Color.black, true);
                 str.Append(comm);
                 str.Append(WHITESPACE);
                 index++;

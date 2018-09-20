@@ -13,5 +13,8 @@
   ],
   "Enter Command": [
     13
+  ],
+  "Complete Command": [
+    9
   ]
 }

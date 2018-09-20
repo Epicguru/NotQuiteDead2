@@ -69,7 +69,14 @@ public static class Commands
     public static List<SortedCommandName> GetAutocompleteCommand(string current)
     {
         if (string.IsNullOrWhiteSpace(current))
-            return null;
+        {
+            // Just give all commands.
+            foreach (var item in Loaded.Keys)
+            {
+                autocomplete.Add(new SortedCommandName() { CommandName = item, Keyword = "" });
+            }
+            return autocomplete;
+        }
 
         // Where current is the command being typed, with no forward slash and no arguments.
         // Get the most likely command that was meant to be typed. Detect arguments being typed, and if there are any then don't offer autocomplete.
@@ -99,6 +106,27 @@ public static class Commands
         autocomplete.Sort();
 
         return autocomplete;
+    }
+
+    public static void AddCommandAsExectued(string cmd)
+    {
+        const int LIMIT = 100;
+
+        cmd = cmd.Trim();
+
+        if (PreviousCommands.Contains(cmd))
+        {
+            PreviousCommands.Remove(cmd);
+            PreviousCommands.Insert(0, cmd);
+        }
+        else
+        {
+            PreviousCommands.Insert(0, cmd);
+            if(PreviousCommands.Count > LIMIT)
+            {
+                PreviousCommands.RemoveAt(PreviousCommands.Count - 1);
+            }
+        }
     }
 
     public static void ClearLog()

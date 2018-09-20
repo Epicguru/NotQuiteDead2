@@ -7,6 +7,7 @@ public class UI_CommandOutput : MonoBehaviour
 {
     public bool Open;
     public Text Text;
+    public ScrollRect Scroll;
     public Transform[] Bars;
     public RectTransform Rect;
     public float TargetHeight = 400f;
@@ -58,6 +59,12 @@ public class UI_CommandOutput : MonoBehaviour
     public void Log(string lines)
     {
         Text.text += lines.Trim() + '\n';
+        Invoke("ScrollToBottom", 0.05f);
+    }
+
+    private void ScrollToBottom()
+    {
+        Scroll.verticalNormalizedPosition = 0f;
     }
 
     public void ClearLog()
