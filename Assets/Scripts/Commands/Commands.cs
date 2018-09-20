@@ -9,7 +9,9 @@ using UnityEngine;
 public static class Commands
 {
     public static Dictionary<string, List<DebugCmd>> Loaded = new Dictionary<string, List<DebugCmd>>();
+    public static List<string> PreviousCommands = new List<string>();
     private static List<object> tempParams = new List<object>();
+    private static List<SortedCommandName> autocomplete = new List<SortedCommandName>();
 
     public static void LoadCommands()
     {
@@ -62,6 +64,41 @@ public static class Commands
         {
             UI_CommandInput.Instance.Output.Log(output.Trim());
         }
+    }
+
+    public static List<SortedCommandName> GetAutocompleteCommand(string current)
+    {
+        if (string.IsNullOrWhiteSpace(current))
+            return null;
+
+        // Where current is the command being typed, with no forward slash and no arguments.
+        // Get the most likely command that was meant to be typed. Detect arguments being typed, and if there are any then don't offer autocomplete.
+
+        current = current.Trim();
+        string[] split = current.Split(' ');
+        if(split.Length > 1)
+        {
+            // Since commands are always one single word (or multiple words with underscores) then if there are more than one words, there are probably arguments.
+            return null;
+        }
+
+        autocomplete.Clear();
+
+        // TODO:
+        // 1. Add all command names to the list.
+        // 2. Rank based on:
+        // A: Starts with current
+        // B: Contains current
+
+        foreach (var key in Loaded.Keys)
+        {
+            if (key.Contains(current))
+                autocomplete.Add(new SortedCommandName() { CommandName = key, Keyword = current });
+        }
+
+        autocomplete.Sort();
+
+        return autocomplete;
     }
 
     public static void ClearLog()
@@ -290,5 +327,21 @@ public static class Commands
             Debug.LogError("Exception while executing command '{0}', See: {1}".Form(cmd, e.ToString()));
             return false;
         }
+    }
+}
+
+public class SortedCommandName : IComparable<SortedCommandName>
+{
+    public string CommandName;
+    public string Keyword;
+
+    public int CompareTo(SortedCommandName other)
+    {
+        return this.GetStartIndex() - other.GetStartIndex();
+    }
+
+    public int GetStartIndex()
+    {
+        return CommandName.IndexOf(Keyword);
     }
 }

@@ -41,9 +41,18 @@ public class UI_CommandInput : MonoBehaviour
         string typed = Input.text.Trim();
         bool isCmd = typed.StartsWith("/");
 
-        Output.Open = focoused;
+        // For now keep the output open, it's annoying when it closes.
+        Output.Open = true;
         Suggestions.Open = isCmd && focoused;
         
+        if(InputManager.IsDown("Complete Command"))
+        {
+            if (isCmd)
+            {
+
+            }
+        }
+
         if(InputManager.IsDown("Enter Command"))
         {
             if (isCmd)
@@ -52,8 +61,11 @@ public class UI_CommandInput : MonoBehaviour
                 string error;
                 bool clear = Commands.TryExecute(Input.text.Trim(), out error);
 
-                if(clear)
+                if (clear)
+                {
                     Input.text = "";
+                    Suggestions.SelectedIndex = 0;
+                }
 
                 if (!string.IsNullOrWhiteSpace(error))
                 {

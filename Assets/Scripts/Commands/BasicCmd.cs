@@ -47,4 +47,16 @@ public static class BasicCmd
     {
         // TODO implementme!
     }
+
+    [DebugCommand("Does something.")]
+    public static void Some_Random_Command()
+    {
+
+    }
+
+    [DebugCommand("Some something else. Just debugging.")]
+    public static void Random_Other_Teleport()
+    {
+
+    }
 }

@@ -18,6 +18,7 @@ public class UI_CommandSuggestions : MonoBehaviour
 
     public string Keyword;
     public List<DebugCmd> Matches = new List<DebugCmd>();
+    public int SelectedIndex;
 
     private float timer;
     private StringBuilder str = new StringBuilder();
@@ -51,24 +52,27 @@ public class UI_CommandSuggestions : MonoBehaviour
             dirty = false;
 
             Matches.Clear();
-            foreach (var cmd in Commands.Loaded.Keys)
+            var suggested = Commands.GetAutocompleteCommand(Keyword);
+
+            foreach(var thing in suggested)
             {
-                if (cmd.Contains(Keyword))
+                foreach(var comm in Commands.Loaded[thing.CommandName])
                 {
-                    foreach (var variant in Commands.Loaded[cmd])
-                    {
-                        Matches.Add(variant);
-                    }
+                    Matches.Add(comm);
                 }
             }
 
             str.Clear();
             const string WHITESPACE = "  ";
 
+            int index = 0;
             foreach (var item in Matches)
             {
-                str.Append(RichText.Highlight(item.ToString(), Keyword, Color.black, true));
+                bool selected = index == SelectedIndex;
+                string comm = RichText.Highlight(selected ? RichText.InColour(item.ToString(), Color.green) : item.ToString(), Keyword, Color.black, true);
+                str.Append(comm);
                 str.Append(WHITESPACE);
+                index++;
             }
 
             Text.text = str.ToString();
