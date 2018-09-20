@@ -39,10 +39,6 @@ public class UI_CommandInput : MonoBehaviour
         bool focoused = Input.isFocused;
         string typed = Input.text.Trim();
         bool isCmd = typed.StartsWith("/");
-
-        // For now keep the output open, it's annoying when it closes.
-        Output.Open = true;
-        Suggestions.Open = isCmd && focoused;
         
         if(InputManager.IsDown("Complete Command"))
         {
@@ -70,6 +66,7 @@ public class UI_CommandInput : MonoBehaviour
                     // Assume this means it executed successfuly.
                     Commands.AddCommandAsExectued(Input.text);
                     Input.text = "";
+                    Suggestions.Text.text = "";
                     autoIndex = 0;
                 }
 
