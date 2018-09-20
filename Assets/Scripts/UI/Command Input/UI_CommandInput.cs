@@ -49,7 +49,11 @@ public class UI_CommandInput : MonoBehaviour
         {
             if (isCmd)
             {
-
+                string complete = this.Suggestions.Matches[Suggestions.SelectedIndex].Name;
+                if(typed.Length - 1 < complete.Length)
+                {
+                    Input.text = '/' + complete;
+                }
             }
         }
 
