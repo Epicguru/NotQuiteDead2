@@ -26,6 +26,9 @@ public class NetManager : NetworkManager
         var spawned = Instantiate(PlayerCharacter, Vector3.zero, Quaternion.identity);
         player.Manipulator.Target = spawned;
 
+        // Make the main camera follow the newly created character.
+        MainCamera.Target = spawned.transform;
+
         NetworkServer.AddPlayerForConnection(conn, go, playerControllerId);
     }
 }
