@@ -37,11 +37,13 @@ public class NetPosSync : NetworkBehaviour
     }
     private Rigidbody2D _body;
 
-    private Vector2 bodyPos;
-    private Vector2 bodyVel;
-    private Vector2 bodyAngle; // Where x is current angle and y is angular velocity.
+    [SyncVar(hook = "PosChange")] private Vector2 bodyPos;
+    [SyncVar(hook = "VelChange")] private Vector2 bodyVel;
+    [SyncVar(hook = "AngleChange")] private Vector2 bodyAngle; // Where x is current angle and y is angular velocity.
 
     private float timer = 0f;
+
+    private const float TRANSFORM_LERP_SPEED = 20f;
 
     public override float GetNetworkSendInterval()
     {
@@ -53,24 +55,96 @@ public class NetPosSync : NetworkBehaviour
     {
         timer += Time.unscaledDeltaTime;
 
-        if (isServer)
+        UpdateSending();
+        UpdateClient();
+    }
+
+    private void UpdateClient()
+    {
+        if (isServer || !isClient)
+            return;
+
+        // Only if we don't have a body: body sync is handled in syncvar hooks.
+        if (!HasBody)
         {
+            // Interpolate (no extrapolation becauase updates are not necessarily sent periodically)
+
+            // Lerp position...
+            transform.localPosition = Vector2.Lerp(transform.localPosition, bodyPos, Time.deltaTime * TRANSFORM_LERP_SPEED);
+
+            // Lerp angle.
+            var rot = transform.localEulerAngles;
+            rot.z = Mathf.LerpAngle(rot.z, bodyAngle.x, Time.deltaTime * TRANSFORM_LERP_SPEED);
+            transform.localEulerAngles = rot;
+        }
+    }
+
+    private void UpdateSending()
+    {
+        if (!isServer)
+            return;
+
+        if (timer >= UpdateInterval)
+        {
+            timer = 0f;
+
             // Send updates if it has a rigidbody.
             if (HasBody)
             {
-                if(timer >= UpdateInterval)
-                {
-                    timer = 0f;
-                    Vector2 angle = new Vector2(Rigidbody.rotation, Rigidbody.angularVelocity);
+                Vector2 angle = new Vector2(Rigidbody.rotation, Rigidbody.angularVelocity);
 
-                    if(bodyPos != Rigidbody.position)                    
-                        bodyPos = Rigidbody.position;
-                    if (bodyVel != Rigidbody.velocity)
-                        bodyVel = Rigidbody.velocity;
-                    if (bodyAngle != angle)
-                        bodyAngle = angle;                    
-                }
+                if (bodyPos != Rigidbody.position)
+                    bodyPos = Rigidbody.position;
+                if (bodyVel != Rigidbody.velocity)
+                    bodyVel = Rigidbody.velocity;
+                if (bodyAngle != angle)
+                    bodyAngle = angle;
             }
+            else
+            {
+                // Send transform info. It will then have to interpolated on the other end.
+                if (bodyPos != (Vector2)transform.localPosition)
+                    bodyPos = (Vector2)transform.localPosition;
+                Vector2 angle = new Vector2(transform.localEulerAngles.z, 0f);
+                if (bodyAngle != angle)
+                    bodyAngle = angle;
+            }
+        }
+    }
+
+    private void PosChange(Vector2 newPos)
+    {
+        bodyPos = newPos;
+
+        if (isServer)
+            return;
+
+        if (HasBody)
+            Rigidbody.MovePosition(newPos);
+    }
+
+    private void VelChange(Vector2 newVel)
+    {
+        bodyVel = newVel;
+
+        if (isServer)
+            return;
+
+        if (HasBody)
+            Rigidbody.velocity = newVel;
+    }
+
+    private void AngleChange(Vector2 angle)
+    {
+        bodyAngle = angle;
+
+        if (isServer)
+            return;
+
+        if (HasBody)
+        {
+            Rigidbody.rotation = angle.x;
+            Rigidbody.angularVelocity = angle.y;
         }
     }
 }
