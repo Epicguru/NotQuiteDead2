@@ -7,6 +7,7 @@ public class CharacterManipulator : NetworkBehaviour
 {
     // Essentially owns a character, which they can then control. Characters can actually be controlled and changed without
     // being a character manipulator, but this is the formal way of doing things.
+    // Normally attached to a player object or next to an AI script.
 
     public bool IsBot { get; set; }
     public bool IsPlayer

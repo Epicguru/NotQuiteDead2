@@ -82,7 +82,7 @@ public class Player : NetworkBehaviour
                 rawInput.y -= 1;
 
             // Send this raw input to the movement controller.
-            Manipulator.Target.Movement.NormalizedInputDirection = rawInput;
+            Manipulator.MovementDirection = rawInput;
         }
     }
 
