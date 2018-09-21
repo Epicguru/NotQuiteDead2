@@ -1,0 +1,6 @@
+﻿
+A plan on how the characters will be controlled and networked.
+(A character is a human-like entity that can handle items and navigate the world)
+
+Characters have 'manipulators' which essentially own the characters, and indicate that they are in control, but beyond that they do not
+actually have any solid control implementation. Meaning that they own and manage the character but do not implement any control or AI directly.
