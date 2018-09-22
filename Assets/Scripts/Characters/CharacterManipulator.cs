@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+[RequireComponent(typeof(CharacterReference))]
 public class CharacterManipulator : NetworkBehaviour
 {
     // Essentially owns a character, which they can then control. Characters can actually be controlled and changed without
@@ -18,32 +19,47 @@ public class CharacterManipulator : NetworkBehaviour
         }
     }
 
+    private CharacterReference CharacterReference
+    {
+        get
+        {
+            if (_cr == null)
+                _cr = GetComponent<CharacterReference>();
+            return _cr;
+        }
+    }
+    private CharacterReference _cr;
+
     public Character Target
     {
         get
         {
-            return _target;
+            return CharacterReference.GetCharacter();
         }
         set
         {
-            if (value == _target)
+            // This should only ever be called on the server, but it should break anything major if it is called on a client.
+            // However it obviously won't work on a client.
+
+            var current = Target;
+
+            if (value == current)
                 return;
 
             if (value == null)
             {
-                _target.AssignManipulator(null);
+                current.AssignManipulator(null);
             }
             else
             {
-                if (_target != null)
-                    _target.AssignManipulator(null);
+                if (current != null)
+                    current.AssignManipulator(null);
                 value.AssignManipulator(this);
             }
-            _target = value;
+            Debug.Log("Set to " + value.netId.Value);
+            CharacterReference.SetCharacter(value);
         }
     }
-    [SerializeField]
-    private Character _target;
 
     public Player Player
     {

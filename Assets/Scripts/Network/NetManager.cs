@@ -20,13 +20,13 @@ public class NetManager : NetworkManager
         // Setup player. For now just give them a faction and a name based on their player number.
         Player player = go.GetComponent<Player>();
         player.Name = "Player #" + Player.All.Count;
+        NetworkServer.AddPlayerForConnection(conn, go, playerControllerId);
 
         // Here we might load player data from disk and instantiate a character based on the data.
-        // For now, just make them a new character.
+        // For now, just make them a new character. Spawn with client authority!
         var spawned = Instantiate(PlayerCharacter, Vector3.zero, Quaternion.identity);
-        player.Manipulator.Target = spawned;
-        NetworkServer.Spawn(spawned.gameObject);
+        NetworkServer.SpawnWithClientAuthority(spawned.gameObject, player.gameObject);
 
-        NetworkServer.AddPlayerForConnection(conn, go, playerControllerId);
+        player.Manipulator.Target = spawned;
     }
 }

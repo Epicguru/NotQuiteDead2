@@ -1,150 +1,146 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
 public class NetPosSync : NetworkBehaviour
 {
-    // Synchronises the position of objects across the clients, with authority residing with the server.
-    // Uses rigidbodies to do this, or transform if there is no rigidbody.
-
-    [Tooltip("The frequency at which updates on the position, velocity and rotation are sent to clients.")]
-    public float UPS = 25f;
-    public float UpdateInterval
-    {
-        get
-        {
-            return 1f / UPS;
-        }
-    }
-
-    public bool HasBody
-    {
-        get
-        {
-            return Rigidbody != null;
-        }
-    }
-
+    public bool UseRigidbody2D = true;
     public Rigidbody2D Rigidbody
     {
         get
         {
-            if (_body == null)
-                _body = GetComponent<Rigidbody2D>();
-            return _body;
+            if (_rigidbody == null)
+            {
+                _rigidbody = GetComponent<Rigidbody2D>();
+            }
+
+            return _rigidbody;
         }
     }
-    private Rigidbody2D _body;
+    private Rigidbody2D _rigidbody;
 
-    [SyncVar(hook = "PosChange")] private Vector2 bodyPos;
-    [SyncVar(hook = "VelChange")] private Vector2 bodyVel;
-    [SyncVar(hook = "AngleChange")] private Vector2 bodyAngle; // Where x is current angle and y is angular velocity.
+    [Range(0f, 60f)]
+    public float UpdateRate = 15f;
 
-    private float timer = 0f;
+    public float LerpSpeed = 10f;
 
-    private const float TRANSFORM_LERP_SPEED = 20f;
+    [SyncVar]
+    private Vector2 Position;
 
-    public override float GetNetworkSendInterval()
+    [SyncVar(hook = "NewVel")]
+    private Vector2 Velocity;
+
+    [SyncVar]
+    private float Rotation;
+
+    [SerializeField]
+    [ReadOnly]
+    private Vector2 realTarget;
+
+    public void Awake()
     {
-        // Send updates whenever the variables are updated.
-        return 0f;
+        if (UseRigidbody2D)
+        {
+            if (Rigidbody == null)
+            {
+                Debug.LogWarning("Object '{0}' has a NetPosSync that uses a rigidbody to sync its position, but a rigidbody 2D could not be found!".Form(name));
+            }
+        }
+    }
+
+    public Vector2 GetLastVelocity()
+    {
+        if (!UseRigidbody2D)
+        {
+            Debug.LogWarning("This NetPosSync ({0}) does not use Rigidbody2D, so does not sync velocity!".Form(name));
+            return Vector2.zero;
+        }
+        return Velocity;
+    }
+
+    public override void OnStartClient()
+    {
+        // Set initial state, unless on server.
+        if (isServer)
+            return;
+
+        transform.localPosition = Position;
+        var rot = transform.localEulerAngles;
+        rot.z = Rotation;
+        transform.localEulerAngles = rot;
+        realTarget = Position;
     }
 
     public void Update()
     {
-        timer += Time.unscaledDeltaTime;
-
-        UpdateSending();
-        UpdateClient();
-    }
-
-    private void UpdateClient()
-    {
-        if (isServer || !isClient)
-            return;
-
-        // Only if we don't have a body: body sync is handled in syncvar hooks.
-        if (!HasBody)
+        if (isServer)
         {
-            // Interpolate (no extrapolation becauase updates are not necessarily sent periodically)
-
-            // Lerp position...
-            transform.localPosition = Vector2.Lerp(transform.localPosition, bodyPos, Time.deltaTime * TRANSFORM_LERP_SPEED);
-
-            // Lerp angle.
-            var rot = transform.localEulerAngles;
-            rot.z = Mathf.LerpAngle(rot.z, bodyAngle.x, Time.deltaTime * TRANSFORM_LERP_SPEED);
-            transform.localEulerAngles = rot;
+            UpdateState();
+        }
+        else
+        {
+            MoveToTarget();
         }
     }
 
-    private void UpdateSending()
+    [Server]
+    private void UpdateState()
     {
-        if (!isServer)
-            return;
+        Position = transform.localPosition;
+        Rotation = transform.localEulerAngles.z;
 
-        if (timer >= UpdateInterval)
+        if (UseRigidbody2D && Rigidbody != null)
         {
-            timer = 0f;
+            Velocity = Rigidbody.velocity;
+        }
+    }
 
-            // Send updates if it has a rigidbody.
-            if (HasBody)
+    [Client]
+    private void MoveToTarget()
+    {
+        if (!UseRigidbody2D)
+        {
+            transform.localPosition = Vector2.Lerp(transform.localPosition, Position, Time.deltaTime * LerpSpeed);
+            // Rotation...
+            Vector3 angles = transform.localEulerAngles;
+            angles.z = Mathf.LerpAngle(angles.z, Rotation, Time.deltaTime * LerpSpeed);
+            transform.localEulerAngles = angles;
+        }
+        else
+        {
+            if (Rigidbody == null)
             {
-                Vector2 angle = new Vector2(Rigidbody.rotation, Rigidbody.angularVelocity);
+                Debug.LogWarning("Position and rotation of '{0}' not synced, Rigidbody2D missing!");
+                return;
+            }
 
-                if (bodyPos != Rigidbody.position)
-                    bodyPos = Rigidbody.position;
-                if (bodyVel != Rigidbody.velocity)
-                    bodyVel = Rigidbody.velocity;
-                if (bodyAngle != angle)
-                    bodyAngle = angle;
-            }
-            else
-            {
-                // Send transform info. It will then have to interpolated on the other end.
-                if (bodyPos != (Vector2)transform.localPosition)
-                    bodyPos = (Vector2)transform.localPosition;
-                Vector2 angle = new Vector2(transform.localEulerAngles.z, 0f);
-                if (bodyAngle != angle)
-                    bodyAngle = angle;
-            }
+            // Rotation...
+            Vector3 angles = transform.localEulerAngles;
+            angles.z = Mathf.LerpAngle(angles.z, Rotation, Time.deltaTime * LerpSpeed);
+            transform.localEulerAngles = angles;
+
+            // Move real target by current velocity...
+            realTarget += Velocity * Time.deltaTime;
+
+            // Lerp from real position to target position, which should be very close by.
+            float t = Time.deltaTime * 20f;
+            transform.localPosition = Vector2.Lerp(transform.localPosition, realTarget, t);
         }
     }
 
-    private void PosChange(Vector2 newPos)
+    private void NewVel(Vector2 newVel)
     {
-        bodyPos = newPos;
-
+        Velocity = newVel;
         if (isServer)
             return;
 
-        if (HasBody)
-            Rigidbody.MovePosition(newPos);
+        realTarget = Position;
     }
 
-    private void VelChange(Vector2 newVel)
+    public override float GetNetworkSendInterval()
     {
-        bodyVel = newVel;
+        if (UpdateRate == 0)
+            return 0;
 
-        if (isServer)
-            return;
-
-        if (HasBody)
-            Rigidbody.velocity = newVel;
-    }
-
-    private void AngleChange(Vector2 angle)
-    {
-        bodyAngle = angle;
-
-        if (isServer)
-            return;
-
-        if (HasBody)
-        {
-            Rigidbody.rotation = angle.x;
-            Rigidbody.angularVelocity = angle.y;
-        }
+        return 1f / UpdateRate;
     }
 }

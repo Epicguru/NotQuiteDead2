@@ -22,7 +22,6 @@ public class Player : NetworkBehaviour
         set
         {
             this._name = value;
-            base.name = _name;
         }
     }
     [SyncVar]
@@ -56,17 +55,12 @@ public class Player : NetworkBehaviour
         Local = this;
 
         // Tell the camera to follow this player's character gameobject.
-        MainCamera.Target = this.Manipulator.Target.transform;
+        //MainCamera.Target = this.Manipulator.Target.transform;
     }
 
     public void Update()
     {
-        // TODO - how do we send input from client's to the server? Authorative actions, such as direction change,
-        // weapon manipulation or item use can only be done on the server, but the remote clients are the players controlling
-        // this server - side implementation...
-
-        if (!isServer)
-            return;
+        this.name = Name;
 
         if (!isLocalPlayer)
             return;

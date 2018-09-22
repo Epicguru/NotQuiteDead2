@@ -49,14 +49,20 @@ public class CharacterMovement : NetworkBehaviour
 
     public void Update()
     {
-        if (isServer)
-        {
-            // On the server, do the actual velocity application.
 
+        // Only done on authority (may be server, may be client)
+        if (hasAuthority)
+        {
             // Speed cannot be less than zero...
             CurrentSpeed = Mathf.Max(0f, CurrentSpeed);
 
             Body.velocity = NormalizedInputDirection.normalized * CurrentSpeed;
+        }
+
+        // Things only done on the server.
+        if (isServer)
+        {
+            // On the server, do the actual velocity application.
 
             // Change character direction based on weather we are moving left or right, and weather there is a item being held.
             // TODO use item input or other inputs that can override this default behaviour.

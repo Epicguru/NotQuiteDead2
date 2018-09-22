@@ -2124,7 +2124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da7aebedab549c34885988cc366678ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UPS: 25
+  UseRigidbody2D: 1
+  UpdateRate: 20
+  LerpSpeed: 10
 --- !u!114 &114402141805072062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2322,7 +2324,7 @@ MonoBehaviour:
     i14: 239
     i15: 57
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114567906979494286
 MonoBehaviour:
   m_ObjectHideFlags: 1
