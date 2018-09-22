@@ -96,7 +96,7 @@ public static class BuildUtils
     {
         get
         {
-            return EditorPrefs.GetString(BUILD_PATH_KEY, "Builds/Game.exe");
+            return EditorPrefs.GetString(BUILD_PATH_KEY, "/Builds/Game.exe");
         }
         set
         {
