@@ -30,6 +30,10 @@ public class MainCamera : MonoBehaviour
     public float MaxSpeedDistance = 10f;
     public AnimationCurve Curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
+    [SerializeField]
+    [ReadOnly]
+    private Transform _target;
+
     public void Awake()
     {
         this.tag = "MainCamera";
@@ -37,6 +41,7 @@ public class MainCamera : MonoBehaviour
 
     public void LateUpdate()
     {
+        _target = Target;
         if (Target == null)
             return;
 

@@ -50,8 +50,13 @@ public class Player : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         // Double ultra check.
-        if(isLocalPlayer)
-            Local = this;
+        if (!isLocalPlayer)
+            return;
+
+        Local = this;
+
+        // Tell the camera to follow this player's character gameobject.
+        MainCamera.Target = this.Manipulator.Target.transform;
     }
 
     public void Update()

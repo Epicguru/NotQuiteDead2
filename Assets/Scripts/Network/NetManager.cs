@@ -27,9 +27,6 @@ public class NetManager : NetworkManager
         player.Manipulator.Target = spawned;
         NetworkServer.Spawn(spawned.gameObject);
 
-        // Make the main camera follow the newly created character.
-        MainCamera.Target = spawned.transform;
-
         NetworkServer.AddPlayerForConnection(conn, go, playerControllerId);
     }
 }
