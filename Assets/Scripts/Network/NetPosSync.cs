@@ -31,9 +31,9 @@ public class NetPosSync : NetworkBehaviour
     }
     private Rigidbody2D _body;
 
-    [SyncVar] private Vector2 Pos;
-    [SyncVar] private Vector2 Vel;
-    [SyncVar] private Vector2 Rot;
+    [SyncVar(hook = "PosChange")] private Vector2 Pos;
+    [SyncVar(hook = "VelChange")] private Vector2 Vel;
+    [SyncVar(hook = "RotChange")] private Vector2 Rot;
 
     public override float GetNetworkSendInterval()
     {
