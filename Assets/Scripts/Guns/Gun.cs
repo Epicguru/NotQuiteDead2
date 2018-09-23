@@ -28,7 +28,13 @@ public class Gun : MonoBehaviour
     }
     private Item _item;
 
-    public CharacterDirection Direction;
+    public CharacterDirection Direction
+    {
+        get
+        {
+            return Item.Character.Direction;
+        }
+    }
 
     public int MagCapacity = 31;
     public int CurrentMagCount = 31;

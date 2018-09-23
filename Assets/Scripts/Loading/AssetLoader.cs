@@ -54,14 +54,16 @@ public class AssetLoader : MonoBehaviour
         if (!LoadedStatic)
         {
             LoadedStatic = false;
-
             List<KeyValuePair<string, Run>> actions = new List<KeyValuePair<string, Run>>();
-            //actions.Add(new KeyValuePair<string, Run>("Loading: Item Data...", () => { ItemData.LoadAll(); }));
+
+
+
+            actions.Add(new KeyValuePair<string, Run>("Loading: Items...", () => { Item.LoadAll(); }));
             actions.Add(new KeyValuePair<string, Run>("Loading: Commands...", () => { Commands.LoadCommands(); }));
 
 
-            int total = actions.Count;
 
+            int total = actions.Count;
             System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
             // Loop and execute...
             for (int i = 0; i < total; i++)
@@ -93,11 +95,14 @@ public class AssetLoader : MonoBehaviour
     {
         if (!LoadedStatic)
         {
-            // Item data...
-            //ItemData.UnloadAll();
+            // Items...
+            Item.UnloadAll();
 
             // Resources cleanup...
             Resources.UnloadUnusedAssets();
+
+            // Do some GC.
+            System.GC.Collect();
 
             LoadedStatic = false;
         }
@@ -156,6 +161,6 @@ public class AssetLoader : MonoBehaviour
 
     private static void OnGameSceneSetUp()
     {
-        //NetworkPrefabs.Apply();
+        NetManager.ApplyRegister();
     }
 }

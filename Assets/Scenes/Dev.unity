@@ -2272,6 +2272,8 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
+  StaticSpawnables:
+  - {fileID: 1439444052909760, guid: dc49216473d986a49ba7f379f9b6ef39, type: 2}
   PlayerCharacter: {fileID: 114915074816816788, guid: dc49216473d986a49ba7f379f9b6ef39,
     type: 2}
 --- !u!1 &1730076726

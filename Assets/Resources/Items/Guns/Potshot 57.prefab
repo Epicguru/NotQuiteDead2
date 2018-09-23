@@ -152,6 +152,7 @@ GameObject:
   - component: {fileID: 114026483565065032}
   - component: {fileID: 114876284534547122}
   - component: {fileID: 114999906132518422}
+  - component: {fileID: 114473268794353630}
   m_Layer: 0
   m_Name: Potshot 57
   m_TagString: Untagged
@@ -595,6 +596,20 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: AnimCallback, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   BehindUser: 0
+--- !u!114 &114473268794353630
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1504077745653444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bb0e046e30bf54dbae85cb6300d40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  _value: {fileID: 0}
+  NodeID: 0
 --- !u!114 &114824747387388440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -620,7 +635,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29043245161f3e4d95ac944a94350ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Direction: {fileID: 0}
   MagCapacity: 21
   CurrentMagCount: 21
   RPM: 900
@@ -650,7 +664,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd7dcc6a6c22334ab6b4c6f10a2550a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stored: 1
+  _id: 1
+  Name: Potshot 57
+  OnCharacter: 0
+  InHands: 0
 --- !u!114 &114999906132518422
 MonoBehaviour:
   m_ObjectHideFlags: 1

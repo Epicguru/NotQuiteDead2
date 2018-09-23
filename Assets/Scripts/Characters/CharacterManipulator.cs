@@ -31,14 +31,7 @@ public class CharacterManipulator : NetworkBehaviour
         set
         {
             // Should only be called on the server!
-            if (value == null)
-            {
-                CharacterRef.SetReference(0);
-            }
-            else
-            {
-                CharacterRef.SetReference(value.netId);
-            }
+            CharacterRef.SetReferenceObj(value);
         }
     }
 

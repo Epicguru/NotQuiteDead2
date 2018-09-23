@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 114305679169350772}
   - component: {fileID: 114219628125067138}
   - component: {fileID: 114078496996979128}
+  - component: {fileID: 114365495524768110}
   m_Layer: 0
   m_Name: Liberator
   m_TagString: Untagged
@@ -479,7 +480,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29043245161f3e4d95ac944a94350ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Direction: {fileID: 0}
   MagCapacity: 31
   CurrentMagCount: 31
   RPM: 600
@@ -522,6 +522,20 @@ MonoBehaviour:
     AngularVelocity: 30
     Lifetime: 3
     UseGravity: 1
+--- !u!114 &114365495524768110
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1488575997646286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bb0e046e30bf54dbae85cb6300d40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  _value: {fileID: 0}
+  NodeID: 0
 --- !u!114 &114389905233054960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -549,7 +563,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd7dcc6a6c22334ab6b4c6f10a2550a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stored: 1
+  _id: 0
+  Name: Liberator
+  OnCharacter: 0
+  InHands: 0
 --- !u!114 &114764360238821070
 MonoBehaviour:
   m_ObjectHideFlags: 1

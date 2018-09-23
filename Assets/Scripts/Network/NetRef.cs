@@ -78,6 +78,20 @@ public class NetRef : NetworkBehaviour
     [ReadOnly]
     private GameObject _value;
 
+    public override float GetNetworkSendInterval()
+    {
+        return 0f;
+    }
+
+    [Server]
+    public void SetReferenceObj<T>(T obj) where T : NetworkBehaviour
+    {
+        if (obj == null)
+            SetReference(0);
+        else
+            SetReference(obj.netId);
+    }
+
     [Server]
     public void SetReference(NetworkInstanceId id)
     {

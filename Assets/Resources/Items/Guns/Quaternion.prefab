@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 114482555599178892}
   - component: {fileID: 114040295745947240}
   - component: {fileID: 114220999441964400}
+  - component: {fileID: 114170467195988772}
   m_Layer: 0
   m_Name: Quaternion
   m_TagString: Untagged
@@ -326,6 +327,20 @@ MonoBehaviour:
     AngularVelocity: 30
     Lifetime: 1.5
     UseGravity: 1
+--- !u!114 &114170467195988772
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1352262281725914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bb0e046e30bf54dbae85cb6300d40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  _value: {fileID: 0}
+  NodeID: 0
 --- !u!114 &114220999441964400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -413,7 +428,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29043245161f3e4d95ac944a94350ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Direction: {fileID: 0}
   MagCapacity: 26
   CurrentMagCount: 26
   RPM: 1200
@@ -443,7 +457,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddd7dcc6a6c22334ab6b4c6f10a2550a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stored: 1
+  _id: 2
+  Name: Quaternion
+  OnCharacter: 0
+  InHands: 0
 --- !u!212 &212047440904532772
 SpriteRenderer:
   m_ObjectHideFlags: 1

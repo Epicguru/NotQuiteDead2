@@ -47,6 +47,8 @@ public class Character : NetworkBehaviour
     }
     private CharacterHandManager _hands;
 
+    public Item ToEquip;
+
     public bool HasHandManager
     {
         get
