@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-[RequireComponent(typeof(CharacterReference))]
+[RequireComponent(typeof(NetRef))]
 public class CharacterManipulator : NetworkBehaviour
 {
     // Essentially owns a character, which they can then control. Characters can actually be controlled and changed without
@@ -19,47 +19,39 @@ public class CharacterManipulator : NetworkBehaviour
         }
     }
 
-    private CharacterReference CharacterReference
-    {
-        get
-        {
-            if (_cr == null)
-                _cr = GetComponent<CharacterReference>();
-            return _cr;
-        }
-    }
-    private CharacterReference _cr;
-
     public Character Target
     {
         get
         {
-            return CharacterReference.GetCharacter();
+            var value = CharacterRef.Value;
+            if (value == null)
+                return null;
+            return value.GetComponent<Character>();
         }
         set
         {
-            // This should only ever be called on the server, but it should break anything major if it is called on a client.
-            // However it obviously won't work on a client.
-
-            var current = Target;
-
-            if (value == current)
-                return;
-
+            // Should only be called on the server!
             if (value == null)
             {
-                current.AssignManipulator(null);
+                CharacterRef.SetReference(0);
             }
             else
             {
-                if (current != null)
-                    current.AssignManipulator(null);
-                value.AssignManipulator(this);
+                CharacterRef.SetReference(value.netId);
             }
-            Debug.Log("Set to " + value.netId.Value);
-            CharacterReference.SetCharacter(value);
         }
     }
+
+    public NetRef CharacterRef
+    {
+        get
+        {
+            if (_ref == null)
+                _ref = GetComponent<NetRef>();
+            return _ref;
+        }
+    }
+    private NetRef _ref;
 
     public Player Player
     {

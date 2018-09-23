@@ -53,9 +53,6 @@ public class Player : NetworkBehaviour
             return;
 
         Local = this;
-
-        // Tell the camera to follow this player's character gameobject.
-        //MainCamera.Target = this.Manipulator.Target.transform;
     }
 
     public void Update()
@@ -64,6 +61,12 @@ public class Player : NetworkBehaviour
 
         if (!isLocalPlayer)
             return;
+
+        var c = Manipulator.Target;
+        if(c != null && MainCamera.Target != c)
+        {
+            MainCamera.Target = c.transform;
+        }
 
         // If we have a target to control, normally the player object...
         if(Manipulator.Target != null)

@@ -49,6 +49,7 @@ public class NetPosSync : NetworkBehaviour
 
     private void UpdateSending()
     {
+        // Only the authority can send to other nodes.
         if (!hasAuthority)
             return;
 
@@ -117,6 +118,11 @@ public class NetPosSync : NetworkBehaviour
             return;
         }
 
+        // Stop here if we have authority.
+        if (hasAuthority)
+            return;
+
+        // Code below will only be executed on clients that don't have authority.
         if (HasBody)
         {
             // Note that only velocities are applied constantly: the position and rotation are applied once received.

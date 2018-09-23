@@ -64,6 +64,7 @@ public static class BuildUtils
         options.scenes = scenes;
         options.targetGroup = BuildTargetGroup.Standalone;
         options.target = BuildTarget.StandaloneWindows64;
+        options.options = BuildOptions.Development;
 
         var report = BuildPipeline.BuildPlayer(options);
         EditorUtility.ClearProgressBar();
