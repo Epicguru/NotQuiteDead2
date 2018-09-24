@@ -1294,7 +1294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eaabd2409a18a64ab8002b3a18ed373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Events: {fileID: 0}
+  Events: {fileID: 1290124057}
   Bindings:
   - Name: Right
     Keys: 64000000
@@ -1310,6 +1310,16 @@ MonoBehaviour:
     Keys: 09000000
   - Name: Command Console
     Keys: 1a010000
+  - Name: Reload
+    Keys: 72000000
+  - Name: Check Chamber
+    Keys: 74000000
+  - Name: Check Magazine
+    Keys: 66000000
+  - Name: Shoot
+    Keys: 43010000
+  - Name: Aim
+    Keys: 44010000
 --- !u!1 &1251388953
 GameObject:
   m_ObjectHideFlags: 0

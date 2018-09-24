@@ -154,9 +154,14 @@ public class CharacterHandManager : NetworkBehaviour
         {
             Debug.LogWarning("Item '{0}' cannot be stored, it is already stored by this character ({1}) or another character!".Form(item.Name, name));
         }
+        else if (!item.Dropped)
+        {
+            Debug.LogWarning("Item '{0}' is not dropped, cannot store on this ({1}) character!".Form(item.Name, name));
+        }
         else
         {
             item.InHands = false;
+            item.Dropped = false;
             item.OnCharacter = true;
             item.NetParentSync.SetParent(this.HoldPoint);
             item.transform.localPosition = Vector3.zero;
@@ -167,14 +172,49 @@ public class CharacterHandManager : NetworkBehaviour
     [Server]
     public void EquipItem(Item item)
     {
-        // Assumes that the item is already on the character's body.
-        Debug.Log("Equipping item... " + item);
+        if(item == null)
+        {
+            Debug.LogError("Null item to equip!");
+            return;
+        }
+
+        if (item.Dropped)
+        {
+            Debug.LogError("Item '{0}' is dropped, cannot equip to charcter {1}!".Form(item.Name, name));
+            return;
+        }
+
+        if (item.InHands)
+            return;
+
+        //Debug.Log("Equipping item... " + item);
         Holding = item;
     }
 
     [Server]
     public void DequipCurrent()
     {
+        if (Holding == null)
+            return;
+
+        Holding = null;
+    }
+
+    [Server]
+    public void DropCurrent()
+    {
+        if (Holding == null)
+            return;
+
+        Holding.OnCharacter = false;
+        Holding.InHands = false;
+        Holding.Dropped = true;
+
+        if(currentlyHolding == Holding)
+        {
+            currentlyHolding = null;
+        }
+        Holding.NetParentSync.SetParent(null);
         Holding = null;
     }
 }
@@ -217,6 +257,60 @@ public static class HandCommands
         else
         {
             Commands.Log(RichText.InColour("Item not found stored on player. Check spelling, and make sure the item is already stored.", Color.red));
+        }
+    }
+
+    [DebugCommand("Dequips (stores) the currently held item on the local player.", GodModeOnly = true, ServerOnly = true)]
+    public static void DequipItem()
+    {
+        if (Player.Local == null)
+        {
+            Commands.Log(RichText.InColour("Local player not found!", Color.red));
+            return;
+        }
+
+        var target = Player.Local.Manipulator.Target;
+        if (target == null)
+        {
+            Commands.Log(RichText.InColour("Local player does not have control of any character!", Color.red));
+            return;
+        }
+
+        if(target.Hands.Holding == null)
+        {
+            Commands.Log("Nothing to dequip.");
+        }
+        else
+        {
+            Commands.Log("Dequipped the {0}.".Form(target.Hands.Holding.Name));
+            target.Hands.DequipCurrent();
+        }
+    }
+
+    [DebugCommand("Dequips (stores) the currently held item on the local player.", GodModeOnly = true, ServerOnly = true)]
+    public static void DropItem()
+    {
+        if (Player.Local == null)
+        {
+            Commands.Log(RichText.InColour("Local player not found!", Color.red));
+            return;
+        }
+
+        var target = Player.Local.Manipulator.Target;
+        if (target == null)
+        {
+            Commands.Log(RichText.InColour("Local player does not have control of any character!", Color.red));
+            return;
+        }
+
+        if (target.Hands.Holding == null)
+        {
+            Commands.Log("Nothing to drop.");
+        }
+        else
+        {
+            Commands.Log("Dropped the {0}.".Form(target.Hands.Holding.Name));
+            target.Hands.DropCurrent();
         }
     }
 }

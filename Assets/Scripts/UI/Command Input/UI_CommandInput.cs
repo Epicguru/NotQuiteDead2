@@ -40,7 +40,7 @@ public class UI_CommandInput : MonoBehaviour
         string typed = Input.text.Trim();
         bool isCmd = typed.StartsWith("/");
         
-        if(InputManager.IsDown("Complete Command"))
+        if(InputManager.IsDown("Complete Command", true))
         {
             if (isCmd && Suggestions.Matches.Count > 0)
             {
@@ -53,7 +53,7 @@ public class UI_CommandInput : MonoBehaviour
             }
         }
 
-        if(InputManager.IsDown("Enter Command"))
+        if(InputManager.IsDown("Enter Command", true))
         {
             if (isCmd)
             {

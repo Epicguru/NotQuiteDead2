@@ -53,12 +53,6 @@ public class Gun : MonoBehaviour
 
     public float AimTime = 0.15f;
 
-    public KeyCode ShootKey = KeyCode.Mouse0;
-    public KeyCode AimKey = KeyCode.Mouse1;
-    public KeyCode ReloadKey = KeyCode.R;
-    public KeyCode CheckMagKey = KeyCode.F;
-    public KeyCode CheckChamberKey = KeyCode.T;
-
     [HideInInspector]
     public HandPosition LeftHand, RightHand;
 
@@ -100,6 +94,13 @@ public class Gun : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (Item.Dropped)
+        {
+            // Animation state is managed in the Item class.
+            SortSprites(BEHIND_PLAYER_ID);
+            return;
+        }
+
         // Collect raw input. The input must then be validated.
         CollectInput();
 
@@ -205,11 +206,11 @@ public class Gun : MonoBehaviour
 
     public void CollectInput()
     {
-        Shoot = Input.GetKey(ShootKey);
-        Reload = Input.GetKeyDown(ReloadKey);
-        CheckMag = Input.GetKeyDown(CheckMagKey);
-        CheckChamber = Input.GetKeyDown(CheckChamberKey);
-        Aim = Input.GetKey(AimKey);
+        Shoot = InputManager.IsPressed("Shoot");
+        Reload = InputManager.IsDown("Reload");
+        CheckMag = InputManager.IsDown("Check Magazine");
+        CheckChamber = InputManager.IsDown("Check Chamber");
+        Aim = InputManager.IsPressed("Aim");
     }
 
     public void SortSprites(int targetLayerID)

@@ -28,6 +28,7 @@ public class UI_CommandWindow : MonoBehaviour, IDragHandler
         }
         Image.enabled = true;
         showing = true;
+        InputManager.Active = false;
     }
 
     public void OnRedX()
@@ -41,6 +42,7 @@ public class UI_CommandWindow : MonoBehaviour, IDragHandler
         }
         Image.enabled = false;
         showing = false;
+        InputManager.Active = true;
     }
 
     public void OnDrag(PointerEventData eventData)

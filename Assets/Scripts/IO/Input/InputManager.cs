@@ -5,6 +5,8 @@ public static class InputManager
 {
     private static Dictionary<string, KeyCode[]> bindings;
 
+    public static bool Active { get; set; } = true;
+
     public static Vector2 ScreenMousePos { get; private set; }
     public static Vector2 MousePos { get; private set; }
 
@@ -72,8 +74,11 @@ public static class InputManager
         Debug.Log(string.Format("Loaded {0} default key bindings, {1} current key bindings, and merged to create {2} bindings.", defNum, currentKeys.Count, defaultKeys.Count));
     }
 
-    public static bool IsPressed(string input)
+    public static bool IsPressed(string input, bool bypass = false)
     {
+        if (!Active && !bypass)
+            return false;
+
         if (string.IsNullOrWhiteSpace(input))
             return false;
 
@@ -98,8 +103,11 @@ public static class InputManager
         }
     }
 
-    public static bool IsDown(string input)
+    public static bool IsDown(string input, bool bypass = false)
     {
+        if (!Active && !bypass)
+            return false;
+
         if (string.IsNullOrWhiteSpace(input))
             return false;
 
@@ -124,8 +132,11 @@ public static class InputManager
         }
     }
 
-    public static bool IsUp(string input)
+    public static bool IsUp(string input, bool bypass = false)
     {
+        if (!Active && !bypass)
+            return false;
+
         if (string.IsNullOrWhiteSpace(input))
             return false;
 

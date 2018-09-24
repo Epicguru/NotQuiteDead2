@@ -8,7 +8,9 @@ using UnityEngine.Networking;
 public class Item : NetworkBehaviour
 {
     public const string STORED_NAME = "Stored";
+    public const string DROPPED_NAME = "Dropped";
     public static readonly int STORED_ID = Animator.StringToHash(STORED_NAME);
+    public static readonly int DROPPED_ID = Animator.StringToHash(DROPPED_NAME);
 
     private static Dictionary<ushort, Item> loaded = new Dictionary<ushort, Item>();
 
@@ -70,6 +72,10 @@ public class Item : NetworkBehaviour
     [SyncVar]
     public bool OnCharacter = false; // Is the item stored on the character's body, such as on their back or hip?
 
+    [SyncVar]
+    public bool Dropped = true; // Is the item dropped on the floor in the world? If it is, then it is expected that OnCharacter is false and InHands is also false.
+
+    // Is the item not dropped, on a character, but not in that character's hands?
     public bool Stored
     {
         get
@@ -139,6 +145,7 @@ public class Item : NetworkBehaviour
         if(Animator != null)
         {
             Animator.SetBool(STORED_ID, OnCharacter && !InHands);
+            Animator.SetBool(DROPPED_ID, Dropped);
         }
     }
 
@@ -155,6 +162,12 @@ public class Item : NetworkBehaviour
             return null;
     }
 
+    /// <summary>
+    /// Spawns a new item instance into the game world. The item by default is dropped on the floor (Dropped), is not on any character (!OnCharacter && !InHands).
+    /// </summary>
+    /// <param name="id">The item ID.</param>
+    /// <param name="position">The item position.</param>
+    /// <returns>The new item instance.</returns>
     [Server]
     public static Item Spawn(ushort id, Vector2 position)
     {
@@ -168,6 +181,10 @@ public class Item : NetworkBehaviour
         i.transform.position = position;
         i.transform.rotation = Quaternion.identity;
         i.transform.parent = null;
+
+        i.Dropped = true;
+        i.OnCharacter = false;
+        i.InHands = false;
 
         NetworkServer.Spawn(i.gameObject);
 

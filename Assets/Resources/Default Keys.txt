@@ -19,5 +19,20 @@
   ],
   "Command Console": [
     282
+  ],
+  "Reload": [
+    114
+  ],
+  "Check Chamber": [
+    116
+  ],
+  "Check Magazine": [
+    102
+  ],
+  "Shoot": [
+    323
+  ],
+  "Aim": [
+    324
   ]
 }
