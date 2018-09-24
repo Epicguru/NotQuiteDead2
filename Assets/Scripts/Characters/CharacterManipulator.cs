@@ -10,6 +10,8 @@ public class CharacterManipulator : NetworkBehaviour
     // being a character manipulator, but this is the formal way of doing things.
     // Normally attached to a player object or next to an AI script.
 
+    public static List<CharacterManipulator> All = new List<CharacterManipulator>();
+
     public bool IsBot { get; set; }
     public bool IsPlayer
     {
@@ -57,6 +59,18 @@ public class CharacterManipulator : NetworkBehaviour
     }
     private Player _player;
 
+    public void Awake()
+    {
+        if (!All.Contains(this))
+            All.Add(this);
+    }
+
+    public void OnDestroy()
+    {
+        if(All.Contains(this))
+            All.Remove(this);
+    }
+
     public Vector2 MovementDirection
     {
         get
@@ -79,5 +93,17 @@ public class CharacterManipulator : NetworkBehaviour
         {
             Target.Movement.CurrentSpeed = value;
         }
+    }
+
+    public static CharacterManipulator GetOwnerOf(Character c)
+    {
+        // Warning - this works, but is very expensive.
+        foreach (var item in All)
+        {
+            if (item.Target == c)
+                return item;
+        }
+
+        return null;
     }
 }

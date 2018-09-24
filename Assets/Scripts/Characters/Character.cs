@@ -57,17 +57,31 @@ public class Character : NetworkBehaviour
         }
     }
 
-    public CharacterManipulator Manipulator { get; private set; }
+    public CharacterManipulator Manipulator
+    {
+        get
+        {
+            if(_manipulator == null)
+            {
+                _manipulator = CharacterManipulator.GetOwnerOf(this);
+            }
+            else
+            {
+                if(_manipulator.Target != this)
+                {
+                    _manipulator = CharacterManipulator.GetOwnerOf(this);
+                }
+            }
+
+            return _manipulator;
+        }
+    }
+    private CharacterManipulator _manipulator;
     public bool IsControlled
     {
         get
         {
             return Manipulator != null;
         }
-    }
-
-    public void AssignManipulator(CharacterManipulator m)
-    {
-        Manipulator = m;
     }
 }
