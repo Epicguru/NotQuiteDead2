@@ -45,6 +45,9 @@ public class Gun : NetworkBehaviour
     [Header("Volatile")]
     [SyncVar] public int Ammo;
 
+    [Header("Debug")]
+    [SyncVar] public float Angle;
+
     [HideInInspector]
     public HandPosition LeftHand, RightHand;
 
@@ -56,6 +59,15 @@ public class Gun : NetworkBehaviour
                 return true;
             else
                 return Direction.Right;
+        }
+        set
+        {
+            if(Direction == null)
+            {
+                return;
+            }
+            if(Direction.Right != value) // TODO make the Direction class allow for cmd to be sent from client.
+                Direction.Right = value;
         }
     }
     private List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
@@ -97,20 +109,57 @@ public class Gun : NetworkBehaviour
         // Sort based on the current state. Normally driven by animation.
         SortSprites(CurrentlyBehindUser ? BEHIND_PLAYER_ID : IN_FRONT_OF_PLAYER_ID);
 
-        // If in control of the gun then:
-        // Take input.
-        // Aim.
-        // Shoot, reload, check mag... when requested.
-        // Otherwise:
-        // Play the same animations, point at the same angle.
+        bool dropped = Item.Dropped;
+        if (dropped) // If dropped (anywhere, on any network node) then stop execution here.
+            return;
 
-        if (isServer)
+        bool valid = Item.Character != null;
+        if (!valid)
+            return; // If the character is null (anywhere) then we can't do much with this item.
+
+        var man = Item.Character.Manipulator;
+        bool player = man.IsPlayer;
+        bool localPlayer = player && man.Player.isLocalPlayer;
+        bool auth = localPlayer ? true : (isServer && !player); // Auth means that the currnet network node (client, server, host) has control over this gun.
+
+        if (auth)
         {
+            // TODO take input.
+            // TODO validate input.
+            Aiming = true;
 
+            ValidateInput();
+            RotateToMouse();
+            LookToMouse();
         }
+        else
+        {
+            // Mimic what the server sees for this gun.
+            // No need to take or validate input.
+
+            // Lerp to sent angle.
+            LerpToAngle();
+        }
+
+        // Here, things to do regardless of the auth state.
+        Anim.Aiming = this.Aiming;
     }
 
-    private void UpdateRotation()
+    private void ValidateInput()
+    {
+        // Makes sure all the states are compatible and that the input is not contradicting state.
+        if (Item.Dropped || !Item.InHands)
+            Aiming = false;
+    }
+
+    private void LerpToAngle()
+    {
+        var rot = transform.localEulerAngles;
+        rot.z = Mathf.LerpAngle(rot.z, Angle, Time.deltaTime * 15f);
+        transform.localEulerAngles = rot;
+    }
+
+    private void RotateToMouse()
     {
         // Sets the rotation of this gun to point towards the mouse.
         Vector2 mouseOffset = InputManager.MousePos - (Vector2)transform.position;
@@ -137,6 +186,27 @@ public class Gun : NetworkBehaviour
         var a = transform.localEulerAngles;
         a.z = finalAngle;
         transform.localEulerAngles = a;
+
+        // If on the server, send the angle directly to all other clients through the SyncVar.
+        // Otherwise it will have to sent through commands.
+        if (isServer)
+        {
+            Angle = finalAngle;
+        }
+    }
+
+    private void LookToMouse()
+    {
+        // Works on both server and clients!
+        Vector2 mouseOffset = InputManager.MousePos - (Vector2)transform.position;
+        if(mouseOffset.x >= 0f && Aiming)
+        {
+            Right = true;
+        }
+        else if(Aiming)
+        {
+            Right = false;
+        }
     }
 
     public void SortSprites(int targetLayerID)
