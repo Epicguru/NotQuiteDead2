@@ -108,6 +108,7 @@ public class Gun : NetworkBehaviour
     {        
         // Sort based on the current state. Normally driven by animation.
         SortSprites(CurrentlyBehindUser ? BEHIND_PLAYER_ID : IN_FRONT_OF_PLAYER_ID);
+        transform.localScale = Vector3.one;
 
         bool dropped = Item.Dropped;
         if (dropped) // If dropped (anywhere, on any network node) then stop execution here.

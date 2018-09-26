@@ -44,24 +44,20 @@ public class NetParentSync : NetRef
         }
 
         var obj = base.Value;
-        if(transform.parent != obj.transform)
-        {
-            transform.parent = obj.transform;
-        }
 
         // Object is null but we have a ref value. Wait until the object is found.
         if (obj == null)
             return;
 
-        var node = GetComponentInParent<NetParentNode>();
+        var currentNode = GetComponentInParent<NetParentNode>();
         bool findCorrect = false;
-        if(node == null)
+        if(currentNode == null)
         {
             findCorrect = true;
         }
         else
         {
-            if(node.ID != NodeID)
+            if(currentNode.ID != NodeID)
             {
                 // Not on the right node.
                 findCorrect = true;
@@ -71,7 +67,7 @@ public class NetParentSync : NetRef
         if (!findCorrect)
             return;
 
-        var nodes = GetComponentsInParent<NetParentNode>();
+        var nodes = obj.GetComponentsInChildren<NetParentNode>();
         NetParentNode found = null;
         foreach (var item in nodes)
         {
