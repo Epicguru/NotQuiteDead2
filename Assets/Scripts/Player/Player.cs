@@ -1,31 +1,25 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 [RequireComponent(typeof(CharacterManipulator))]
-public class Player : NetworkBehaviour
+public class Player : MonoBehaviour
 {
     // This is NOT a character!
-    // The player class sits on an empty game object and is created when a player joins the game.
+    // The player class sits on an empty game object and is created when the player starts the game session.
     // It can control characters: normally it only controls it's own player object.
 
-    public static List<Player> All = new List<Player>();
-    public static Player Local;
-
-    public string Name
+    public static Player Instance;
+    public static Character Character
     {
         get
         {
-            return _name;
-        }
-        set
-        {
-            this._name = value;
+            return Instance.Manipulator.Target;
         }
     }
-    [SyncVar]
-    private string _name;
+
+    [SerializeField]
+    public string Name = "Bob";
 
     public CharacterManipulator Manipulator
     {
@@ -40,27 +34,12 @@ public class Player : NetworkBehaviour
 
     public void Awake()
     {
-        if (!All.Contains(this))
-        {
-            All.Add(this);
-        }
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-        // Double ultra check.
-        if (!isLocalPlayer)
-            return;
-
-        Local = this;
+        Instance = this;
     }
 
     public void Update()
     {
         this.name = Name;
-
-        if (!isLocalPlayer)
-            return;
 
         var c = Manipulator.Target;
         if(c != null && MainCamera.Target != c)
@@ -86,11 +65,5 @@ public class Player : NetworkBehaviour
             // Send this raw input to the movement controller.
             Manipulator.MovementDirection = rawInput;
         }
-    }
-
-    public void OnDestroy()
-    {
-        if(All.Contains(this))
-            All.Remove(this);
     }
 }

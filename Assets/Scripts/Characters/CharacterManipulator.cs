@@ -1,10 +1,8 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-[RequireComponent(typeof(NetRef))]
-public class CharacterManipulator : NetworkBehaviour
+public class CharacterManipulator : MonoBehaviour
 {
     // Essentially owns a character, which they can then control. Characters can actually be controlled and changed without
     // being a character manipulator, but this is the formal way of doing things.
@@ -23,30 +21,10 @@ public class CharacterManipulator : NetworkBehaviour
 
     public Character Target
     {
-        get
-        {
-            var value = CharacterRef.Value;
-            if (value == null)
-                return null;
-            return value.GetComponent<Character>();
-        }
-        set
-        {
-            // Should only be called on the server!
-            CharacterRef.SetReferenceObj(value);
-        }
+        // TODO assign the Manipulator to the target here.
+        get;
+        set;
     }
-
-    public NetRef CharacterRef
-    {
-        get
-        {
-            if (_ref == null)
-                _ref = GetComponent<NetRef>();
-            return _ref;
-        }
-    }
-    private NetRef _ref;
 
     public Player Player
     {

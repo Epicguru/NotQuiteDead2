@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 [RequireComponent(typeof(Character))]
-public class CharacterDirection : NetworkBehaviour
+public class CharacterDirection : MonoBehaviour
 {
     public Character Character
     {
@@ -25,31 +24,20 @@ public class CharacterDirection : NetworkBehaviour
         }
         set
         {
-            if (value != _right)
+            if(value != _right)
             {
                 _right = value;
+                UpdateScale(_right);
             }
         }
     }
-    [SyncVar] private bool _right = true;
-
-    // Local to every client.
-    private bool localRight = false;
+    private bool _right;
 
     public float ScaleMagnitude = 1f;
 
     public void Start()
     {
         UpdateScale(Right);
-    }
-
-    public void Update()
-    {
-        if(localRight != Right)
-        {
-            localRight = Right;
-            UpdateScale(Right);
-        }
     }
 
     public void UpdateScale(bool right)

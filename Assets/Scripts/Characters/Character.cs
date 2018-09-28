@@ -1,10 +1,9 @@
 ﻿
 using UnityEngine;
-using UnityEngine.Networking;
 
 [RequireComponent(typeof(CharacterDirection))]
 [RequireComponent(typeof(CharacterMovement))]
-public class Character : NetworkBehaviour
+public class Character : MonoBehaviour
 {
     // A character is a humanoid actor in the world.
     // A character can do everything the player can do - because the player object is just another character.

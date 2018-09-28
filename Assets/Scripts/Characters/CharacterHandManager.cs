@@ -1,40 +1,15 @@
 ﻿
 using UnityEngine;
-using UnityEngine.Networking;
 
-[RequireComponent(typeof(NetRef))]
-public class CharacterHandManager : NetworkBehaviour
+public class CharacterHandManager : MonoBehaviour
 {
     // Manages items on the character's body that can be equipped into the hands, as well as the actual object in the hands.
     // Does not manage armour or anything like that.
 
     // The currently held item. A held item is, unsuprisingly, held in the hands as opposed to just
     // sitting somewhere on the characters body.
-    public Item Holding
-    {
-        get
-        {
-            var value = NetRef.Value;
-            if (value == null)
-                return null;
-            return value.GetComponent<Item>();
-        }
-        set
-        {
-            NetRef.SetReferenceObj(value);
-        }
-    }
+    public Item Holding;
 
-    public NetRef NetRef
-    {
-        get
-        {
-            if (_netRef == null)
-                _netRef = GetComponent<NetRef>();
-            return _netRef;
-        }
-    }
-    private NetRef _netRef;
 
     // The item that is really held by the character. Unlike Holding, this value is hidden.
     // This is used to remove items from the character hands with correct animations and interpolation.
@@ -42,7 +17,7 @@ public class CharacterHandManager : NetworkBehaviour
     private Item currentlyHolding;
 
     [Header("References")]
-    public NetParentNode HoldPoint;
+    public Transform HoldPoint;
     public HandTracker Left;
     public HandTracker Right;
 
@@ -143,8 +118,7 @@ public class CharacterHandManager : NetworkBehaviour
     /// Grabs an item in the game world and places it on the character. It is NOT put into the character's hands.
     /// See EquipItem to put a stored item into the hands.
     /// </summary>
-    /// <param name="item">The existing, net spawned, item.</param>
-    [Server]
+    /// <param name="item">The existing, spawned, item.</param>
     public void StoreItem(Item item)
     {
         if (item == null)
@@ -163,13 +137,12 @@ public class CharacterHandManager : NetworkBehaviour
             item.InHands = false;
             item.Dropped = false;
             item.OnCharacter = true;
-            item.NetParentSync.SetParent(this.HoldPoint);
+            item.transform.SetParent(this.HoldPoint);
             item.transform.localPosition = Vector3.zero;
             item.transform.localRotation = Quaternion.identity;
         }
     }
 
-    [Server]
     public void EquipItem(Item item)
     {
         if(item == null)
@@ -191,7 +164,6 @@ public class CharacterHandManager : NetworkBehaviour
         Holding = item;
     }
 
-    [Server]
     public void DequipCurrent()
     {
         if (Holding == null)
@@ -200,7 +172,6 @@ public class CharacterHandManager : NetworkBehaviour
         Holding = null;
     }
 
-    [Server]
     public void DropCurrent()
     {
         if (Holding == null)
@@ -214,29 +185,23 @@ public class CharacterHandManager : NetworkBehaviour
         {
             currentlyHolding = null;
         }
-        Holding.NetParentSync.SetParent(null);
+        Holding.transform.SetParent(null);
         Holding = null;
     }
 }
 
 public static class HandCommands
 {
-    [DebugCommand("On the local player, put the item into their hands. Assumes that the item is already stored on their body.", GodModeOnly = true, ServerOnly = true, Parameters = "STRING:name:The name of the item to equip.")]
+    [DebugCommand("On the player, put the item into their hands. Assumes that the item is already stored on their body.", GodModeOnly = true, Parameters = "STRING:name:The name of the item to equip.")]
     public static void EquipItem(string name)
     {
-        if (Player.Local == null)
+        if (Player.Character == null)
         {
-            Commands.Log(RichText.InColour("Local player not found!", Color.red));
+            Commands.Log(RichText.InColour("Player does not have control of any character!", Color.red));
             return;
         }
 
-        if (Player.Local.Manipulator.Target == null)
-        {
-            Commands.Log(RichText.InColour("Local player does not have control of any character!", Color.red));
-            return;
-        }
-
-        var parent = Player.Local.Manipulator.Target.Hands.HoldPoint.transform;
+        var parent = Player.Character.Hands.HoldPoint.transform;
 
         var items = parent.GetComponentsInChildren<Item>();
         Item found = null;
@@ -251,7 +216,7 @@ public static class HandCommands
 
         if (found != null)
         {
-            Player.Local.Manipulator.Target.Hands.EquipItem(found);
+            Player.Character.Hands.EquipItem(found);
             Commands.Log("Equipped item '{0}'.".Form(found.Name));
         }
         else
@@ -260,43 +225,31 @@ public static class HandCommands
         }
     }
 
-    [DebugCommand("Dequips (stores) the currently held item on the local player.", GodModeOnly = true, ServerOnly = true)]
+    [DebugCommand("Dequips (stores) the currently held item on the player.", GodModeOnly = true)]
     public static void DequipItem()
     {
-        if (Player.Local == null)
+        if (Player.Character == null)
         {
-            Commands.Log(RichText.InColour("Local player not found!", Color.red));
+            Commands.Log(RichText.InColour("Player does not have control of any character!", Color.red));
             return;
         }
 
-        var target = Player.Local.Manipulator.Target;
-        if (target == null)
-        {
-            Commands.Log(RichText.InColour("Local player does not have control of any character!", Color.red));
-            return;
-        }
-
-        if(target.Hands.Holding == null)
+        if(Player.Character.Hands.Holding == null)
         {
             Commands.Log("Nothing to dequip.");
         }
         else
         {
-            Commands.Log("Dequipped the {0}.".Form(target.Hands.Holding.Name));
-            target.Hands.DequipCurrent();
+            Commands.Log("Dequipped the {0}.".Form(Player.Character.Hands.Holding.Name));
+            Player.Character.Hands.DequipCurrent();
         }
     }
 
-    [DebugCommand("Dequips (stores) the currently held item on the local player.", GodModeOnly = true, ServerOnly = true)]
+    [DebugCommand("Dequips (stores) the currently held item on the player.", GodModeOnly = true)]
     public static void DropItem()
     {
-        if (Player.Local == null)
-        {
-            Commands.Log(RichText.InColour("Local player not found!", Color.red));
-            return;
-        }
 
-        var target = Player.Local.Manipulator.Target;
+        var target = Player.Character;
         if (target == null)
         {
             Commands.Log(RichText.InColour("Local player does not have control of any character!", Color.red));

@@ -64,6 +64,7 @@ public static class Commands
         {
             UI_CommandInput.Instance.Output.Log(output.Trim());
         }
+        Debug.Log("[CMD] {0}".Form(output.Trim()));
     }
 
     public static List<SortedCommandName> GetAutocompleteCommand(string current)

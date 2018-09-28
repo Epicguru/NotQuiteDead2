@@ -1,11 +1,10 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 [RequireComponent(typeof(Item))]
 [RequireComponent(typeof(GunAnimator))]
-public class Gun : NetworkBehaviour
+public class Gun : MonoBehaviour
 {
     public GunAnimator Anim
     {
@@ -40,13 +39,13 @@ public class Gun : NetworkBehaviour
 
     [Header("State")] 
     public bool CurrentlyBehindUser = false; // When equipped on the player, are all the sprites sorted behind the player?
-    [SyncVar] public bool Aiming;
+    public bool Aiming;
 
     [Header("Volatile")]
-    [SyncVar] public int Ammo;
+    public int Ammo;
 
     [Header("Debug")]
-    [SyncVar] public float Angle;
+    public float Angle;
 
     [HideInInspector]
     public HandPosition LeftHand, RightHand;
@@ -118,29 +117,12 @@ public class Gun : NetworkBehaviour
         if (!valid)
             return; // If the character is null (anywhere) then we can't do much with this item.
 
-        var man = Item.Character.Manipulator;
-        bool player = man.IsPlayer;
-        bool localPlayer = player && man.Player.isLocalPlayer;
-        bool auth = localPlayer ? true : (isServer && !player); // Auth means that the currnet network node (client, server, host) has control over this gun.
+        // TODO take input.
+        Aiming = true;
 
-        if (auth)
-        {
-            // TODO take input.
-            // TODO validate input.
-            Aiming = true;
-
-            ValidateInput();
-            RotateToMouse();
-            LookToMouse();
-        }
-        else
-        {
-            // Mimic what the server sees for this gun.
-            // No need to take or validate input.
-
-            // Lerp to sent angle.
-            LerpToAngle();
-        }
+        ValidateInput();
+        RotateToMouse();
+        LookToMouse();
 
         // Here, things to do regardless of the auth state.
         Anim.Aiming = this.Aiming;
@@ -151,13 +133,6 @@ public class Gun : NetworkBehaviour
         // Makes sure all the states are compatible and that the input is not contradicting state.
         if (Item.Dropped || !Item.InHands)
             Aiming = false;
-    }
-
-    private void LerpToAngle()
-    {
-        var rot = transform.localEulerAngles;
-        rot.z = Mathf.LerpAngle(rot.z, Angle, Time.deltaTime * 15f);
-        transform.localEulerAngles = rot;
     }
 
     private void RotateToMouse()
@@ -187,13 +162,6 @@ public class Gun : NetworkBehaviour
         var a = transform.localEulerAngles;
         a.z = finalAngle;
         transform.localEulerAngles = a;
-
-        // If on the server, send the angle directly to all other clients through the SyncVar.
-        // Otherwise it will have to sent through commands.
-        if (isServer)
-        {
-            Angle = finalAngle;
-        }
     }
 
     private void LookToMouse()

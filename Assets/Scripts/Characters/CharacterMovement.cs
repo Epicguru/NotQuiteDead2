@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 [RequireComponent(typeof(Character))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CharacterDirection))]
-public class CharacterMovement : NetworkBehaviour
-{ 
+public class CharacterMovement : MonoBehaviour
+{
     public Animator Animator;
     public string RunningBool = "Running";
 
@@ -22,7 +21,7 @@ public class CharacterMovement : NetworkBehaviour
     }
     private Character _character;
 
-	public Rigidbody2D Body
+    public Rigidbody2D Body
     {
         get
         {
@@ -44,36 +43,26 @@ public class CharacterMovement : NetworkBehaviour
     }
     private CharacterDirection _direction;
 
-    [SyncVar] public Vector2 NormalizedInputDirection;
-    [SyncVar] public float CurrentSpeed = 10f;
+    public Vector2 NormalizedInputDirection;
+    public float CurrentSpeed = 10f;
 
     public void Update()
     {
+        // Speed cannot be less than zero...
+        CurrentSpeed = Mathf.Max(0f, CurrentSpeed);
 
-        // Only done on authority (may be server, may be client)
-        if (hasAuthority)
-        {
-            // Speed cannot be less than zero...
-            CurrentSpeed = Mathf.Max(0f, CurrentSpeed);
+        Body.velocity = NormalizedInputDirection.normalized * CurrentSpeed;
 
-            Body.velocity = NormalizedInputDirection.normalized * CurrentSpeed;
-        }
+        // On the server, do the actual velocity application.
 
-        // Things only done on the server.
-        if (isServer)
-        {
-            // On the server, do the actual velocity application.
+        // Change character direction based on weather we are moving left or right, and weather there is a item being held.
+        // TODO use item input or other inputs that can override this default behaviour.
+        if (Body.velocity.x != 0f)
+            Direction.Right = Body.velocity.x > 0f;
 
-            // Change character direction based on weather we are moving left or right, and weather there is a item being held.
-            // TODO use item input or other inputs that can override this default behaviour.
-            if (Body.velocity.x != 0f)
-                Direction.Right = Body.velocity.x > 0f;
-        }
-
-        // Below, do things that will run on both server and all clients.
 
         // Update the character animator. It may be more complex than the default implementation, but it will at least have the running bool.
-        if(Animator != null)
+        if (Animator != null)
         {
             Animator.SetBool(RunningBool, Body.velocity != Vector2.zero);
         }

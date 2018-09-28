@@ -83,11 +83,11 @@ public class GunAnimator : MonoBehaviour
 
     public void AnimationCallback(AnimationEvent e)
     {
-        if(e.stringParameter == SHOOT_CALLBACK && Gun.isServer)
+        if(e.stringParameter == SHOOT_CALLBACK)
         {
             Gun.Ammo--;
         }
-        if(e.stringParameter == RELOAD_CALLBACK && Gun.isServer)
+        if(e.stringParameter == RELOAD_CALLBACK)
         {
             Reloading = false;
             Gun.Ammo = Gun.Info.MagCapacity;

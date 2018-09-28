@@ -2,10 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-[RequireComponent(typeof(NetParentSync))]
-public class Item : NetworkBehaviour
+public class Item : MonoBehaviour
 {
     public const string STORED_NAME = "Stored";
     public const string DROPPED_NAME = "Dropped";
@@ -34,17 +32,6 @@ public class Item : NetworkBehaviour
     }
     private Character _char;
 
-    public NetParentSync NetParentSync
-    {
-        get
-        {
-            if (_netPSync == null)
-                _netPSync = GetComponent<NetParentSync>();
-            return _netPSync;
-        }
-    }
-    private NetParentSync _netPSync;
-
     public Animator Animator
     {
         get
@@ -69,10 +56,8 @@ public class Item : NetworkBehaviour
     public string Name = "Default Name";
 
     [Header("State")]
-    [SyncVar]
     public bool OnCharacter = false; // Is the item stored on the character's body, such as on their back or hip?
 
-    [SyncVar]
     public bool Dropped = true; // Is the item dropped on the floor in the world? If it is, then it is expected that OnCharacter is false and InHands is also false.
 
     // Is the item not dropped, on a character, but not in that character's hands?
@@ -84,7 +69,6 @@ public class Item : NetworkBehaviour
         }
     }
 
-    [SyncVar]
     public bool InHands = false; // Assuming that OnCharacter is true, is the item in the character's hands?
 
     public HandPosition RightHand
@@ -168,7 +152,6 @@ public class Item : NetworkBehaviour
     /// <param name="id">The item ID.</param>
     /// <param name="position">The item position.</param>
     /// <returns>The new item instance.</returns>
-    [Server]
     public static Item Spawn(ushort id, Vector2 position)
     {
         if (!IsLoaded(id))
@@ -185,8 +168,6 @@ public class Item : NetworkBehaviour
         i.Dropped = true;
         i.OnCharacter = false;
         i.InHands = false;
-
-        NetworkServer.Spawn(i.gameObject);
 
         return i;
     }
@@ -208,7 +189,6 @@ public class Item : NetworkBehaviour
             else
             {
                 loaded.Add(id, item);
-                NetManager.Register(item.gameObject);
 
                 if(id > highest)
                 {

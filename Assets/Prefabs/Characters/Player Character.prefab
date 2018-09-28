@@ -135,8 +135,6 @@ GameObject:
   - component: {fileID: 114920514181259798}
   - component: {fileID: 50232824126036476}
   - component: {fileID: 114557919098514522}
-  - component: {fileID: 114396289241169164}
-  - component: {fileID: 114125253058680222}
   m_Layer: 0
   m_Name: Player Character
   m_TagString: Untagged
@@ -670,22 +668,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9ae6eca3d5e3945888150ce55a17a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Holding: {fileID: 0}
   HoldPoint: {fileID: 114002198751589716}
   Left: {fileID: 114402141805072062}
   Right: {fileID: 114441815993425974}
---- !u!114 &114125253058680222
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1439444052909760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ddb1f17834ff644f9bab65e1d572506, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: 0
-  _value: {fileID: 0}
 --- !u!114 &114192178853322326
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -701,19 +687,6 @@ MonoBehaviour:
   RunningBool: Running
   NormalizedInputDirection: {x: 0, y: 0}
   CurrentSpeed: 7
---- !u!114 &114396289241169164
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1439444052909760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da7aebedab549c34885988cc366678ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UPS: 20
-  LerpSpeed: 10
 --- !u!114 &114402141805072062
 MonoBehaviour:
   m_ObjectHideFlags: 1

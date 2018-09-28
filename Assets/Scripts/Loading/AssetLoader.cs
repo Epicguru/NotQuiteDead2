@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.Networking.Match;
 using UnityEngine.SceneManagement;
 
 public class AssetLoader : MonoBehaviour
@@ -13,21 +12,6 @@ public class AssetLoader : MonoBehaviour
     public UI_LoadingMenu UI;
     public string GameScene;
 
-    public bool AutoNetworkStart = true;
-
-    [Header("Network")]
-    public bool Server;
-    public bool Client;
-    public bool Host
-    {
-        get
-        {
-            return Client && Server;
-        }
-    }
-
-    public string IP = "localhost";
-    public int Port = 7777;
     [ReadOnly]
     public bool LoadedStatic = false;
 
@@ -118,49 +102,11 @@ public class AssetLoader : MonoBehaviour
             UI.Percentage = op.progress;
             yield return null;
         }
-
-        if (!AutoNetworkStart)
-        {
-            OnGameSceneSetUp();
-            yield break;
-        }
-
-        // Start as host.
-        var net = FindObjectOfType<NetManager>();
-        if (net == null)
-        {
-            Debug.LogError("Could not find network manager!");
-        }
-        else
-        {
-            net.networkPort = this.Port;
-            if (Host)
-            {
-                net.StartHost();
-                Debug.Log("Started game as host on port {0} ...".Form(net.networkPort));
-            }
-            else if (Server)
-            {
-                net.StartServer();
-                Debug.Log("Started game as standalone server on port {0} ...".Form(net.networkPort));
-            }
-            else if (Client)
-            {
-                net.networkAddress = this.IP;
-                net.StartClient();
-                Debug.Log("Started game as client connected to remote {0} on {1}".Form(net.networkAddress, net.networkPort));
-            }
-            else
-            {
-                Debug.LogError("Impropper network setup, neither client nor server!");
-            }
-
-            OnGameSceneSetUp();
-        }
+        OnGameSceneSetUp();        
     }
 
     private static void OnGameSceneSetUp()
     {
-        NetManager.ApplyRegister();
+        // Code here is run after the scene has finished loading...
     }
 }
