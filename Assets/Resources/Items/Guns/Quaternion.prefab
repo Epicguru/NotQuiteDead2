@@ -54,8 +54,6 @@ GameObject:
   - component: {fileID: 114545918782971624}
   - component: {fileID: 114482555599178892}
   - component: {fileID: 114040295745947240}
-  - component: {fileID: 114220999441964400}
-  - component: {fileID: 114170467195988772}
   m_Layer: 0
   m_Name: Quaternion
   m_TagString: Untagged
@@ -327,52 +325,6 @@ MonoBehaviour:
     AngularVelocity: 30
     Lifetime: 1.5
     UseGravity: 1
---- !u!114 &114170467195988772
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1352262281725914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1bb0e046e30bf54dbae85cb6300d40e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: 0
-  _value: {fileID: 0}
-  NodeID: 0
---- !u!114 &114220999441964400
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1352262281725914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 157
-    i1: 14
-    i2: 17
-    i3: 47
-    i4: 69
-    i5: 113
-    i6: 192
-    i7: 52
-    i8: 217
-    i9: 148
-    i10: 71
-    i11: 12
-    i12: 75
-    i13: 142
-    i14: 242
-    i15: 46
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!114 &114224732942933152
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -428,22 +380,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29043245161f3e4d95ac944a94350ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MagCapacity: 26
-  CurrentMagCount: 26
-  RPM: 1200
-  Shoot: 0
-  Reload: 0
-  CheckMag: 0
-  CheckChamber: 0
-  Aim: 0
+  Info:
+    AimTime: 0.3
+    MagCapacity: 30
   CurrentlyBehindUser: 0
-  AllowCheckingWhenChamberEmpty: 1
-  AimTime: 0.15
-  ShootKey: 323
-  AimKey: 324
-  ReloadKey: 114
-  CheckMagKey: 102
-  CheckChamberKey: 116
+  Aiming: 0
+  Ammo: 0
+  Angle: 0
   LeftHand: {fileID: 0}
   RightHand: {fileID: 0}
 --- !u!114 &114545918782971624
@@ -460,6 +403,7 @@ MonoBehaviour:
   _id: 2
   Name: Quaternion
   OnCharacter: 0
+  Dropped: 1
   InHands: 0
 --- !u!212 &212047440904532772
 SpriteRenderer:

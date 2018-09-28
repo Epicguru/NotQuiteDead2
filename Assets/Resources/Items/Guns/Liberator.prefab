@@ -86,8 +86,6 @@ GameObject:
   - component: {fileID: 114604427601605072}
   - component: {fileID: 114305679169350772}
   - component: {fileID: 114219628125067138}
-  - component: {fileID: 114078496996979128}
-  - component: {fileID: 114365495524768110}
   m_Layer: 0
   m_Name: Liberator
   m_TagString: Untagged
@@ -437,38 +435,6 @@ MonoBehaviour:
   Hand: 0
   BehindItem: 0
   Flipped: 0
---- !u!114 &114078496996979128
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1488575997646286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 218
-    i1: 248
-    i2: 210
-    i3: 217
-    i4: 146
-    i5: 71
-    i6: 210
-    i7: 132
-    i8: 11
-    i9: 184
-    i10: 29
-    i11: 152
-    i12: 142
-    i13: 143
-    i14: 75
-    i15: 211
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!114 &114219628125067138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -480,22 +446,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29043245161f3e4d95ac944a94350ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MagCapacity: 31
-  CurrentMagCount: 31
-  RPM: 600
-  Shoot: 0
-  Reload: 0
-  CheckMag: 0
-  CheckChamber: 0
-  Aim: 0
+  Info:
+    AimTime: 0.3
+    MagCapacity: 30
   CurrentlyBehindUser: 0
-  AllowCheckingWhenChamberEmpty: 1
-  AimTime: 0.15
-  ShootKey: 323
-  AimKey: 324
-  ReloadKey: 114
-  CheckMagKey: 102
-  CheckChamberKey: 116
+  Aiming: 0
+  Ammo: 0
+  Angle: 0
   LeftHand: {fileID: 0}
   RightHand: {fileID: 0}
 --- !u!114 &114305679169350772
@@ -522,20 +479,6 @@ MonoBehaviour:
     AngularVelocity: 30
     Lifetime: 3
     UseGravity: 1
---- !u!114 &114365495524768110
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1488575997646286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1bb0e046e30bf54dbae85cb6300d40e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: 0
-  _value: {fileID: 0}
-  NodeID: 0
 --- !u!114 &114389905233054960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -566,6 +509,7 @@ MonoBehaviour:
   _id: 0
   Name: Liberator
   OnCharacter: 0
+  Dropped: 1
   InHands: 0
 --- !u!114 &114764360238821070
 MonoBehaviour:

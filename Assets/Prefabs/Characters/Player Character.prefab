@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 114013370356569680}
   - component: {fileID: 114920514181259798}
   - component: {fileID: 50232824126036476}
-  - component: {fileID: 114557919098514522}
   m_Layer: 0
   m_Name: Player Character
   m_TagString: Untagged
@@ -229,7 +228,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4530455415879542}
-  - component: {fileID: 114002198751589716}
   m_Layer: 0
   m_Name: Item Hold Point
   m_TagString: Untagged
@@ -645,18 +643,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114002198751589716
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1752554196744960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd93cfe7b7f59cb4c95f09cd594d96f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: 0
 --- !u!114 &114013370356569680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -669,7 +655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Holding: {fileID: 0}
-  HoldPoint: {fileID: 114002198751589716}
+  HoldPoint: {fileID: 4530455415879542}
   Left: {fileID: 114402141805072062}
   Right: {fileID: 114441815993425974}
 --- !u!114 &114192178853322326
@@ -779,38 +765,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScaleMagnitude: 1
---- !u!114 &114557919098514522
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1439444052909760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 220
-    i1: 73
-    i2: 33
-    i3: 100
-    i4: 115
-    i5: 217
-    i6: 134
-    i7: 164
-    i8: 155
-    i9: 167
-    i10: 243
-    i11: 121
-    i12: 249
-    i13: 182
-    i14: 239
-    i15: 57
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114915074816816788
 MonoBehaviour:
   m_ObjectHideFlags: 1

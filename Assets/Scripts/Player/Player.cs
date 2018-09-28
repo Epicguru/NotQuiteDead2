@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     public string Name = "Bob";
+    public Character CharacterPrefab;
 
     public CharacterManipulator Manipulator
     {
@@ -35,6 +36,10 @@ public class Player : MonoBehaviour
     public void Awake()
     {
         Instance = this;
+        Character spawned = Instantiate(CharacterPrefab);
+        spawned.transform.position = Vector3.zero;
+        spawned.transform.rotation = Quaternion.identity;
+        Manipulator.Target = spawned;
     }
 
     public void Update()

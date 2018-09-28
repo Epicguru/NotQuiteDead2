@@ -151,8 +151,6 @@ GameObject:
   - component: {fileID: 114995358675479262}
   - component: {fileID: 114026483565065032}
   - component: {fileID: 114876284534547122}
-  - component: {fileID: 114999906132518422}
-  - component: {fileID: 114473268794353630}
   m_Layer: 0
   m_Name: Potshot 57
   m_TagString: Untagged
@@ -596,20 +594,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: AnimCallback, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   BehindUser: 0
---- !u!114 &114473268794353630
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1504077745653444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1bb0e046e30bf54dbae85cb6300d40e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ID: 0
-  _value: {fileID: 0}
-  NodeID: 0
 --- !u!114 &114824747387388440
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -635,22 +619,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29043245161f3e4d95ac944a94350ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MagCapacity: 21
-  CurrentMagCount: 21
-  RPM: 900
-  Shoot: 0
-  Reload: 0
-  CheckMag: 0
-  CheckChamber: 0
-  Aim: 0
+  Info:
+    AimTime: 0.3
+    MagCapacity: 30
   CurrentlyBehindUser: 0
-  AllowCheckingWhenChamberEmpty: 0
-  AimTime: 0.15
-  ShootKey: 323
-  AimKey: 324
-  ReloadKey: 114
-  CheckMagKey: 102
-  CheckChamberKey: 116
+  Aiming: 0
+  Ammo: 0
+  Angle: 0
   LeftHand: {fileID: 0}
   RightHand: {fileID: 0}
 --- !u!114 &114995358675479262
@@ -667,39 +642,8 @@ MonoBehaviour:
   _id: 1
   Name: Potshot 57
   OnCharacter: 0
+  Dropped: 1
   InHands: 0
---- !u!114 &114999906132518422
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1504077745653444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 132
-    i1: 96
-    i2: 176
-    i3: 234
-    i4: 91
-    i5: 153
-    i6: 163
-    i7: 84
-    i8: 200
-    i9: 240
-    i10: 200
-    i11: 40
-    i12: 15
-    i13: 215
-    i14: 112
-    i15: 131
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!212 &212134489680684378
 SpriteRenderer:
   m_ObjectHideFlags: 1
