@@ -23,7 +23,7 @@ public static class Commands
         // Partition on the type list initially.
         var def = typeof(DebugCommandAttribute);
         var found = from t in a.GetTypes().AsParallel()
-            let methods = t.GetMethods()
+            let methods = t.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
             from m in methods
                 where m.IsDefined(def, true)
                     select new { Type = t, Method = m, Attribute = m.GetCustomAttribute<DebugCommandAttribute>() };
@@ -65,6 +65,16 @@ public static class Commands
             UI_CommandInput.Instance.Output.Log(output.Trim());
         }
         Debug.Log("[CMD] {0}".Form(output.Trim()));
+    }
+
+    public static void LogError(string output)
+    {
+        string o = RichText.InColour(output.Trim(), Color.red);
+        if (UI_CommandInput.Instance != null)
+        {
+            UI_CommandInput.Instance.Output.Log(o);
+        }
+        Debug.Log("[CMD][ERROR] {0}".Form(o));
     }
 
     public static List<SortedCommandName> GetAutocompleteCommand(string current)

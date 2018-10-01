@@ -204,4 +204,45 @@ public class Item : MonoBehaviour
     {
         loaded.Clear();
     }
+
+    [DebugCommand("Spawns an item beneith the local player.", GodModeOnly = true, Parameters = "INT:ID:The numerical ID of the item to spawn. Is never less than zero.")]
+    private static void Spawn_Item(int id)
+    {
+        if(Player.Character == null)
+        {
+            Commands.LogError("Player character not found! Item not spawned.");
+            return;
+        }
+
+        var pos = Player.Character.transform.position;
+        Spawn_Item(id, pos.x, pos.y);
+    }
+
+    [DebugCommand("Spawns an item at a position.", GodModeOnly = true, Parameters = "INT:ID:The numerical ID of the item to spawn. Is never less than zero., FLOAT:x:The x position to spawn at., FLOAT:y:The y position to spawn at.")]
+    private static void Spawn_Item(int id, float x, float y)
+    {
+        if (id < 0)
+        {
+            Commands.LogError("Item for Id {0} not found! ID value is outside of the valid bounds.".Form(id));
+            return;
+        }
+
+        if (id > ushort.MaxValue)
+        {
+            Commands.LogError("Item for Id {0} not found! ID value is outside of the valid bounds.");
+            return;
+        }
+
+        Item found = Item.Get((ushort)id);
+
+        if (found == null)
+        {
+            Commands.LogError("Item for Id {0} not found!".Form(id));
+            return;
+        }
+        Vector2 pos = new Vector2(x, y);
+        var spawned = Item.Spawn(found.ID, pos);
+
+        Commands.Log("Spawned a new '{0}' at {1}.".Form(spawned.Name, pos));
+    }
 }

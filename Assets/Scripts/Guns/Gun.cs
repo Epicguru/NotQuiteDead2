@@ -39,7 +39,11 @@ public class Gun : MonoBehaviour
 
     [Header("State")] 
     public bool CurrentlyBehindUser = false; // When equipped on the player, are all the sprites sorted behind the player?
-    public bool Aiming;
+    public bool s_Aiming;
+    public bool s_CheckChamber;
+    public bool s_CheckMagazine;
+    public bool s_Reload;
+    public bool s_Shoot;
 
     [Header("Volatile")]
     public int Ammo;
@@ -74,6 +78,8 @@ public class Gun : MonoBehaviour
     private static int BEHIND_PLAYER_ID;
     private static int IN_FRONT_OF_PLAYER_ID;
     private float aimTimer = 0f;
+    private float shootTimer = 0f;
+    private float shotInterval { get { return 1f / (Info.RPM / 60f); } }
 
     private void Start()
     {
@@ -101,9 +107,15 @@ public class Gun : MonoBehaviour
                     RightHand = hand;
             }
         }
+
+        // Allow gun to shoot instantly upon spawning.
+        shootTimer = shotInterval + 1f;
+
+        // Give full magazine upon spawning.
+        Ammo = Info.MagCapacity;
     }
 
-    private void LateUpdate()
+    private void Update()
     {        
         // Sort based on the current state. Normally driven by animation.
         SortSprites(CurrentlyBehindUser ? BEHIND_PLAYER_ID : IN_FRONT_OF_PLAYER_ID);
@@ -117,22 +129,65 @@ public class Gun : MonoBehaviour
         if (!valid)
             return; // If the character is null (anywhere) then we can't do much with this item.
 
-        // TODO take input.
-        Aiming = true;
-
+        TakeInput();
+        UpdateShotTimer();
         ValidateInput();
-        RotateToMouse();
         LookToMouse();
+        RotateToMouse();
 
-        // Here, things to do regardless of the auth state.
-        Anim.Aiming = this.Aiming;
+        Anim.Aiming = this.s_Aiming;
+        ResolveTrigger(ref s_Reload, GunAnimator.RELOAD_ID);
+        ResolveTrigger(ref s_CheckChamber, GunAnimator.CHECK_CHAMBER_ID);
+        ResolveTrigger(ref s_CheckMagazine, GunAnimator.CHECK_MAG_ID);
+        ResolveTrigger(ref s_Shoot, GunAnimator.SHOOT_ID);
+    }
+
+    private void ResolveTrigger(ref bool flag, int ID)
+    {
+        if (flag)
+        {
+            Anim.Trigger(ID);
+            flag = false;
+        }
+    }
+
+    private void TakeInput()
+    {
+        s_Aiming = InputManager.IsPressed("Aim");
+        s_CheckChamber = InputManager.IsDown("Check Chamber");
+        s_CheckMagazine = InputManager.IsDown("Check Magazine");
+        s_Reload = InputManager.IsDown("Reload");
+        s_Shoot = InputManager.IsPressed("Shoot");
     }
 
     private void ValidateInput()
     {
         // Makes sure all the states are compatible and that the input is not contradicting state.
         if (Item.Dropped || !Item.InHands)
-            Aiming = false;
+        {
+            s_Aiming = false;
+            s_Reload = false;
+            s_CheckChamber = false;
+            s_CheckMagazine = false;
+            s_Shoot = false;
+            return;
+        }
+
+        if (Ammo >= Info.MagCapacity)
+            s_Reload = false;
+        if (Ammo <= 0)
+            s_Shoot = false;
+
+        if (shootTimer <= shotInterval)
+        {
+            // Cannot shoot regardless of actual input state.
+            s_Shoot = false;
+        }
+        else if(s_Shoot)
+        {
+            // Input wants to shoot, approved!
+            shootTimer = 0f;
+        }
     }
 
     private void RotateToMouse()
@@ -143,7 +198,7 @@ public class Gun : MonoBehaviour
         float aimAngle = mouseOffset.ToAngle();
         float change = Time.deltaTime;
 
-        if (Aiming)
+        if (s_Aiming)
         {
             aimTimer += change;
         }
@@ -168,14 +223,19 @@ public class Gun : MonoBehaviour
     {
         // Works on both server and clients!
         Vector2 mouseOffset = InputManager.MousePos - (Vector2)transform.position;
-        if(mouseOffset.x >= 0f && Aiming)
+        if(mouseOffset.x >= 0f && s_Aiming)
         {
             Right = true;
         }
-        else if(Aiming)
+        else if(s_Aiming)
         {
             Right = false;
         }
+    }
+
+    private void UpdateShotTimer()
+    {
+        shootTimer += Time.deltaTime;
     }
 
     public void SortSprites(int targetLayerID)

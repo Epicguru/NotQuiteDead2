@@ -9,4 +9,5 @@ public class GunInfo
 {
     public float AimTime = 0.3f;
     public int MagCapacity = 30;
+    public float RPM = 60f;
 }

@@ -36,10 +36,14 @@ public class Player : MonoBehaviour
     public void Awake()
     {
         Instance = this;
+
+        // Spawn a character for this player. In the future this will load data from disk.
         Character spawned = Instantiate(CharacterPrefab);
         spawned.transform.position = Vector3.zero;
         spawned.transform.rotation = Quaternion.identity;
         Manipulator.Target = spawned;
+
+        Character.Hands.EquipItem(Item.Spawn(0, Vector2.zero));
     }
 
     public void Update()

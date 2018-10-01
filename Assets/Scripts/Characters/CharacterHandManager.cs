@@ -151,10 +151,10 @@ public class CharacterHandManager : MonoBehaviour
             return;
         }
 
+        // Dropped items cannot be directly equipped into hands.
         if (item.Dropped)
         {
-            Debug.LogError("Item '{0}' is dropped, cannot equip to charcter {1}!".Form(item.Name, name));
-            return;
+            StoreItem(item);
         }
 
         if (item.InHands)
@@ -197,7 +197,7 @@ public static class HandCommands
     {
         if (Player.Character == null)
         {
-            Commands.Log(RichText.InColour("Player does not have control of any character!", Color.red));
+            Commands.LogError("Player does not have control of any character!");
             return;
         }
 
@@ -221,7 +221,7 @@ public static class HandCommands
         }
         else
         {
-            Commands.Log(RichText.InColour("Item not found stored on player. Check spelling, and make sure the item is already stored.", Color.red));
+            Commands.LogError("Item not found stored on player. Check spelling, and make sure the item is already stored.");
         }
     }
 
@@ -230,7 +230,7 @@ public static class HandCommands
     {
         if (Player.Character == null)
         {
-            Commands.Log(RichText.InColour("Player does not have control of any character!", Color.red));
+            Commands.LogError("Player does not have control of any character!");
             return;
         }
 
@@ -252,7 +252,7 @@ public static class HandCommands
         var target = Player.Character;
         if (target == null)
         {
-            Commands.Log(RichText.InColour("Local player does not have control of any character!", Color.red));
+            Commands.LogError("Local player does not have control of any character!");
             return;
         }
 

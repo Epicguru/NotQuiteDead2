@@ -449,8 +449,13 @@ MonoBehaviour:
   Info:
     AimTime: 0.3
     MagCapacity: 30
+    RPM: 550
   CurrentlyBehindUser: 0
-  Aiming: 0
+  s_Aiming: 0
+  s_CheckChamber: 0
+  s_CheckMagazine: 0
+  s_Reload: 0
+  s_Shoot: 0
   Ammo: 0
   Angle: 0
   LeftHand: {fileID: 0}
