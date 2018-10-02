@@ -90,7 +90,10 @@ public class GunAnimator : MonoBehaviour
         if(e.stringParameter == RELOAD_CALLBACK)
         {
             Reloading = false;
-            Gun.Ammo = Gun.Info.MagCapacity;
+            int add = 0;
+            if (!Gun.Info.OpenBolt && Gun.BulletInChamber) // If not open bolt and there is a bullet in the chamber.
+                add = 1;
+            Gun.Ammo = Gun.Info.MagCapacity + add;
         }
         if(e.stringParameter == CHECK_MAG_CALLBACK)
         {

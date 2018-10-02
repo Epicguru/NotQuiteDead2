@@ -48,11 +48,15 @@ public class Gun : MonoBehaviour
     [Header("Volatile")]
     public int Ammo;
 
-    [Header("Debug")]
-    public float Angle;
-
     [HideInInspector]
     public HandPosition LeftHand, RightHand;
+    public bool BulletInChamber
+    {
+        get
+        {
+            return Ammo > 0;
+        }
+    }
 
     private bool Right
     {
@@ -176,7 +180,7 @@ public class Gun : MonoBehaviour
             return;
         }
 
-        if (Ammo >= Info.MagCapacity) // Cannot reload if magazine is full.
+        if (Ammo >= Info.MagCapacity + (Info.OpenBolt ? 0 : 1)) // Cannot reload if magazine is full.
             s_Reload = false;
         if (Ammo <= 0) // Cannot shoot if there are no bullets left.
             s_Shoot = false;
