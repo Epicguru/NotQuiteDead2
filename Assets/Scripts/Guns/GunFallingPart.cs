@@ -33,15 +33,32 @@ public class GunFallingPart : MonoBehaviour
     private PoolableObject _poolable;
 
 
-    public void Mimic(SpriteRenderer spr)
+    public bool Mimic(SpriteRenderer spr)
     {
         if (spr == null)
-            return;
+            return true;
 
         transform.position = spr.transform.position;
         transform.rotation = spr.transform.rotation;
-        transform.localScale = transform.lossyScale;
+        transform.localScale = transform.localScale;
+        var c = spr.GetComponentInParent<Character>();
+        if(c != null)
+        {
+            var s = transform.localScale;
+            s.x = c.Direction.Right ? 1f : -1f;
+            transform.localScale = s;
+        }
         SpriteRenderer.sprite = spr.sprite;
+        return c == null ? true : c.Direction.Right;
+    }
+
+    public void MimicWithVel(SpriteRenderer spr, Vector2 vel, float angular, bool useGravity, Vector2 inherited)
+    {
+        bool right = Mimic(spr);
+        var velocity = vel;
+        if (!right)
+            velocity.x *= -1f;
+        SetVelocity(velocity + inherited, angular, useGravity);
     }
 
     public void SetVelocity(Vector2 velocity, float angular, bool useGravity)

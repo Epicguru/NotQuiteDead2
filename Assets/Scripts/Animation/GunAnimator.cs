@@ -106,8 +106,8 @@ public class GunAnimator : MonoBehaviour
             if(FallingMagazineInfo.RealMag != null)
             {
                 var spawned = Pool.Get(Spawnables.I.GunFallingPart).GetComponent<GunFallingPart>();
-                spawned.Mimic(FallingMagazineInfo.RealMag);
-                spawned.SetVelocity(FallingMagazineInfo.Velocity, FallingMagazineInfo.AngularVelocity, FallingMagazineInfo.UseGravity);
+                Vector2 inheritedVelocity = (Gun.Item.Character == null ? Vector2.zero : Gun.Item.Character.Movement.Body.velocity);
+                spawned.MimicWithVel(FallingMagazineInfo.RealMag, FallingMagazineInfo.Velocity, FallingMagazineInfo.AngularVelocity, FallingMagazineInfo.UseGravity, inheritedVelocity);
                 spawned.StartLife(FallingMagazineInfo.Lifetime);
             }            
         }
