@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterManipulator))]
+[RequireComponent(typeof(PlayerPickup))]
 public class Player : MonoBehaviour
 {
     // This is NOT a character!
@@ -32,6 +33,17 @@ public class Player : MonoBehaviour
         }
     }
     private CharacterManipulator _manipulator;
+
+    public PlayerPickup PlayerPickup
+    {
+        get
+        {
+            if (_pickup == null)
+                _pickup = GetComponent<PlayerPickup>();
+            return _pickup;
+        }
+    }
+    private PlayerPickup _pickup;
 
     public void Awake()
     {

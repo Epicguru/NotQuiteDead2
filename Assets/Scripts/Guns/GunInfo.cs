@@ -14,6 +14,8 @@ public class GunInfo
     public int MagCapacity = 30;
     [Tooltip("If true, the gun does not store a bullet in the chamber but instead takes ammo straight from the magazine.")]
     public bool OpenBolt = false;
+    [Tooltip("if true, the player can hold down the fire button to continuously fire. AI generally ignore this and fire semi-auto weapons as if they were full auto.")]
+    public bool FullAuto = true;
     [Tooltip("The maximum rounds that the gun can fire per minute. A value of 60 means that the gun can shoot once per second.")]
     public float RPM = 60f;
 }

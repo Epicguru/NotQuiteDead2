@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class Item : MonoBehaviour
 {
     public const string STORED_NAME = "Stored";
@@ -11,6 +12,17 @@ public class Item : MonoBehaviour
     public static readonly int DROPPED_ID = Animator.StringToHash(DROPPED_NAME);
 
     private static Dictionary<ushort, Item> loaded = new Dictionary<ushort, Item>();
+
+    public Collider2D Collider
+    {
+        get
+        {
+            if (_coll == null)
+                _coll = GetComponent<Collider2D>();
+            return _coll;
+        }
+    }
+    private Collider2D _coll;
 
     public Character Character
     {
@@ -124,6 +136,11 @@ public class Item : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        Collider.isTrigger = true;
+    }
+
     private void Update()
     {
         if(Animator != null)
@@ -131,6 +148,15 @@ public class Item : MonoBehaviour
             Animator.SetBool(STORED_ID, OnCharacter && !InHands);
             Animator.SetBool(DROPPED_ID, Dropped);
         }
+    }
+
+    public bool CanBePickedUp(Character c)
+    {
+        if (c == null)
+            return false;
+        float dst = Vector2.Distance(c.transform.position, transform.position);
+        Debug.Log(dst);
+        return dst <= 4f;
     }
 
     public static bool IsLoaded(ushort id)

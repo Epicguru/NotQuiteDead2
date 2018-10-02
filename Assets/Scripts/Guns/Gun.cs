@@ -164,7 +164,7 @@ public class Gun : MonoBehaviour
         s_CheckChamber = InputManager.IsDown("Check Chamber");
         s_CheckMagazine = InputManager.IsDown("Check Magazine");
         s_Reload = InputManager.IsDown("Reload");
-        s_Shoot = InputManager.IsPressed("Shoot");
+        s_Shoot = Info.FullAuto ? InputManager.IsPressed("Shoot") : InputManager.IsDown("Shoot");
     }
 
     private void ValidateInput()

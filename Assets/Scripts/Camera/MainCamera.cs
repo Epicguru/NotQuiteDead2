@@ -32,6 +32,7 @@ public class MainCamera : MonoBehaviour
 
     public void Awake()
     {
+        Instance = this;
         this.tag = "MainCamera";
     }
 
