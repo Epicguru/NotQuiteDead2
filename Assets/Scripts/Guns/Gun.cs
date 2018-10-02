@@ -135,6 +135,9 @@ public class Gun : MonoBehaviour
         LookToMouse();
         RotateToMouse();
 
+        Anim.MagEmpty =     (Info.OpenBolt ? Ammo == 0 : Ammo <= 1);
+        Anim.ChamberEmpty = (Ammo == 0);
+
         Anim.Aiming = this.s_Aiming;
         ResolveTrigger(ref s_Reload, GunAnimator.RELOAD_ID);
         ResolveTrigger(ref s_CheckChamber, GunAnimator.CHECK_CHAMBER_ID);
@@ -173,10 +176,17 @@ public class Gun : MonoBehaviour
             return;
         }
 
-        if (Ammo >= Info.MagCapacity)
+        if (Ammo >= Info.MagCapacity) // Cannot reload if magazine is full.
             s_Reload = false;
-        if (Ammo <= 0)
+        if (Ammo <= 0) // Cannot shoot if there are no bullets left.
             s_Shoot = false;
+        if (s_Aiming) // Cannot check chamber or magazine while aiming. Reloading should cancel aim.
+        {
+            s_CheckChamber = false;
+            s_CheckMagazine = false;
+        }
+        if (Anim.Reloading || Anim.CheckingChamber || Anim.CheckingMag) // Cannot aim when reloading, checking mag or chamber.
+            s_Aiming = false;
 
         if (shootTimer <= shotInterval)
         {
