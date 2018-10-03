@@ -30,12 +30,23 @@ public class PlayerPickup : MonoBehaviour
             var item = hit.transform.GetComponentInParent<Item>();
             if(item != null)
             {
-                Debug.Log(item.Name);
                 if (item.Dropped)
                 {
                     if (item.CanBePickedUp(Player.Character))
                     {
                         UI_ActionPopup.Display(item.Name, KeyCode.E, (Vector2)item.transform.position + Vector2.right * 1f);
+                        if (Input.GetKeyDown(KeyCode.E))
+                        {
+                            // Pick up the item...
+                            // First, store in on the character body.
+                            Player.Character.Hands.StoreItem(item);
+
+                            // If the hands are empty, the put the item into the hands.
+                            if(Player.Character.Hands.Holding == null)
+                            {
+                                Player.Character.Hands.EquipItem(item);
+                            }
+                        }
                     }
                 }
             }

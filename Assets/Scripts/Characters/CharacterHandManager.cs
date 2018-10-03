@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterHandManager : MonoBehaviour
@@ -10,6 +11,11 @@ public class CharacterHandManager : MonoBehaviour
     // sitting somewhere on the characters body.
     public Item Holding;
 
+    // Real, spawned items that exist on the character's body, in the stored state. The item in the hands (Equiped) is not included in this list.
+    // Normally the length of this will never be more than 3. At a very maximum, the character will be in 'possesion' of 4 items: 3 stored on the
+    // body and one in the hands. However, in this scenario, the character could not store the item in the hands and would be forced to drop it to equip
+    // one of those stored items, or alternatively drop a stored item to store the held one.
+    public List<Item> OnCharacter = new List<Item>();
 
     // The item that is really held by the character. Unlike Holding, this value is hidden.
     // This is used to remove items from the character hands with correct animations and interpolation.

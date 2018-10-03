@@ -22,7 +22,7 @@ public class UI_ActionPopup : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        FadeTime = 0f;
+        timer = 0f;
     }
 
     private void Update()

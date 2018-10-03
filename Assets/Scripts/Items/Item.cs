@@ -155,7 +155,6 @@ public class Item : MonoBehaviour
         if (c == null)
             return false;
         float dst = Vector2.Distance(c.transform.position, transform.position);
-        Debug.Log(dst);
         return dst <= 4f;
     }
 
