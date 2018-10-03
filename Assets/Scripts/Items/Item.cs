@@ -66,6 +66,7 @@ public class Item : MonoBehaviour
     [SerializeField]
     private ushort _id;
     public string Name = "Default Name";
+    public Sprite Icon;
 
     [Header("State")]
     public bool OnCharacter = false; // Is the item stored on the character's body, such as on their back or hip?
@@ -134,6 +135,22 @@ public class Item : MonoBehaviour
 
             return state.IsTag("Stored");
         }
+    }
+
+    private static List<string> stateErrors = new List<string>();
+    public List<string> GetStateErrors()
+    {
+        stateErrors.Clear();
+        if(Icon == null)
+        {
+            stateErrors.Add("Icon is missing. (null)");
+        }
+        if (string.IsNullOrWhiteSpace(Name))
+        {
+            stateErrors.Add("Name is null or whitespace ('{0}')".Form(Name));
+        }
+
+        return stateErrors;
     }
 
     private void Start()
@@ -214,6 +231,12 @@ public class Item : MonoBehaviour
             else
             {
                 loaded.Add(id, item);
+                // Check for errors.
+                var errors = item.GetStateErrors();
+                foreach (var e in errors)
+                {
+                    Debug.LogError("Item '{0}'({1}) has error: {2}".Form(item.Name, item.ID, e.Trim()));
+                }
 
                 if(id > highest)
                 {

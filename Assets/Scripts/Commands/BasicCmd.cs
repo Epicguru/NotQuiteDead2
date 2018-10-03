@@ -25,7 +25,7 @@ public static class BasicCmd
     }
 
     [DebugCommand("Clears all text off the console log.", GodModeOnly = false)]
-    public static void ClearLog()
+    public static void Clear_Log()
     {
         Commands.ClearLog();
     }
@@ -39,5 +39,16 @@ public static class BasicCmd
             Player.Character.transform.position = new UnityEngine.Vector3(x, y, 0f);
             Commands.Log("Teleported to {0}, {1}".Form(x, y));
         }
+    }
+
+    [DebugCommand("Sets the global time scale.", GodModeOnly = true, Parameters = "FLOAT:scale:The time scale coefficient. 1 is normal time; 0 is frozen time.")]
+    public static void Time_Scale(float scale)
+    {
+        if(scale <= 0f)
+        {
+            scale = 0f;
+        }
+
+        Time.timeScale = scale;
     }
 }

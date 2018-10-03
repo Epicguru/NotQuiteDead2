@@ -34,7 +34,7 @@ public class PlayerPickup : MonoBehaviour
                 {
                     if (item.CanBePickedUp(Player.Character))
                     {
-                        UI_ActionPopup.Display(item.Name, InputManager.GetInputKeys("Action")[0], (Vector2)item.transform.position + Vector2.right * 1f);
+                        UI_ActionPopup.Display(item.Name, InputManager.GetInputKeys("Action")[0], (Vector2)item.transform.position + Vector2.right * 0.2f);
                         if (InputManager.IsDown("Action"))
                         {
                             // Pick up the item...

@@ -540,6 +540,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 0
   Name: Liberator
+  Icon: {fileID: 21300000, guid: fbbc0e49aa1e0174092cd6029b73e930, type: 3}
   OnCharacter: 0
   Dropped: 1
   InHands: 0

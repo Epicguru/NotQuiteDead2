@@ -434,6 +434,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 2
   Name: Quaternion
+  Icon: {fileID: 21300000, guid: ae306c24b0c451849bbd69bf7582d104, type: 3}
   OnCharacter: 0
   Dropped: 1
   InHands: 0

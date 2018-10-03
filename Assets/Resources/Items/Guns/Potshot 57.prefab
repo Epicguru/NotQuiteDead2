@@ -673,6 +673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 1
   Name: Potshot 57
+  Icon: {fileID: 21300000, guid: 60503786587d98d4587d4f5a66dbadcb, type: 3}
   OnCharacter: 0
   Dropped: 1
   InHands: 0
