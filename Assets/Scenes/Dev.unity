@@ -1101,7 +1101,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1008.3, y: 594.1}
+  m_AnchoredPosition: {x: 1008.3008, y: 594.0996}
   m_SizeDelta: {x: 200, y: 40}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &728845875
@@ -1707,6 +1707,8 @@ MonoBehaviour:
     Keys: 43010000
   - Name: Aim
     Keys: 44010000
+  - Name: Action
+    Keys: 65000000
 --- !u!1 &1251388953
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class CharacterHandManager : MonoBehaviour
 
     // The currently held item. A held item is, unsuprisingly, held in the hands as opposed to just
     // sitting somewhere on the characters body.
-    public Item Holding;
+    public Item Holding { get; private set; }
 
     // Real, spawned items that exist on the character's body, in the stored state. The item in the hands (Equiped) is not included in this list.
     // Normally the length of this will never be more than 3. At a very maximum, the character will be in 'possesion' of 4 items: 3 stored on the
@@ -29,6 +29,7 @@ public class CharacterHandManager : MonoBehaviour
 
     public void Update()
     {
+        OnCharacter.RemoveAll((x) => { return x == null; });
         var Holding = this.Holding;
 
         // First, check if the Holding value is the same as the currentlyHolding value.
@@ -146,6 +147,8 @@ public class CharacterHandManager : MonoBehaviour
             item.transform.SetParent(this.HoldPoint);
             item.transform.localPosition = Vector3.zero;
             item.transform.localRotation = Quaternion.identity;
+            if(!OnCharacter.Contains(item))
+                OnCharacter.Add(item);
         }
     }
 
@@ -166,7 +169,10 @@ public class CharacterHandManager : MonoBehaviour
         if (item.InHands)
             return;
 
-        //Debug.Log("Equipping item... " + item);
+        if (Holding != null && !OnCharacter.Contains(Holding))
+            OnCharacter.Add(Holding);
+        if(OnCharacter.Contains(item))
+            OnCharacter.Remove(item);
         Holding = item;
     }
 
@@ -175,6 +181,8 @@ public class CharacterHandManager : MonoBehaviour
         if (Holding == null)
             return;
 
+        if(!OnCharacter.Contains(Holding))
+            OnCharacter.Add(Holding);
         Holding = null;
     }
 
@@ -187,6 +195,8 @@ public class CharacterHandManager : MonoBehaviour
         Holding.InHands = false;
         Holding.Dropped = true;
 
+        if(OnCharacter.Contains(Holding))
+            OnCharacter.Remove(Holding);
         if(currentlyHolding == Holding)
         {
             currentlyHolding = null;

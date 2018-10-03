@@ -160,4 +160,14 @@ public static class InputManager
             return false;
         }
     }
+
+    public static KeyCode[] GetInputKeys(string input)
+    {
+        if (!bindings.ContainsKey(input))
+        {
+            return null;
+        }
+
+        return bindings[input];
+    }
 }
