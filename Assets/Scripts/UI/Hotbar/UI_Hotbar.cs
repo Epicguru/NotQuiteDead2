@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class UI_Hotbar : MonoBehaviour
 {
+    public static UI_Hotbar Instance;
+
     public Character Target;
     public UI_HotbarItem Prefab;
     public Transform Parent;
 
     private Dictionary<ItemSlot, UI_HotbarItem> spawned = new Dictionary<ItemSlot, UI_HotbarItem>();
+
+    public void Awake()
+    {
+        Instance = this;
+    }
 
     public void Update()
     {
@@ -58,6 +65,7 @@ public class UI_Hotbar : MonoBehaviour
         {
             var i = pair.Key;
             spawned[i] = Pool.Get(Prefab.PoolableObject).GetComponent<UI_HotbarItem>();
+            spawned[i].transform.SetParent(Parent, false);
             spawned[i].Icon = items[i].Icon;
             spawned[i].Key = i.ToString();
         }

@@ -49,13 +49,24 @@ public class Player : MonoBehaviour
     {
         Instance = this;
 
+        // Create a character for the player.
+        SpawnCharacter();        
+    }
+
+    private void SpawnCharacter()
+    {
         // Spawn a character for this player. In the future this will load data from disk.
         Character spawned = Instantiate(CharacterPrefab);
         spawned.transform.position = Vector3.zero;
         spawned.transform.rotation = Quaternion.identity;
         Manipulator.Target = spawned;
 
+        // Give a gun.
         Character.Hands.EquipItem(Item.Spawn(1, Vector2.zero));
+
+        // Make the hotbar UI track this character.
+        if (UI_Hotbar.Instance != null)
+            UI_Hotbar.Instance.Target = Character;
     }
 
     public void Update()
