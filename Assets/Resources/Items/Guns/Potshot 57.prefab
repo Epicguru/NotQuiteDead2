@@ -599,9 +599,9 @@ MonoBehaviour:
   MagEmpty: 0
   Blocked: 0
   FallingMagazineInfo:
-    RealMag: {fileID: 0}
-    Velocity: {x: 1, y: -5}
-    AngularVelocity: 30
+    RealMag: {fileID: 212944942402028222}
+    Velocity: {x: 5, y: -6}
+    AngularVelocity: 300
     Lifetime: 3
     UseGravity: 1
 --- !u!114 &114392548971796478
@@ -646,11 +646,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Info:
-    AimTime: 0.3
-    MagCapacity: 30
+    AimTime: 0.2
+    MagCapacity: 20
     OpenBolt: 0
     FullAuto: 0
-    RPM: 60
+    RPM: 500
   CurrentlyBehindUser: 0
   s_Aiming: 0
   s_CheckChamber: 0
@@ -674,6 +674,7 @@ MonoBehaviour:
   _id: 1
   Name: Potshot 57
   Icon: {fileID: 21300000, guid: 60503786587d98d4587d4f5a66dbadcb, type: 3}
+  Slot: 2
   OnCharacter: 0
   Dropped: 1
   InHands: 0

@@ -67,6 +67,7 @@ public class Item : MonoBehaviour
     private ushort _id;
     public string Name = "Default Name";
     public Sprite Icon;
+    public ItemSlot Slot = ItemSlot.STORED;
 
     [Header("State")]
     public bool OnCharacter = false; // Is the item stored on the character's body, such as on their back or hip?
@@ -292,5 +293,16 @@ public class Item : MonoBehaviour
         var spawned = Item.Spawn(found.ID, pos);
 
         Commands.Log("Spawned a new '{0}' at {1}.".Form(spawned.Name, pos));
+    }
+
+    public void OnDestroy()
+    {
+        if (Dropped)
+            return;
+
+        if(Character != null && Character.HasHandManager && (InHands || OnCharacter))
+        {
+            Character.Hands.NotifyDestroyed(this);
+        }
     }
 }

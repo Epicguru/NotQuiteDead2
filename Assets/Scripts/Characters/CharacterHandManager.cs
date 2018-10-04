@@ -15,7 +15,7 @@ public class CharacterHandManager : MonoBehaviour
     // Normally the length of this will never be more than 3. At a very maximum, the character will be in 'possesion' of 4 items: 3 stored on the
     // body and one in the hands. However, in this scenario, the character could not store the item in the hands and would be forced to drop it to equip
     // one of those stored items, or alternatively drop a stored item to store the held one.
-    public List<Item> OnCharacter = new List<Item>();
+    public Dictionary<ItemSlot, Item> OnCharacter = new Dictionary<ItemSlot, Item>();
 
     // The item that is really held by the character. Unlike Holding, this value is hidden.
     // This is used to remove items from the character hands with correct animations and interpolation.
@@ -27,9 +27,19 @@ public class CharacterHandManager : MonoBehaviour
     public HandTracker Left;
     public HandTracker Right;
 
+    [SerializeField]
+    [ReadOnly]
+    [TextArea(5, 10)]
+    private string DEBUG;
+
     public void Update()
     {
-        OnCharacter.RemoveAll((x) => { return x == null; });
+        DEBUG = "";
+        foreach (var pair in OnCharacter)
+        {
+            DEBUG += pair.Value.Name + "\n";
+        }
+
         var Holding = this.Holding;
 
         // First, check if the Holding value is the same as the currentlyHolding value.
@@ -126,18 +136,25 @@ public class CharacterHandManager : MonoBehaviour
     /// See EquipItem to put a stored item into the hands.
     /// </summary>
     /// <param name="item">The existing, spawned, item.</param>
-    public void StoreItem(Item item)
+    public bool StoreItem(Item item)
     {
         if (item == null)
-            return;
+            return false;
 
         if (item.Stored)
         {
             Debug.LogWarning("Item '{0}' cannot be stored, it is already stored by this character ({1}) or another character!".Form(item.Name, name));
+            return false;
         }
         else if (!item.Dropped)
         {
             Debug.LogWarning("Item '{0}' is not dropped, cannot store on this ({1}) character!".Form(item.Name, name));
+            return false;
+        }
+        else if (OnCharacter.ContainsKey(item.Slot))
+        {
+            Debug.LogWarning("Item '{0}' cannot be stored on character {1} because the slot {2} is already occuppied by item '{3}'.".Form(item.Name, name, item.Slot, OnCharacter[item.Slot].Name));
+            return false;
         }
         else
         {
@@ -147,33 +164,50 @@ public class CharacterHandManager : MonoBehaviour
             item.transform.SetParent(this.HoldPoint);
             item.transform.localPosition = Vector3.zero;
             item.transform.localRotation = Quaternion.identity;
-            if(!OnCharacter.Contains(item))
-                OnCharacter.Add(item);
+
+            OnCharacter.Add(item.Slot, item);
+            return true;
         }
     }
 
-    public void EquipItem(Item item)
+    public bool EquipItem(Item item)
     {
         if(item == null)
         {
             Debug.LogError("Null item to equip!");
-            return;
+            return false;
         }
 
         // Dropped items cannot be directly equipped into hands.
         if (item.Dropped)
         {
-            StoreItem(item);
+            bool worked = StoreItem(item);
+            if (!worked)
+            {
+                Debug.LogWarning("Cannot equip item '{0}' on character {1} because the item slot {2} already has a stored item.".Form(item.Name, name, item.Slot));
+                return false;
+            }
         }
 
         if (item.InHands)
-            return;
+            return false;
 
-        if (Holding != null && !OnCharacter.Contains(Holding))
-            OnCharacter.Add(Holding);
-        if(OnCharacter.Contains(item))
-            OnCharacter.Remove(item);
+        if (Holding != null)
+        {
+            if(Holding.Slot == item.Slot)
+            {
+                // Conflicting slot. The new item cannot be picked up because this would basically allow two primaries to be carried at once.
+                return false;
+            }
+            else
+            {
+                OnCharacter.Add(Holding.Slot, Holding);
+            }
+        }
+        if(OnCharacter.ContainsKey(item.Slot))
+            OnCharacter.Remove(item.Slot);
         Holding = item;
+        return true;
     }
 
     public void DequipCurrent()
@@ -181,8 +215,8 @@ public class CharacterHandManager : MonoBehaviour
         if (Holding == null)
             return;
 
-        if(!OnCharacter.Contains(Holding))
-            OnCharacter.Add(Holding);
+        if(!OnCharacter.ContainsKey(Holding.Slot))
+            OnCharacter.Add(Holding.Slot, Holding);
         Holding = null;
     }
 
@@ -195,14 +229,27 @@ public class CharacterHandManager : MonoBehaviour
         Holding.InHands = false;
         Holding.Dropped = true;
 
-        if(OnCharacter.Contains(Holding))
-            OnCharacter.Remove(Holding);
+        if(OnCharacter.ContainsKey(Holding.Slot))
+            OnCharacter.Remove(Holding.Slot);
         if(currentlyHolding == Holding)
         {
             currentlyHolding = null;
         }
         Holding.transform.SetParent(null);
         Holding = null;
+    }
+
+    public void NotifyDestroyed(Item item)
+    {
+        if (item == null)
+            return;
+
+        var slot = item.Slot;
+        if(OnCharacter.ContainsKey(slot) && OnCharacter[slot] == item)
+        {
+            OnCharacter.Remove(slot);
+            Debug.Log("Item notified destroyed, removed from OnCharacter.");
+        }
     }
 }
 

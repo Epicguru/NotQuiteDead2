@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
         spawned.transform.rotation = Quaternion.identity;
         Manipulator.Target = spawned;
 
-        Character.Hands.EquipItem(Item.Spawn(0, Vector2.zero));
+        Character.Hands.EquipItem(Item.Spawn(1, Vector2.zero));
     }
 
     public void Update()

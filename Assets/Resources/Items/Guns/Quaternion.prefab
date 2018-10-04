@@ -347,8 +347,8 @@ MonoBehaviour:
   Blocked: 0
   FallingMagazineInfo:
     RealMag: {fileID: 212047440904532772}
-    Velocity: {x: 1, y: -5}
-    AngularVelocity: 30
+    Velocity: {x: -1.5, y: -5}
+    AngularVelocity: -50
     Lifetime: 1.5
     UseGravity: 1
 --- !u!114 &114224732942933152
@@ -407,11 +407,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Info:
-    AimTime: 0.3
-    MagCapacity: 30
+    AimTime: 0.2
+    MagCapacity: 25
     OpenBolt: 0
     FullAuto: 1
-    RPM: 60
+    RPM: 950
   CurrentlyBehindUser: 0
   s_Aiming: 0
   s_CheckChamber: 0
@@ -435,6 +435,7 @@ MonoBehaviour:
   _id: 2
   Name: Quaternion
   Icon: {fileID: 21300000, guid: ae306c24b0c451849bbd69bf7582d104, type: 3}
+  Slot: 1
   OnCharacter: 0
   Dropped: 1
   InHands: 0
