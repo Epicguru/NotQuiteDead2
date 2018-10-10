@@ -1860,6 +1860,14 @@ MonoBehaviour:
     Keys: 44010000
   - Name: Action
     Keys: 65000000
+  - Name: Hotbar Primary
+    Keys: 31000000
+  - Name: Hotbar Secondary
+    Keys: 32000000
+  - Name: Hotbar Backup
+    Keys: 33000000
+  - Name: Hotbar Stored
+    Keys: 34000000
 --- !u!1 &1251388953
 GameObject:
   m_ObjectHideFlags: 0

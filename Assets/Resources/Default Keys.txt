@@ -37,5 +37,17 @@
   ],
   "Action": [
     101
+  ],
+  "Hotbar Primary": [
+    49
+  ],
+  "Hotbar Secondary": [
+    50
+  ],
+  "Hotbar Backup": [
+    51
+  ],
+  "Hotbar Stored": [
+    52
   ]
 }
