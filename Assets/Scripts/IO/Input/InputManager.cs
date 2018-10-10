@@ -163,8 +163,10 @@ public static class InputManager
 
     public static KeyCode[] GetInputKeys(string input)
     {
+        Init();
         if (!bindings.ContainsKey(input))
         {
+            Debug.LogWarning("Not key bindings for input '{0}', returning null...".Form(input));
             return null;
         }
 

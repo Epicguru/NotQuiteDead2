@@ -30,10 +30,16 @@ public class UI_Hotbar : MonoBehaviour
             return;
         }
         var onCharacter = Target.Hands.OnCharacter;
-        if (onCharacter.Count != 0)
+        if (onCharacter.Count != 0 || Target.Hands.Holding != null)
         {
             bool refresh = false;
-            refresh = onCharacter.Count != spawned.Count;
+            refresh = (onCharacter.Count + (Target.Hands.Holding == null ? 0 : 1)) != spawned.Count;
+            if(Target.Hands.Holding != null)
+            {
+                if(!onCharacter.ContainsKey(Target.Hands.Holding.Slot))
+                    onCharacter.Add(Target.Hands.Holding.Slot, Target.Hands.Holding);
+            }         
+            
             foreach (var pair in onCharacter)
             {
                 if(!spawned.ContainsKey(pair.Key))
@@ -50,6 +56,10 @@ public class UI_Hotbar : MonoBehaviour
             }
             if(refresh)
                 Rebuild(onCharacter);
+
+            if (Target.Hands.Holding != null)            
+                onCharacter.Remove(Target.Hands.Holding.Slot);
+            
         }
         else
         {
@@ -67,7 +77,9 @@ public class UI_Hotbar : MonoBehaviour
             spawned[i] = Pool.Get(Prefab.PoolableObject).GetComponent<UI_HotbarItem>();
             spawned[i].transform.SetParent(Parent, false);
             spawned[i].Icon = items[i].Icon;
-            spawned[i].Key = i.ToString();
+            string inputKey = "Hotbar " + char.ToUpper(i.ToString()[0]) + i.ToString().ToLower().Substring(1);
+            var key = InputManager.GetInputKeys(inputKey)[0];
+            spawned[i].Key = key.GetNiceName();
         }
     }
 
