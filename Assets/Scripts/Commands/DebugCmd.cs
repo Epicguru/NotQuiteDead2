@@ -141,6 +141,12 @@ public class DebugCmd
                 str.Append(SEP);
             }
         }
+
+        str.AppendLine();
+        str.Append(Method.DeclaringType.FullName);
+        str.Append('.');
+        str.Append(Method.Name);
+
         str.AppendLine();
         str.Append(forPrint ? RichText.InItalics(Description) : Description);
         str.AppendLine();

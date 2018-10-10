@@ -97,5 +97,37 @@ public class Player : MonoBehaviour
             // Send this raw input to the movement controller.
             Manipulator.MovementDirection = rawInput;
         }
+
+        UpdateHotbarInput();
+    }
+    
+    private void UpdateHotbarInput()
+    {
+        if (Manipulator.Target == null || !Manipulator.Target.HasHandManager)
+            return;
+
+        bool p = InputManager.IsDown("Hotbar Primary");
+        bool s = InputManager.IsDown("Hotbar Secondary");
+        bool b = InputManager.IsDown("Hotbar Backup");
+        bool st = InputManager.IsDown("Hotbar Stored");
+
+        var hands = Manipulator.Target.Hands;
+
+        if (p)
+        {
+            hands.EquipItem(ItemSlot.PRIMARY);
+        }
+        else if (s)
+        {
+            hands.EquipItem(ItemSlot.SECONDARY);
+        }
+        else if (b)
+        {
+            hands.EquipItem(ItemSlot.BACKUP);
+        }
+        else if (st)
+        {
+            hands.EquipItem(ItemSlot.STORED);
+        }
     }
 }

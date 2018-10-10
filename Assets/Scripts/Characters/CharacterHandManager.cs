@@ -156,6 +156,11 @@ public class CharacterHandManager : MonoBehaviour
             Debug.LogWarning("Item '{0}' cannot be stored on character {1} because the slot {2} is already occuppied by item '{3}'.".Form(item.Name, name, item.Slot, OnCharacter[item.Slot].Name));
             return false;
         }
+        else if(Holding != null && Holding.Slot == item.Slot)
+        {
+            Debug.LogWarning("Item '{0}' cannot be stored on character {1} because the slot {2} is already occuppied by currently equipped item '{3}'.".Form(item.Name, name, item.Slot, Holding.Name));
+            return false;
+        }
         else
         {
             item.InHands = false;
@@ -170,12 +175,23 @@ public class CharacterHandManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Moves an item from the stored state to the equipped state, putting it into the character's hands.
+    /// If the item is not already stored on the character, it will try to be stored first. If an item cannot be stored on the character, it cannot be equipped, even if the hands are empty.
+    /// Passing null will result in the current item being stored onto the character.
+    /// </summary>
+    /// <param name="item">The item, or null.</param>
+    /// <returns>True if successful, false if anything failed.</returns>
     public bool EquipItem(Item item)
     {
         if(item == null)
         {
-            Debug.LogError("Null item to equip!");
-            return false;
+            if(Holding != null)
+            {
+                OnCharacter.Add(Holding.Slot, Holding);
+                Holding = null;
+            }
+            return true;
         }
 
         // Dropped items cannot be directly equipped into hands.
@@ -210,16 +226,20 @@ public class CharacterHandManager : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Dequips currently held or equipping item. The same as calling EquipItem(null);
+    /// </summary>
     public void DequipCurrent()
     {
         if (Holding == null)
             return;
 
-        if(!OnCharacter.ContainsKey(Holding.Slot))
-            OnCharacter.Add(Holding.Slot, Holding);
-        Holding = null;
+        EquipItem(null);
     }
 
+    /// <summary>
+    /// Drops the currently held item.
+    /// </summary>
     public void DropCurrent()
     {
         if (Holding == null)
@@ -250,6 +270,31 @@ public class CharacterHandManager : MonoBehaviour
             OnCharacter.Remove(slot);
             Debug.Log("Item notified destroyed, removed from OnCharacter.");
         }
+    }
+
+    /// <summary>
+    /// Equips whatever item is in the specified slot, if it exits. If the item in the slot is already equipped or equipping, the item is dequipped, so don't call this every frame.
+    /// </summary>
+    /// <param name="slot">The slot to equip from. See StoreItem to put items in those slots.</param>
+    /// <returns>True if successful, false if it fails for any reason.</returns>
+    public bool EquipItem(ItemSlot slot)
+    {
+        if (slot == ItemSlot.NO_SLOT)
+            return false;
+
+        if (!OnCharacter.ContainsKey(slot))
+        {
+            // Checks holding.
+            if(Holding != null && Holding.Slot == slot)
+            {
+                // Cool. Set holding to null.
+                EquipItem(null);
+                return true;
+            }
+            return false;
+        }
+
+        return EquipItem(OnCharacter[slot]);
     }
 }
 
