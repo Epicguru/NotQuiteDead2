@@ -184,15 +184,15 @@ public class Gun : MonoBehaviour
             s_Reload = false;
         if (Ammo <= 0) // Cannot shoot if there are no bullets left.
             s_Shoot = false;
+        if (Anim.Reloading || Anim.CheckingChamber || Anim.CheckingMag) // Cannot aim when reloading, checking mag or chamber.
+            s_Aiming = false;
         if (s_Aiming) // Cannot check chamber or magazine while aiming. Reloading should cancel aim.
         {
             s_CheckChamber = false;
             s_CheckMagazine = false;
-        }
-        if (Anim.Reloading || Anim.CheckingChamber || Anim.CheckingMag) // Cannot aim when reloading, checking mag or chamber.
-            s_Aiming = false;
+        }        
 
-        if (shootTimer <= shotInterval)
+        if (shootTimer <= shotInterval || !s_Aiming) // If not aiming, or gun in on cooldown.
         {
             // Cannot shoot regardless of actual input state.
             s_Shoot = false;
