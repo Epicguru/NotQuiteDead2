@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(PoolableObject))]
 public class Projectile : MonoBehaviour
@@ -23,6 +24,8 @@ public class Projectile : MonoBehaviour
     public Vector2 Direction = new Vector2(1f, 0f);
     [Tooltip("The speed at which the projectile travels, in units per second.")]
     public float CurrentSpeed = 10f;
+
+    public UnityEvent UponFired;
 
     public void Update()
     {
@@ -81,5 +84,21 @@ public class Projectile : MonoBehaviour
             Debug.LogWarning("No projectile prefab found for ID {0}. Returning null.".Form(id));
             return null;
         }
+    }
+
+    public static Projectile Spawn(byte id, Vector2 pos, Vector2 direction)
+    {
+        var prefab = GetPrefab(id);
+        if (prefab == null)
+            return null;
+
+        var spawned = Pool.Get(prefab.PoolableObject).GetComponent<Projectile>();
+        spawned.transform.position = pos;
+        spawned.Direction = direction;
+
+        if(spawned.UponFired != null)
+            spawned.UponFired.Invoke();
+
+        return spawned;
     }
 }

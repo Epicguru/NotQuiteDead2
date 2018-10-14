@@ -86,6 +86,8 @@ public class GunAnimator : MonoBehaviour
         if(e.stringParameter == SHOOT_CALLBACK)
         {
             Gun.Ammo--;
+            // TEMP spawn projectile.
+            Projectile.Spawn(0, transform.position, Vector2.one);
         }
         if(e.stringParameter == RELOAD_CALLBACK)
         {
