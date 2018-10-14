@@ -19,6 +19,21 @@ public class Projectile : MonoBehaviour
 
     public byte ID;
 
+    [Tooltip("The normalized direction vector.")]
+    public Vector2 Direction = new Vector2(1f, 0f);
+    [Tooltip("The speed at which the projectile travels, in units per second.")]
+    public float CurrentSpeed = 10f;
+
+    public void Update()
+    {
+        Vector2 currentPos = transform.position;
+
+        // Apply transformation here.
+        currentPos += Direction.normalized * CurrentSpeed * Time.deltaTime;
+
+        transform.position = currentPos;
+    }
+
     public static void LoadAll()
     {
         if (LoadedPrefabs != null)
@@ -55,7 +70,7 @@ public class Projectile : MonoBehaviour
         return LoadedPrefabs != null && LoadedPrefabs.ContainsKey(id);
     }
 
-    public static Projectile Get(byte id)
+    public static Projectile GetPrefab(byte id)
     {
         if (IsLoaded(id))
         {

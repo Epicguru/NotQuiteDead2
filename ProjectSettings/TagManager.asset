@@ -54,3 +54,6 @@ TagManager:
   - name: Equipped Items
     uniqueID: 1216088593
     locked: 0
+  - name: Effects
+    uniqueID: 2495329543
+    locked: 0
