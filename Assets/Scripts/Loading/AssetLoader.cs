@@ -44,6 +44,7 @@ public class AssetLoader : MonoBehaviour
 
             actions.Add(new KeyValuePair<string, Run>("Loading: Items...", () => { Item.LoadAll(); }));
             actions.Add(new KeyValuePair<string, Run>("Loading: Commands...", () => { Commands.LoadCommands(); }));
+            actions.Add(new KeyValuePair<string, Run>("Loading: Projectiles...", () => { Projectile.LoadAll(); }));
 
 
 
@@ -79,8 +80,9 @@ public class AssetLoader : MonoBehaviour
     {
         if (!LoadedStatic)
         {
-            // Items...
+            // Unload all here.
             Item.UnloadAll();
+            Projectile.UnloadAll();
 
             // Resources cleanup...
             Resources.UnloadUnusedAssets();

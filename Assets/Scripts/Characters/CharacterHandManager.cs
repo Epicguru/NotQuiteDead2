@@ -92,12 +92,12 @@ public class CharacterHandManager : MonoBehaviour
                 // the item and the Stored state is set to false, the animation state will still be 'stored'. This slightly
                 // confuses the script and causes the gun to equip and dequip with no hands following it.
                 // To prevent this, we check the conflicted flag. If it is conflicting, then we don't equip the new item yet.
-                bool conflicted = !currentlyHolding.Stored && currentlyHolding.CurrentlyStored;
+                bool conflicted = !currentlyHolding.Stored && currentlyHolding.IsCurrentlyStored;
 
                 if(!conflicted)
                     currentlyHolding.InHands = false;
 
-                if (currentlyHolding.CurrentlyStored && !conflicted)
+                if (currentlyHolding.IsCurrentlyStored && !conflicted)
                 {
                     // Now the item is completely stored on the character (on back, waist, invisible, whatever).
                     // Now set the current item to the target (Holding) item, which causes it to be equipped.
@@ -116,7 +116,7 @@ public class CharacterHandManager : MonoBehaviour
                 // Once the item is completely stored (we can check that), then we set the currentlyHolding to
                 // null. This makes both Holding and currentlyHolding null, causing the hands to move to an idle position.
                 currentlyHolding.InHands = false;
-                if (currentlyHolding.CurrentlyStored)
+                if (currentlyHolding.IsCurrentlyStored)
                 {
                     // Now the item is completely stored on the character (on back, waist, invisible, whatever) so
                     // we set the current item to null.

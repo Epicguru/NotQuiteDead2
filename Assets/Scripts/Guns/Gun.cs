@@ -77,23 +77,12 @@ public class Gun : MonoBehaviour
                 Direction.Right = value;
         }
     }
-    private List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
-    private int currentSpriteLayer = -1;
-    private static int BEHIND_PLAYER_ID;
-    private static int IN_FRONT_OF_PLAYER_ID;
     private float aimTimer = 0f;
     private float shootTimer = 0f;
     private float shotInterval { get { return 1f / (Info.RPM / 60f); } }
 
     private void Start()
     {
-        IN_FRONT_OF_PLAYER_ID = SortingLayer.NameToID("Equipped Items");
-        BEHIND_PLAYER_ID = SortingLayer.NameToID("Behind Equipped Items");
-
-        spriteRenderers.Clear();
-        GetComponentsInChildren<SpriteRenderer>(true, spriteRenderers);
-        spriteRenderers.RemoveAll(x => x.CompareTag("Ignore Dynamic Layering"));
-
         foreach (var hand in GetComponentsInChildren<HandPosition>(true))
         {
             if(hand.Hand == Hand.LEFT)
@@ -121,8 +110,6 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {        
-        // Sort based on the current state. Normally driven by animation.
-        SortSprites(CurrentlyBehindUser ? BEHIND_PLAYER_ID : IN_FRONT_OF_PLAYER_ID);
         transform.localScale = Vector3.one;
 
         bool dropped = Item.Dropped;
@@ -147,6 +134,15 @@ public class Gun : MonoBehaviour
         ResolveTrigger(ref s_CheckChamber, GunAnimator.CHECK_CHAMBER_ID);
         ResolveTrigger(ref s_CheckMagazine, GunAnimator.CHECK_MAG_ID);
         ResolveTrigger(ref s_Shoot, GunAnimator.SHOOT_ID);
+    }
+
+    private void DoSorting()
+    {
+        // Called through a message sent by Item.
+        // Sort based on the current state. Normally driven by animation.
+        if (Item.Dropped)
+            return;
+        Item.SetSpritesLayer(CurrentlyBehindUser ? Item.BEHIND_PLAYER_ID : Item.IN_FRONT_OF_PLAYER_ID);
     }
 
     private void ResolveTrigger(ref bool flag, int ID)
@@ -250,21 +246,5 @@ public class Gun : MonoBehaviour
     private void UpdateShotTimer()
     {
         shootTimer += Time.deltaTime;
-    }
-
-    public void SortSprites(int targetLayerID)
-    {
-        if (targetLayerID == currentSpriteLayer)        
-            return;
-        
-        foreach(var spr in spriteRenderers)
-        {
-            if (spr == null)
-                continue;
-
-            spr.sortingLayerID = targetLayerID;
-        }
-
-        currentSpriteLayer = targetLayerID;
     }
 }

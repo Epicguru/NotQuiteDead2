@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Item : MonoBehaviour
 {
+    public static int IN_FRONT_OF_PLAYER_ID = -1;
+    public static int BEHIND_PLAYER_ID = -1;
+    public static int DROPPED_ITEMS_ID = -1;
+
     public const string STORED_NAME = "Stored";
     public const string DROPPED_NAME = "Dropped";
     public static readonly int STORED_ID = Animator.StringToHash(STORED_NAME);
@@ -38,7 +42,7 @@ public class Item : MonoBehaviour
                 _char = GetComponentInParent<Character>();
             if (transform.parent == null && _char != null)
                 _char = null;
-            
+
             return _char;
         }
     }
@@ -71,29 +75,37 @@ public class Item : MonoBehaviour
 
     [Header("State")]
     public bool OnCharacter = false; // Is the item stored on the character's body, such as on their back or hip?
-
     public bool Dropped = true; // Is the item dropped on the floor in the world? If it is, then it is expected that OnCharacter is false and InHands is also false.
-
-    // Is the item not dropped, on a character, but not in that character's hands?
+    public bool InHands = false; // Assuming that OnCharacter is true, is the item in the character's hands?
     public bool Stored
     {
         get
         {
             return OnCharacter && !InHands;
         }
-    }
+    } // Is the item not dropped, on a character, but not in that character's hands?
+    public bool IsCurrentlyStored
+    {
+        get
+        {
+            if (Animator == null)
+                return true;
 
-    public bool InHands = false; // Assuming that OnCharacter is true, is the item in the character's hands?
+            var state = Animator.GetCurrentAnimatorStateInfo(0);
+
+            return state.IsTag("Stored");
+        }
+    } // Queries the animation system for the stored state. More costly, so avoid using when not completely necessary.
 
     public HandPosition RightHand
     {
         get
         {
-            if(_rhand == null)
+            if (_rhand == null)
             {
                 foreach (var hand in GetComponentsInChildren<HandPosition>())
                 {
-                    if(hand.Hand == Hand.RIGHT)
+                    if (hand.Hand == Hand.RIGHT)
                     {
                         _rhand = hand;
                         break;
@@ -124,25 +136,15 @@ public class Item : MonoBehaviour
         }
     }
     private HandPosition _rhand, _lhand;
-
-    public bool CurrentlyStored
-    {
-        get
-        {
-            if (Animator == null)
-                return true;
-
-            var state = Animator.GetCurrentAnimatorStateInfo(0);
-
-            return state.IsTag("Stored");
-        }
-    }
+    private List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
+    private int currentSpriteLayer = -1;
+    private int targetSpriteLayer = -1;
 
     private static List<string> stateErrors = new List<string>();
     public List<string> GetStateErrors()
     {
         stateErrors.Clear();
-        if(Icon == null)
+        if (Icon == null)
         {
             stateErrors.Add("Icon is missing. (null)");
         }
@@ -157,6 +159,18 @@ public class Item : MonoBehaviour
     private void Start()
     {
         Collider.isTrigger = true;
+
+        if (DROPPED_ITEMS_ID == -1)
+        {
+            DROPPED_ITEMS_ID = SortingLayer.NameToID("Dropped Items");
+            IN_FRONT_OF_PLAYER_ID = SortingLayer.NameToID("Equipped Items");
+            BEHIND_PLAYER_ID = SortingLayer.NameToID("Behind Equipped Items");
+        }
+
+        targetSpriteLayer = SortingLayer.NameToID("Dropped Items");
+        spriteRenderers.Clear();
+        GetComponentsInChildren<SpriteRenderer>(true, spriteRenderers);
+        spriteRenderers.RemoveAll(x => x.CompareTag("Ignore Dynamic Layering"));
     }
 
     private void Update()
@@ -166,6 +180,24 @@ public class Item : MonoBehaviour
             Animator.SetBool(STORED_ID, OnCharacter && !InHands);
             Animator.SetBool(DROPPED_ID, Dropped);
         }
+
+        SendMessage("DoSorting", SendMessageOptions.DontRequireReceiver);
+        SortSprites(this.targetSpriteLayer);
+    }
+
+    private void DoSorting()
+    {
+        // Default implemementation:
+        // If dropped, set the appropriate layer.
+
+        if (Dropped)
+        {
+            SetSpritesLayer(DROPPED_ITEMS_ID);
+        }
+        else if (OnCharacter)
+        {
+            SetSpritesLayer(IN_FRONT_OF_PLAYER_ID);            
+        }
     }
 
     public bool CanBePickedUp(Character c)
@@ -174,6 +206,27 @@ public class Item : MonoBehaviour
             return false;
         float dst = Vector2.Distance(c.transform.position, transform.position);
         return dst <= 4f;
+    }
+
+    public void SetSpritesLayer(int targetLayerID)
+    {
+        this.targetSpriteLayer = targetLayerID;
+    }
+
+    private void SortSprites(int targetLayerID)
+    {
+        if (targetLayerID == currentSpriteLayer)
+            return;
+
+        foreach (var spr in spriteRenderers)
+        {
+            if (spr == null)
+                continue;
+
+            spr.sortingLayerID = targetLayerID;
+        }
+
+        currentSpriteLayer = targetLayerID;
     }
 
     public static bool IsLoaded(ushort id)
