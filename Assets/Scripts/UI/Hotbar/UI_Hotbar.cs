@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_Hotbar : MonoBehaviour
 {
     public static UI_Hotbar Instance;
 
+    public Image Graphics;
     public Character Target;
     public UI_HotbarItem Prefab;
     public Transform Parent;
@@ -65,6 +67,11 @@ public class UI_Hotbar : MonoBehaviour
         {
             Clear();
         }
+
+        // Finally, hide if nothing is spawned (there are no items to display)
+        bool show = spawned.Count > 0;
+        if (Graphics.enabled != show)
+            Graphics.enabled = show;
     }
 
     public void Rebuild(Dictionary<ItemSlot, Item> items)
