@@ -86,8 +86,14 @@ public class GunAnimator : MonoBehaviour
         if(e.stringParameter == SHOOT_CALLBACK)
         {
             Gun.Ammo--;
+
             // TEMP spawn projectile.
-            Projectile.Spawn(0, transform.position, Vector2.one);
+            if(Gun.Muzzle != null)
+            {
+                Vector2 direction = InputManager.MousePos - (Vector2)Gun.Muzzle.position;
+                direction.Normalize();
+                Projectile.Spawn(0, Gun.Muzzle.position, direction);
+            }
         }
         if(e.stringParameter == RELOAD_CALLBACK)
         {

@@ -207,6 +207,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1902530888574194
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4418905425474028}
+  m_Layer: 0
+  m_Name: Muzzle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1988997874384762
 GameObject:
   m_ObjectHideFlags: 1
@@ -230,7 +245,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1488575997646286}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.684, z: 0}
+  m_LocalPosition: {x: -1.808, y: 0.392, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4322768827446850}
@@ -281,6 +296,7 @@ Transform:
   - {fileID: 4479891452974396}
   - {fileID: 4827490182343430}
   - {fileID: 4205251277311938}
+  - {fileID: 4418905425474028}
   m_Father: {fileID: 4322768827446850}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -325,6 +341,19 @@ Transform:
   - {fileID: 4378788690039812}
   m_Father: {fileID: 4310490625746028}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4418905425474028
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1902530888574194}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.7382, y: 0.0882, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4310490625746028}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4479891452974396
 Transform:
@@ -478,6 +507,7 @@ MonoBehaviour:
     OpenBolt: 0
     FullAuto: 1
     RPM: 550
+  Muzzle: {fileID: 4418905425474028}
   CurrentlyBehindUser: 0
   s_Aiming: 0
   s_CheckChamber: 0

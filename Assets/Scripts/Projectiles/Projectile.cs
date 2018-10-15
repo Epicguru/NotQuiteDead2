@@ -24,6 +24,28 @@ public class Projectile : MonoBehaviour
     public Vector2 Direction = new Vector2(1f, 0f);
     [Tooltip("The speed at which the projectile travels, in units per second.")]
     public float CurrentSpeed = 10f;
+    [Tooltip("The distance from the origial firing point at which the projectile is automatically destroyed.")]
+    public float MaxRange = 150f;
+
+    private Vector2 startPos;
+
+    public float SquareDistanceTravelled
+    {
+        get
+        {
+            // Should just be used for comparisons.
+            return ((Vector2)(transform.position) - startPos).sqrMagnitude;
+        }
+    }
+
+    public float DistanceTravelled
+    {
+        get
+        {
+            // Good ol' pythagoras.
+            return Mathf.Sqrt(SquareDistanceTravelled);
+        }
+    }
 
     public UnityEvent UponFired;
 
@@ -35,6 +57,25 @@ public class Projectile : MonoBehaviour
         currentPos += Direction.normalized * CurrentSpeed * Time.deltaTime;
 
         transform.position = currentPos;
+
+        EnsureRange();
+    }
+
+    private bool EnsureRange()
+    {
+        // Automatically destroys this projectile if it goes out of range. Returns true if destroyed.
+
+        if(DistanceTravelled >= MaxRange)
+        {
+            Pool.Return(PoolableObject);
+            return true;
+        }
+        return false;
+    }
+
+    private void UponSpawned()
+    {
+        startPos = transform.position;
     }
 
     public static void LoadAll()
@@ -98,6 +139,7 @@ public class Projectile : MonoBehaviour
 
         if(spawned.UponFired != null)
             spawned.UponFired.Invoke();
+        spawned.UponSpawned();
 
         return spawned;
     }

@@ -37,6 +37,10 @@ public class Gun : MonoBehaviour
     [Header("Data")]
     public GunInfo Info;
 
+    [Header("Parts")]
+    [Tooltip("The point from which bullets are fired.")]
+    public Transform Muzzle;
+
     [Header("State")] 
     public bool CurrentlyBehindUser = false; // When equipped on the player, are all the sprites sorted behind the player?
     public bool s_Aiming;
