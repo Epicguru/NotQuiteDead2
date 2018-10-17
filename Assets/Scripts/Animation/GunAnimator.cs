@@ -90,7 +90,9 @@ public class GunAnimator : MonoBehaviour
             // TEMP spawn projectile.
             if(Gun.Muzzle != null)
             {
-                Vector2 direction = InputManager.MousePos - (Vector2)Gun.Muzzle.position;
+                // Note that the direction is calculated from the character's center of mass (the item hold point),
+                // which makes the aiming and shooting more intuitive.
+                Vector2 direction = InputManager.MousePos - (Vector2)Gun.transform.position;
                 direction.Normalize();
                 Projectile.Spawn(0, Gun.Muzzle.position, direction);
             }
