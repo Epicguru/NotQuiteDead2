@@ -13,7 +13,7 @@ public class Health : MonoBehaviour
             return _maxHealth;
         }
         set
-        {            
+        {
             _maxHealth = Mathf.Max(value, 0f);
             CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
         }
@@ -63,6 +63,12 @@ public class Health : MonoBehaviour
     }
     [SerializeField]
     private float _maxArmour;
+
+    public void Reset(float x, float y)
+    {
+        CurrentHealth = x;
+        CurrentArmour = y;
+    }
 
     public bool IsDead
     {
@@ -157,29 +163,23 @@ public class Health : MonoBehaviour
         float damageToHealth = 0f;
         float damageToArmour = 0f;
 
-        while(damage > 0 && !IsDead)
+        // Distribute damage correctly.
+        if (CurrentArmour > 0f && armourPen != 1f)
         {
-            // Distribute damage correctly.
-            if(CurrentArmour > 0f && armourPen != 1f)
-            {
-                // Means that with armour pen of 0, deals full damage to armour, with armour pen 1 deals no damage to armour.
-                float d2a = Mathf.Min(damage * (1 - armourPen), CurrentArmour / ARMOUR_RES);
-                damage -= d2a;
+            // Means that with armour pen of 0, deals full damage to armour, with armour pen 1 deals no damage to armour.
+            float d2a = Mathf.Min(damage * (1 - armourPen), CurrentArmour / ARMOUR_RES);
+            damage -= d2a;
 
-                CurrentArmour -= d2a * ARMOUR_RES;
-                damageToArmour += d2a * ARMOUR_RES;
-                continue;
-            }
-            else
-            {
-                // We have only health, or full armour pen hit.
-                float d2h = Mathf.Min(CurrentHealth, damage);
-                CurrentHealth -= d2h;
-                damageToHealth += d2h;
-                damage -= d2h;
-                // All damage has been dealt, so no need to continue any more.
-                break;
-            }
+            CurrentArmour -= d2a * ARMOUR_RES;
+            damageToArmour += d2a * ARMOUR_RES;
+        }
+        if(damage > 0f)
+        {
+            // We have only health, or full armour pen hit.
+            float d2h = Mathf.Min(CurrentHealth, damage);
+            CurrentHealth -= d2h;
+            damageToHealth += d2h;
+            damage -= d2h;
         }
 
         return new Vector3(damageToHealth, damageToArmour, damage);
