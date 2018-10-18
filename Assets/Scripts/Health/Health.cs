@@ -46,6 +46,7 @@ public class Health : MonoBehaviour
             _currentArmour = Mathf.Clamp(value, 0f, MaxArmour);
         }
     }
+    [SerializeField]
     private float _currentArmour = 0f;
 
     public float MaxArmour
@@ -60,6 +61,7 @@ public class Health : MonoBehaviour
             CurrentArmour = Mathf.Min(CurrentArmour, MaxArmour);
         }
     }
+    [SerializeField]
     private float _maxArmour;
 
     public bool IsDead
@@ -130,10 +132,14 @@ public class Health : MonoBehaviour
         return Mathf.CeilToInt(CurrentArmour);
     }
 
-    public Vector2 DealDamage(float baseDamage, float armourPen)
+    /// <summary>
+    /// Deals damage to the current Health state, reducing health and/or armour.
+    /// </summary>
+    /// <param name="baseDamage">The base damage value. With no armour, or 1 armour penetration, this will be the damage dealt to the health directly.</param>
+    /// <param name="armourPen">With 1 armour penetration, ignores armour. With 0 armour penetration, will not damage health until armour is destroyed, which could happen in a single hit given enough base damage.</param>
+    /// <returns>A vector 3 where the X component is the damage dealt to the health, the Y component is the damage dealt to armour, and the Z component is the damage left over, which would indicate that the character is dead.</returns>
+    public Vector3 DealDamage(float baseDamage, float armourPen)
     {
-        const float DAMAGE_AGAINST_ARMOUR = 0.5f;
-
         /* 
          * Base rules:
          * - Armour takes half the damage from hits. So a base 100 attack would only remove 50 armour points.
@@ -141,27 +147,41 @@ public class Health : MonoBehaviour
          * - When armour penetration is used, damage against armour is reduced depending on the penetration.
          */
 
-        float damage = baseDamage;
+        if (baseDamage <= 0f)
+            return Vector2.zero;
 
+        const float ARMOUR_RES = 0.5f;
+        armourPen = Mathf.Clamp01(armourPen);
+
+        float damage = baseDamage;
         float damageToHealth = 0f;
         float damageToArmour = 0f;
 
-        while(damage > 0f)
+        while(damage > 0 && !IsDead)
         {
-            // Can't distribute the damage if we have no health left. No point.
-            if (CurrentHealth <= 0f)
-                break;
-
-            if(CurrentArmour > 0f)
+            // Distribute damage correctly.
+            if(CurrentArmour > 0f && armourPen != 1f)
             {
-                float d2a = damage * DAMAGE_AGAINST_ARMOUR;
-                if(d2a > CurrentArmour)
-                {
-                    float remainder = d2a - CurrentArmour;
-                }
+                // Means that with armour pen of 0, deals full damage to armour, with armour pen 1 deals no damage to armour.
+                float d2a = Mathf.Min(damage * (1 - armourPen), CurrentArmour / ARMOUR_RES);
+                damage -= d2a;
+
+                CurrentArmour -= d2a * ARMOUR_RES;
+                damageToArmour += d2a * ARMOUR_RES;
+                continue;
+            }
+            else
+            {
+                // We have only health, or full armour pen hit.
+                float d2h = Mathf.Min(CurrentHealth, damage);
+                CurrentHealth -= d2h;
+                damageToHealth += d2h;
+                damage -= d2h;
+                // All damage has been dealt, so no need to continue any more.
+                break;
             }
         }
 
-        return new Vector2(damageToHealth, damageToArmour);
+        return new Vector3(damageToHealth, damageToArmour, damage);
     }
 }
