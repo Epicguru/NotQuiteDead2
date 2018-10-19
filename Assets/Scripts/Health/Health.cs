@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,6 +8,8 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     public const float ARMOUR_RESISTANCE = 0.5f;
+
+    public bool Invunerable = false;
 
     public float MaxHealth
     {
@@ -159,6 +162,8 @@ public class Health : MonoBehaviour
 
         if (baseDamage <= 0f)
             return Vector2.zero;
+        if (Invunerable)
+            return new Vector3(0f, 0f, Mathf.Min(baseDamage, 0f));
         
         armourPen = Mathf.Clamp01(armourPen);
 
@@ -186,5 +191,29 @@ public class Health : MonoBehaviour
         }
 
         return new Vector3(damageToHealth, damageToArmour, damage);
+    }
+
+    /// <summary>
+    /// Gets the health component on a transform or any of it's parents. Will return null if the Health component is not found.
+    /// </summary>
+    /// <param name="t">The transform to search, including any and all parent transforms.</param>
+    /// <param name="ifCanDamage">When true, will return null if the found health component cannot be damaged, for example if it is dead or invunerable.</param>
+    /// <returns>The Health component, or null.</returns>
+    public static Health GetHealthOf(Transform t, bool ifCanDamage = true)
+    {
+        if (t == null)
+            return null;
+
+        var health = t.GetComponentInParent<Health>();
+        if (health == null)
+            return null;
+
+        if (health.IsDead && ifCanDamage)
+            return null;
+
+        if (health.Invunerable && ifCanDamage)
+            return null;
+
+        return health;
     }
 }

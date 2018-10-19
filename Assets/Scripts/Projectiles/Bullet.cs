@@ -40,17 +40,15 @@ public class Bullet : MonoBehaviour
         LineRenderer.SetPosition(1, transform.position);
     }
 
-    public void Update()
+    public void LateUpdate()
     {
         SetFirstVertex(transform.position);
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Projectile.Direction = Random.insideUnitCircle.normalized;
-            AddNewVertex();
-        }
-
         EnsureLineSize();
+    }
+
+    private void UponProjectileBounce(RaycastHit2D hit)
+    {
+        AddNewVertex(hit.point);
     }
 
     private void SetFirstVertex(Vector3 pos)
@@ -140,7 +138,7 @@ public class Bullet : MonoBehaviour
 
             diff *= dst - toRemove;
             Vector2 finalPos = next + diff;
-            Debug.Log("Removed {0}/{1} from point ({2} <-> {3}) on frame {4}".Form(Vector2.Distance(current, finalPos), toRemove, index, index - 1, Time.frameCount));
+            //Debug.Log("Removed {0}/{1} from point ({2} <-> {3}) on frame {4}".Form(Vector2.Distance(current, finalPos), toRemove, index, index - 1, Time.frameCount));
             LineRenderer.SetPosition(index, finalPos);
             return 0f;
         }
@@ -149,7 +147,7 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// Adds the current position as a new vertex, placed immediately after the first vertex.
     /// </summary>
-    private void AddNewVertex()
+    private void AddNewVertex(Vector2 pos)
     {
         // Say we have two points:
         // The start and the current point, where 0 is current and 1 is start.
@@ -159,5 +157,6 @@ public class Bullet : MonoBehaviour
         {
             LineRenderer.SetPosition(i, LineRenderer.GetPosition(i - 1));
         }
+        LineRenderer.SetPosition(1, pos);
     }
 }
