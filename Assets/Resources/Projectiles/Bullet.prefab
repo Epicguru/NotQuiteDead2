@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 0
   Direction: {x: 1, y: 0}
-  CurrentSpeed: 100
+  CurrentSpeed: 150
   MaxRange: 150
   UponFired:
     m_PersistentCalls:
@@ -85,6 +85,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5ac94db330f3e040b8309d4ba6e8543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TrailLength: 3
+  LENGTH: 0
 --- !u!114 &114799558943389474
 MonoBehaviour:
   m_ObjectHideFlags: 1

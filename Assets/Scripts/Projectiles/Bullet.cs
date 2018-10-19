@@ -64,7 +64,6 @@ public class Bullet : MonoBehaviour
             return;
 
         float MAX = TrailLength;
-        float MAX_SQAURED = MAX*MAX;
 
         // Makes sure that the entirety of the line is no more than MAX units long.
         float dst = 0f;
@@ -74,24 +73,19 @@ public class Bullet : MonoBehaviour
             // Grab the position, get square distance to the next vertex.
             Vector2 pos = LineRenderer.GetPosition(i);
 
-            dst += (pos - previousPoint).sqrMagnitude;
+            dst += Vector2.Distance(pos, previousPoint);
+            previousPoint = pos;
         }
 
-        bool corrected = false;
         // Is it more than the max length?
-        if(dst >= MAX_SQAURED)
+        if(dst >= MAX)
         {
-            // Turn the square distance into the real distance.
-            dst = Mathf.Sqrt(dst);
-
             // Now we need to remove this excess from the line, starting from the last vertex moving towards the first vertex.
             float excess = dst - MAX;
 
             // Trim all the excess from the line.
             // Normally the excess is no more than one frame's worth of movement, but this is the only way to ensure very fast, bouncing projectiles can maintain a continuous line.
             RemoveFromLine(excess, -1);
-
-            corrected = true;
         }
 
         dst = 0f;
@@ -101,12 +95,10 @@ public class Bullet : MonoBehaviour
             // Grab the position, get square distance to the next vertex.
             Vector2 pos = LineRenderer.GetPosition(i);
 
-            dst += (pos - previousPoint).sqrMagnitude;
+            dst += Vector2.Distance(pos, previousPoint);
+            previousPoint = pos;
         }
-        LENGTH = Mathf.Sqrt(dst);
-
-        if(corrected)
-            Debug.Assert(Mathf.Abs(TrailLength - LENGTH) < 0.1f, "Target: {0}, got: {1}".Form(TrailLength, LENGTH));
+        LENGTH = dst;
     }
 
     /// <summary>
@@ -148,7 +140,7 @@ public class Bullet : MonoBehaviour
 
             diff *= dst - toRemove;
             Vector2 finalPos = next + diff;
-            Debug.Log("Removed {0}/{1} [~{4}] from point ({2} <-> {3}) on frame {5}".Form(Vector2.Distance(current, finalPos), toRemove, index, index - 1, Mathf.Abs(toRemove - Vector2.Distance(current, finalPos)), Time.frameCount));
+            Debug.Log("Removed {0}/{1} from point ({2} <-> {3}) on frame {4}".Form(Vector2.Distance(current, finalPos), toRemove, index, index - 1, Time.frameCount));
             LineRenderer.SetPosition(index, finalPos);
             return 0f;
         }
