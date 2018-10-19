@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 // Hey, Epicguru here. The code below is not mine, it is made by Unity user 'Yoyo', and posted for public use on the Unity wiki.
 // Many thanks!
@@ -67,6 +68,12 @@ static class SceneAutoLoader
     {
         if (!LoadMasterOnPlay)
         {
+            return;
+        }
+
+        if (EditorSceneManager.GetActiveScene().name.StartsWith("InitTestScene"))
+        {
+            Debug.LogWarning("Not running scene change, detected test mode.");
             return;
         }
 
