@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5ac94db330f3e040b8309d4ba6e8543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TrailLength: 3
+  TrailLength: 25
   LENGTH: 0
 --- !u!114 &114799558943389474
 MonoBehaviour:
