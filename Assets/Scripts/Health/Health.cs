@@ -6,6 +6,8 @@ using UnityEngine;
 /// </summary>
 public class Health : MonoBehaviour
 {
+    public const float ARMOUR_RESISTANCE = 0.5f;
+
     public float MaxHealth
     {
         get
@@ -64,10 +66,12 @@ public class Health : MonoBehaviour
     [SerializeField]
     private float _maxArmour;
 
-    public void Reset(float x, float y)
+    public void Reset(float maxHealth, float health, float maxArmour, float armour)
     {
-        CurrentHealth = x;
-        CurrentArmour = y;
+        MaxHealth = maxHealth;
+        CurrentHealth = health;
+        MaxArmour = maxArmour;
+        CurrentArmour = armour;
     }
 
     public bool IsDead
@@ -155,8 +159,7 @@ public class Health : MonoBehaviour
 
         if (baseDamage <= 0f)
             return Vector2.zero;
-
-        const float ARMOUR_RES = 0.5f;
+        
         armourPen = Mathf.Clamp01(armourPen);
 
         float damage = baseDamage;
@@ -167,11 +170,11 @@ public class Health : MonoBehaviour
         if (CurrentArmour > 0f && armourPen != 1f)
         {
             // Means that with armour pen of 0, deals full damage to armour, with armour pen 1 deals no damage to armour.
-            float d2a = Mathf.Min(damage * (1 - armourPen), CurrentArmour / ARMOUR_RES);
+            float d2a = Mathf.Min(damage * (1 - armourPen), CurrentArmour / ARMOUR_RESISTANCE);
             damage -= d2a;
 
-            CurrentArmour -= d2a * ARMOUR_RES;
-            damageToArmour += d2a * ARMOUR_RES;
+            CurrentArmour -= d2a * ARMOUR_RESISTANCE;
+            damageToArmour += d2a * ARMOUR_RESISTANCE;
         }
         if(damage > 0f)
         {
