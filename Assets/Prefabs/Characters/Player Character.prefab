@@ -128,6 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4253521425027066}
+  - component: {fileID: 114353529773793232}
   - component: {fileID: 114915074816816788}
   - component: {fileID: 114442143304218442}
   - component: {fileID: 114192178853322326}
@@ -654,10 +655,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c9ae6eca3d5e3945888150ce55a17a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Holding: {fileID: 0}
   HoldPoint: {fileID: 4530455415879542}
   Left: {fileID: 114402141805072062}
   Right: {fileID: 114441815993425974}
+  DEBUG: 
 --- !u!114 &114192178853322326
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -673,6 +674,22 @@ MonoBehaviour:
   RunningBool: Running
   NormalizedInputDirection: {x: 0, y: 0}
   CurrentSpeed: 7
+--- !u!114 &114353529773793232
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1439444052909760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f5b32782f3ec54092b87f75065c005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Invunerable: 0
+  _maxHealth: 100
+  _currentHealth: 100
+  _currentArmour: 0
+  _maxArmour: 0
 --- !u!114 &114402141805072062
 MonoBehaviour:
   m_ObjectHideFlags: 1

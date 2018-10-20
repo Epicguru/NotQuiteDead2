@@ -28,9 +28,17 @@ public class Projectile : MonoBehaviour
     public float MaxRange = 150f;
     [Tooltip("The maximum number of bounces that the projectile can make off of solid surfaces.")]
     public int MaxBounces = 0;
+    [Tooltip("The maximum penetration count against objects that have Health, such as characters.")]
+    public int MaxPenetration = 0;
+    [Tooltip("The baseline damage that the projectile deals against objects.")]
+    public float Damage = 50f;
+    [Tooltip("The amout of armour penetration that the projectile has when damaging Health objects. Does not affect real penetration.")]
+    [Range(0f, 1f)]
+    public float ArmourPenetration = 0f;
 
     private Vector2 startPos;
     private int remainingBounces;
+    private int remainingPenetrations;
     private bool destroyed = false;
 
     public float SquareDistanceTravelled
@@ -65,6 +73,7 @@ public class Projectile : MonoBehaviour
         EnsureRange();
     }
 
+    private List<Health> damaged = new List<Health>();
     private void ResolveAndMove(float distance)
     {
         // Takes the projectile's current position, direction, and moves the projectile whilst reporting and solving collisions.
@@ -83,74 +92,140 @@ public class Projectile : MonoBehaviour
             j++;
 
             int count;
+            int interactions = 0;
             var hits = GetHits(currentPos, currentDirection, distance, out count);
-            if(count == 0)
+            // For each collision, which will be in order, see if it has a health object.
+            for (int i = 0; i < count; i++)
+            {
+                var hit = hits[i];
+                Health h = Health.GetHealthOf(hit.transform, false);
+
+                if (h == null)
+                {
+                    // No health object, so it is an indestructible object, such as a wall.
+                    // Bounce off it, or just stop.
+
+                    // If it is a trigger, pass right through it, like a ghost.
+                    if (hit.collider.isTrigger)
+                        continue;                        
+
+                    if (remainingBounces > 0)
+                    {
+                        // Calculate the distance to the bounce point, and subtract that from the pending distance.
+                        float distanceToWall = Vector2.Distance(currentPos, hit.point);
+                        float offset = 0.025f;
+                        distance -= distanceToWall - offset;
+                        currentPos = hit.point + (offset * hit.normal);
+
+                        // Calculate the new reflected direction, ready for the next itteration.
+                        currentDirection = CalculateReflection(currentDirection, hit.normal).normalized;
+
+                        // Have one less bounce.
+                        remainingBounces--;
+
+                        var r = GetRigidbody(hit.transform);
+                        if (r != null)
+                        {
+                            r.AddForceAtPosition(Direction * Damage * 0.1f, hit.point, ForceMode2D.Impulse);
+                        }
+
+                        SendMessage("UponProjectileBounce", hit, SendMessageOptions.DontRequireReceiver);
+                        interactions++;
+                        break;
+                    }
+                    else
+                    {
+                        currentPos = hit.point;
+                        runLoop = false;
+                        destroyed = true; // Destroy the whole projectile.
+                        interactions++;
+                        SendMessage("UponProjectileDestroyed", SendMessageOptions.DontRequireReceiver);
+                        break;
+                    }
+                }
+                else
+                {
+                    if (damaged.Contains(h))
+                    {
+                        continue;
+                    }
+
+                    if (h.IsDead) // Ignore dead objects.
+                        continue;
+                    if (h.Invunerable)
+                        continue; // Ignore invunerable objects.
+
+                    // TODO hit (and penetrate?) health objects.
+
+                    if(hit.collider.isTrigger && hit.collider.GetComponent<Health>() == null)
+                    {
+                        // If the collider hit is a trigger, and the health component is not attached directly to it, ignore this collision.
+                        continue;
+                    }
+
+                    // Can we penetrate this object?
+                    if(remainingPenetrations == 0)
+                    {
+                        // Can't penetrate it but still deal damage.
+                        if (!damaged.Contains(h))
+                        {
+                            float d = GetDamage();
+                            h.DealDamage(d, ArmourPenetration);
+                            damaged.Add(h);
+                            SendMessage("UponProjectileDamage", hit, SendMessageOptions.DontRequireReceiver);
+                        }
+
+                        // Nope, stop right here.
+                        currentPos = hit.point;
+                        runLoop = false;
+                        destroyed = true;
+                        interactions++;
+                        SendMessage("UponProjectileDestroyed", SendMessageOptions.DontRequireReceiver);
+                        break;
+                    }
+                    else
+                    {
+                        // Go through it and deal damage...
+                        remainingPenetrations--;
+
+                        // Can we damage it or has it already been hit?
+                        if (damaged.Contains(h))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            damaged.Add(h);
+                            interactions++;
+
+                            // Deal the damage against the health component.
+                            float d = GetDamage();
+                            h.DealDamage(d, ArmourPenetration);
+
+                            SendMessage("UponProjectilePenetrate", hit, SendMessageOptions.DontRequireReceiver);
+                            SendMessage("UponProjectileDamage", hit, SendMessageOptions.DontRequireReceiver);
+
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            if(count == 0 || interactions == 0)
             {
                 // Clear path ahead, no need to do more processing.
                 currentPos = currentPos + currentDirection * distance;
                 break;
-            }
-            else
-            {
-                // For each collision, which will be in order, see if it has a health object.
-                for (int i = 0; i < count; i++)
-                {
-                    var hit = hits[i];
-                    Health h = Health.GetHealthOf(hit.transform, false);
-
-                    if(h == null)
-                    {
-                        // No health object, so it is an indestructible object, such as a wall.
-                        // Bounce off it, or just stop.
-
-                        if(remainingBounces > 0)
-                        {
-                            // Calculate the distance to the bounce point, and subtract that from the pending distance.
-                            float distanceToWall = Vector2.Distance(currentPos, hit.point);
-                            float offset = 0.025f;
-                            distance -= distanceToWall - offset;
-                            currentPos = hit.point + (offset * hit.normal);
-
-                            // Calculate the new reflected direction, ready for the next itteration.
-                            currentDirection = CalculateReflection(currentDirection, hit.normal).normalized;
-
-                            // Have one less bounce.
-                            remainingBounces--;
-
-                            var r = GetRigidbody(hit.transform);
-                            if(r != null)
-                            {
-                                r.AddForceAtPosition(Direction * 5f, hit.point, ForceMode2D.Impulse);
-                            }
-
-                            SendMessage("UponProjectileBounce", hit, SendMessageOptions.DontRequireReceiver);
-
-                            break;
-                        }
-                        else
-                        {
-                            currentPos = hit.point;
-                            runLoop = false;
-                            destroyed = true; // Destroy the whole projectile.
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (h.IsDead) // Ignore dead objects.
-                            continue;
-                        if (h.Invunerable)
-                            continue; // Ignore invunerable objects.
-
-                        // TODO hit (and penetrate?) health objects.
-                        // Health objects probably shouldn't be bounced off, but I will have to see...
-                    }
-                }
-            }
+            }            
         }
 
         transform.position = currentPos;
         Direction = currentDirection;
+    }
+
+    private float GetDamage()
+    {
+        return this.Damage;
     }
 
     private const int MAX_HITS = 30;
@@ -158,7 +233,7 @@ public class Projectile : MonoBehaviour
     private static RaycastHit2D[] GetHits(Vector2 start, Vector2 direction, float distance, out int count)
     {
         int realHits = Physics2D.RaycastNonAlloc(start, direction, hits, distance);
-        if(realHits > MAX_HITS)
+        if (realHits > MAX_HITS)
         {
             Debug.LogError("There were more raycast hits than are supported: {0} compared to max {1}. Change the max value to fix this.".Form(realHits, MAX_HITS));
             realHits = MAX_HITS;
@@ -181,16 +256,18 @@ public class Projectile : MonoBehaviour
         // Assumes that vectors are normalized. The normal MUST be normalized, and the input direction's magnitude will always equal that of the output (reflected) vector's magnitude, so
         // technically it doesn't have to be normalized.
 
-        return inDirection - 2*normal * (Vector2.Dot(inDirection, normal));
+        return inDirection - 2 * normal * (Vector2.Dot(inDirection, normal));
     }
 
     private bool EnsureRange()
     {
         // Automatically destroys this projectile if it goes out of range. Returns true if destroyed.
 
-        if(DistanceTravelled >= MaxRange)
+        if (DistanceTravelled > MaxRange)
         {
-            Pool.Return(PoolableObject);
+            transform.position -= -(Vector3)Direction * (DistanceTravelled - MaxRange);
+            destroyed = true;
+            SendMessage("UponProjectileDestroyed", SendMessageOptions.DontRequireReceiver);
             return true;
         }
         return false;
@@ -200,7 +277,9 @@ public class Projectile : MonoBehaviour
     {
         startPos = transform.position;
         remainingBounces = MaxBounces;
+        remainingPenetrations = MaxPenetration;
         destroyed = false;
+        damaged.Clear();
     }
 
     public static void LoadAll()
@@ -262,7 +341,7 @@ public class Projectile : MonoBehaviour
         spawned.transform.position = pos;
         spawned.Direction = direction;
 
-        if(spawned.UponFired != null)
+        if (spawned.UponFired != null)
             spawned.UponFired.Invoke();
         spawned.UponSpawned();
 
