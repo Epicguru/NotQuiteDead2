@@ -45,6 +45,7 @@ public class AssetLoader : MonoBehaviour
             actions.Add(new KeyValuePair<string, Run>("Loading: Items...", () => { Item.LoadAll(); }));
             actions.Add(new KeyValuePair<string, Run>("Loading: Commands...", () => { Commands.LoadCommands(); }));
             actions.Add(new KeyValuePair<string, Run>("Loading: Projectiles...", () => { Projectile.LoadAll(); }));
+            actions.Add(new KeyValuePair<string, Run>("Loading: Effects...", () => { TempEffect.LoadAll(); }));
 
 
 
@@ -83,6 +84,7 @@ public class AssetLoader : MonoBehaviour
             // Unload all here.
             Item.UnloadAll();
             Projectile.UnloadAll();
+            TempEffect.UnloadAll();
 
             // Resources cleanup...
             Resources.UnloadUnusedAssets();
