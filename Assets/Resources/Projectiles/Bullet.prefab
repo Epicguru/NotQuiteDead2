@@ -60,7 +60,7 @@ MonoBehaviour:
   MaxRange: 250
   MaxBounces: 1
   MaxPenetration: 0
-  Damage: 25
+  Damage: 100000
   ArmourPenetration: 0
   UponFired:
     m_PersistentCalls:

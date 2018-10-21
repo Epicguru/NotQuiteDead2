@@ -235,7 +235,6 @@ public class Gun : MonoBehaviour
 
     private void LookToMouse()
     {
-        // Works on both server and clients!
         Vector2 mouseOffset = InputManager.MousePos - (Vector2)transform.position;
         if(mouseOffset.x >= 0f && s_Aiming)
         {

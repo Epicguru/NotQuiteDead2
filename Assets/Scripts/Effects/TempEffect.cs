@@ -58,6 +58,9 @@ public class TempEffect : MonoBehaviour
             var c = SpriteRenderer.color;
             c.a = a;
             SpriteRenderer.color = c;
+            var c2 = SpriteRenderer.material.GetColor("_Color");
+            c2.a = a;
+            SpriteRenderer.material.SetColor("_Color", c2);
         }
     }
 

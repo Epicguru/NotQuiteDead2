@@ -5,7 +5,7 @@ SpriteAtlas:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Agents
+  m_Name: Characters
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -48,5 +48,5 @@ SpriteAtlas:
   - Foot
   - Head Ref
   - Face
-  m_Tag: Agents
+  m_Tag: Characters
   m_IsVariant: 0

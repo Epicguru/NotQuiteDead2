@@ -37,6 +37,16 @@ public class PlayerPickup : MonoBehaviour
                         UI_ActionPopup.Display(item.Name, InputManager.GetInputKeys("Action")[0], (Vector2)item.transform.position + Vector2.right * 0.2f);
                         if (InputManager.IsDown("Action"))
                         {
+                            // If we already have an item of that slot type, drop the current one.
+                            if (Player.Character.Hands.OnCharacter.ContainsKey(item.Slot))
+                            {
+                                Player.Character.Hands.DropStored(item.Slot);
+                            }
+                            if(Player.Character.Hands.Holding != null && Player.Character.Hands.Holding.Slot == item.Slot)
+                            {
+                                Player.Character.Hands.DropCurrent();
+                            }
+
                             // Pick up the item...
                             // First, store in on the character body.
                             Player.Character.Hands.StoreItem(item);

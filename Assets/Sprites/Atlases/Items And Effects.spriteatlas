@@ -5,7 +5,7 @@ SpriteAtlas:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Items
+  m_Name: Items And Effects
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -30,57 +30,86 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 102900000, guid: 23b0753ecf8385945a624ca4ea983304, type: 3}
+    - {fileID: 102900000, guid: a41bf037a6f179b478e139086d332d02, type: 3}
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 4415aa907ed1a3c429d86b6db8086961, type: 3}
   - {fileID: 21300000, guid: da07dc91aec664440b7406384a7bda6e, type: 3}
   - {fileID: 21300000, guid: 5542d0e1a6d9d3c4b89af446a04727de, type: 3}
   - {fileID: 21300000, guid: 936e3232a02578249b08aeecf61787e4, type: 3}
   - {fileID: 21300000, guid: 01f85a23c4a1ea84ea1ac7e18c45adfb, type: 3}
+  - {fileID: 21300000, guid: 65f15de3d0022b64bba0e0e83ce4e829, type: 3}
   - {fileID: 21300000, guid: 87c58bf31f4f68b43b9a5f57b430bf5d, type: 3}
   - {fileID: 21300000, guid: 7f956b04fad79a5489da091a1ae7c0cc, type: 3}
   - {fileID: 21300000, guid: ae306c24b0c451849bbd69bf7582d104, type: 3}
+  - {fileID: 21300000, guid: 95659834885de674bbd1956afaad4cd7, type: 3}
+  - {fileID: 21300000, guid: 9453bfe40c1013b4d9263d43ec395f62, type: 3}
+  - {fileID: 21300000, guid: 37752b35434beac499cb73779b7420a3, type: 3}
   - {fileID: 21300000, guid: ebd23906e2627744eadb235547fd0a82, type: 3}
   - {fileID: 21300000, guid: 57ba3e0668a8c9949b11428e52d49d34, type: 3}
   - {fileID: 21300000, guid: 49cf2e665e9957f4ea1d4fa11e5b558e, type: 3}
   - {fileID: 21300000, guid: 60503786587d98d4587d4f5a66dbadcb, type: 3}
+  - {fileID: 21300000, guid: 343791a6ec712f64da4df714b7f59347, type: 3}
   - {fileID: 21300000, guid: 8298d2f6f5bdb9d4bbc2dbb06bb35a40, type: 3}
   - {fileID: 21300000, guid: cf272ff63ab80514c8af801f6777052a, type: 3}
   - {fileID: 21300000, guid: f8c57147caa9aea4183042a8a486a3a8, type: 3}
   - {fileID: 21300000, guid: 8c9733888a6a6c641a7a97a779cf3c28, type: 3}
+  - {fileID: 21300000, guid: 172adbe836605134e805db00161b86cb, type: 3}
   - {fileID: 21300000, guid: fbbc0e49aa1e0174092cd6029b73e930, type: 3}
   - {fileID: 21300000, guid: 7798ec4a317206241890314551a09fd6, type: 3}
+  - {fileID: 21300000, guid: 505c875a211ec104088fa61219dbd4b4, type: 3}
+  - {fileID: 21300000, guid: b7b42f8a70efd564fa11e663993f4413, type: 3}
+  - {fileID: 21300000, guid: 461e6d4beffbd02479c93b44afb3fe00, type: 3}
   - {fileID: 21300000, guid: e11dcaabbb1c9364e9b84e7b0bf0e851, type: 3}
   - {fileID: 21300000, guid: f37bdc1cc1688ff4eb4c0a2daed5fc51, type: 3}
+  - {fileID: 21300000, guid: de328ffc341e41c4eb64adaef8945a00, type: 3}
+  - {fileID: 21300000, guid: 443bd61e823b85d4e8e3dfecb25bca57, type: 3}
+  - {fileID: 21300000, guid: 08f2674e4a831a44b898b40ab47867b1, type: 3}
   - {fileID: 21300000, guid: 53d98c5e8d906c94192720753bb974f0, type: 3}
   - {fileID: 21300000, guid: 111bdb8e279631d4298d751def48c6e6, type: 3}
   - {fileID: 21300000, guid: 922f980f36ff463468d1a8753035a248, type: 3}
   - {fileID: 21300000, guid: 5d9cb02fe5ae5914d93d2a1ab8daee9d, type: 3}
+  - {fileID: 21300000, guid: d8ee657fdfde3d64c966ac5d885bd602, type: 3}
   - {fileID: 21300000, guid: fee9feef65fbb214bb4bdd4d3b855002, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Hand Cannon Icon
   - Liberator Bolt
   - Potshot 57 Magazine Cover
   - Quaternion Body
   - Potshot 57 Magazine Upper
+  - Hand Cannon Insides
   - Quaternion Iron Sights
   - Potshot 57 Body
   - Quaternion Icon
+  - Muzzle Flash 4
+  - Smoke Trail Texture
+  - Hand Cannon Mag
   - Liberator Body
   - Liberator Flap
   - Liberator Cover
   - Potshot 57 Icon
+  - Hand Cannon Slide
   - Potshot 57 Slide
   - Liberator Magazine
   - Potshot 57 Insides
   - Spin Blur
+  - Muzzle Flash 2
   - Liberator Icon
   - Quaternion Trigger
+  - Muzzle Flash 5
+  - Muzzle Flash 7
+  - Muzzle Flash 6
   - Quaternion Cover
   - Potshot 57 Magazine
+  - Muzzle Flash 1
+  - Hand Cannon Body
+  - Muzzle Flash 3
   - Liberator Insides
   - Quaternion Magazine
   - Potshot 57 Trigger
   - Liberator Trigger
+  - Muzzle Flash 8
   - Potshot 57 Slide Lower
-  m_Tag: Items
+  m_Tag: Items And Effects
   m_IsVariant: 0

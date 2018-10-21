@@ -9,7 +9,20 @@ public class CharacterHandManager : MonoBehaviour
 
     // The currently held item. A held item is, unsuprisingly, held in the hands as opposed to just
     // sitting somewhere on the characters body.
-    public Item Holding { get; private set; }
+    public Item Holding
+    {
+        get
+        {
+            return _holding;
+        }
+        private set
+        {
+            _holding = value;
+        }
+    }
+    [ReadOnly]
+    [SerializeField]
+    private Item _holding;
 
     // Real, spawned items that exist on the character's body, in the stored state. The item in the hands (Equiped) is not included in this list.
     // Normally the length of this will never be more than 3. At a very maximum, the character will be in 'possesion' of 4 items: 3 stored on the
@@ -19,7 +32,6 @@ public class CharacterHandManager : MonoBehaviour
 
     // The item that is really held by the character. Unlike Holding, this value is hidden.
     // This is used to remove items from the character hands with correct animations and interpolation.
-    // Both the item in Holding and in CurrentlyHolding must be in the Equiped array.
     private Item currentlyHolding;
 
     [Header("References")]
@@ -27,18 +39,12 @@ public class CharacterHandManager : MonoBehaviour
     public HandTracker Left;
     public HandTracker Right;
 
-    [SerializeField]
-    [ReadOnly]
-    [TextArea(5, 10)]
-    private string DEBUG;
-
     public void Update()
     {
-        DEBUG = "";
-        foreach (var pair in OnCharacter)
-        {
-            DEBUG += pair.Value.Name + "\n";
-        }
+        if (this.Holding != null && this.Holding.Dropped)
+            this.Holding = null;
+        if (this.currentlyHolding != null && this.currentlyHolding.Dropped)
+            this.currentlyHolding = null;
 
         var Holding = this.Holding;
 
@@ -257,6 +263,35 @@ public class CharacterHandManager : MonoBehaviour
         }
         Holding.transform.SetParent(null);
         Holding = null;
+    }
+
+    /// <summary>
+    /// Drops whatever item is stored in slot 'slot', if any.
+    /// </summary>
+    /// <param name="slot">The slot to drop an item from.</param>
+    public void DropStored(ItemSlot slot)
+    {
+        if (OnCharacter.ContainsKey(slot))
+        {
+            DropStored(OnCharacter[slot]);
+        }
+    }
+
+    /// <summary>
+    ///  Drops on of the stored items.
+    /// </summary>
+    /// <param name="item">The item to drop.</param>
+    public void DropStored(Item item)
+    {
+        if (item == null || item.Dropped || !OnCharacter.ContainsValue(item))
+            return;
+
+        item.OnCharacter = false;
+        item.InHands = false;
+        item.Dropped = true;
+        if (OnCharacter.ContainsKey(item.Slot))
+            OnCharacter.Remove(item.Slot);
+        item.transform.SetParent(null);
     }
 
     public void NotifyDestroyed(Item item)
