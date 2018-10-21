@@ -57,7 +57,10 @@ public class GunFallingPart : MonoBehaviour
         bool right = Mimic(spr);
         var velocity = vel;
         if (!right)
+        {
             velocity.x *= -1f;
+            angular *= -1f;
+        }
         SetVelocity(velocity + inherited, angular, useGravity);
     }
 

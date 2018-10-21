@@ -204,7 +204,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1799205716688124}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.977, y: 1.422, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4651784983840968}
@@ -361,7 +361,7 @@ MonoBehaviour:
   FallingMagazineInfo:
     RealMag: {fileID: 212071939312862264}
     Velocity: {x: 3, y: -7.5}
-    AngularVelocity: 120
+    AngularVelocity: 380
     Lifetime: 1.5
     UseGravity: 1
 --- !u!114 &114791175811485804
