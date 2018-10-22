@@ -85,20 +85,7 @@ public class GunAnimator : MonoBehaviour
     {
         if(e.stringParameter == SHOOT_CALLBACK)
         {
-            Gun.Ammo--;
-
-            // TEMP spawn projectile.
-            if(Gun.Muzzle != null)
-            {
-                // Note that the direction is calculated from the character's center of mass (the item hold point),
-                // which makes the aiming and shooting more intuitive.
-                Vector2 direction = InputManager.MousePos - (Vector2)Gun.transform.position;
-                direction.Normalize();
-                Projectile.Spawn(0, Gun.Muzzle.position, direction);
-
-                // Spawn muzzle flash.
-                TempEffect.Spawn(EffectPrefab.MUZZLE_FLASH, Gun.Muzzle.transform.position, Gun.Muzzle.transform.eulerAngles.z + (Gun.Muzzle.lossyScale.x < 0f ? 180 : 0));
-            }
+            Gun.Shoot();
         }
         if(e.stringParameter == RELOAD_CALLBACK)
         {

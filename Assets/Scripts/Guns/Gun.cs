@@ -6,6 +6,9 @@ using UnityEngine;
 [RequireComponent(typeof(GunAnimator))]
 public class Gun : MonoBehaviour
 {
+    public const float SRF_RANGE = 20f;
+    public const float MAX_DEVIATION = 20f; 
+
     public GunAnimator Anim
     {
         get
@@ -84,6 +87,7 @@ public class Gun : MonoBehaviour
     private float aimTimer = 0f;
     private float shootTimer = 0f;
     private float shotInterval { get { return 1f / (Info.RPM / 60f); } }
+    private Vector2 finalTarget;
 
     private void Start()
     {
@@ -138,6 +142,71 @@ public class Gun : MonoBehaviour
         ResolveTrigger(ref s_CheckChamber, GunAnimator.CHECK_CHAMBER_ID);
         ResolveTrigger(ref s_CheckMagazine, GunAnimator.CHECK_MAG_ID);
         ResolveTrigger(ref s_Shoot, GunAnimator.SHOOT_ID);
+    }
+
+    public void Shoot()
+    {
+        // Generally triggered by animation only. Fire!
+
+        // Remove one bullet.
+        this.Ammo--;
+
+        // TEMP spawn projectile.
+        if (this.Muzzle != null)
+        {
+            // Note that the direction is calculated from the character's center of mass (the item hold point),
+            // which makes the aiming and shooting more intuitive.
+            Vector2 finalTarget = DetermineFinalTargetPos();
+            this.finalTarget = finalTarget;
+            Vector2 direction = DetermineFinalDirection(finalTarget);
+            Projectile.Spawn(0, this.Muzzle.position, direction);
+            // Spawn muzzle flash.
+            SpawnMuzzleFlash();
+        }
+        else
+        {
+            Debug.LogError("Muzzle reference is null, cannot fire gun '{0}'".Form(Item.Name));
+        }
+    }
+
+    private Vector2 DetermineFinalDirection(Vector2 target)
+    {
+        return DetermineFinalAngle(target).ToDirection();
+    }
+
+    private float DetermineFinalAngle(Vector2 target)
+    {
+        Vector2 center = transform.position;
+        float regularAngle = AngleFromTo(center, InputManager.MousePos); // The base angle that the projectile would be spawned at just to point in the general direction of fire.
+        float muzzleAngle = AngleFromTo(Muzzle.transform.position, target);
+        float min = regularAngle - MAX_DEVIATION;
+        float max = regularAngle + MAX_DEVIATION;
+        return Mathf.Clamp(muzzleAngle, min, max);
+    }
+
+    private Vector2 DetermineFinalTargetPos()
+    {
+        // Determines, based on current state, the target position to fire the bullet towards.
+
+        // The base angle, from the center of mass to the mouse pointer.
+        Vector2 mouse = InputManager.MousePos;
+        
+        return mouse;
+    }
+
+    private float AngleFromTo(Vector2 from, Vector2 to)
+    {
+        return (to - from).ToAngle();
+    }
+
+    private Vector2 DirectionFromTo(Vector2 from, Vector2 to)
+    {
+        return (to - from).normalized;
+    }
+
+    private void SpawnMuzzleFlash()
+    {
+        TempEffect.Spawn(EffectPrefab.MUZZLE_FLASH, Muzzle.transform.position, Muzzle.transform.eulerAngles.z + (Muzzle.lossyScale.x < 0f ? 180 : 0));
     }
 
     private void DoSorting()
@@ -249,5 +318,29 @@ public class Gun : MonoBehaviour
     private void UpdateShotTimer()
     {
         shootTimer += Time.deltaTime;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(finalTarget, Vector3.one * 0.07f);
+        Gizmos.DrawLine(transform.position, finalTarget);
+        Gizmos.color = Color.black;
+        Gizmos.DrawLine(transform.position, InputManager.MousePos);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, SRF_RANGE);
+
+        if (Muzzle == null)
+            return;
+
+        Gizmos.color = Color.grey;
+        float baseAngle = AngleFromTo(transform.position, InputManager.MousePos);
+        float pos = baseAngle + MAX_DEVIATION;
+        float neg = baseAngle - MAX_DEVIATION;
+        Vector2 posOffset = pos.ToDirection() * 5f;
+        Vector2 negOffset = neg.ToDirection() * 5f;
+        Vector2 muzzle = Muzzle.transform.position;
+        Gizmos.DrawLine(muzzle, muzzle + posOffset);
+        Gizmos.DrawLine(muzzle, muzzle + negOffset);
     }
 }

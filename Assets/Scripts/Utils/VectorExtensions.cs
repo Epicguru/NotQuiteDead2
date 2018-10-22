@@ -44,4 +44,17 @@ public static class VectorExtensions
 
         return vector;
     }
+
+    /// <summary>
+    /// Returns the direction vector based on an angle in degrees.
+    /// </summary>
+    /// <param name="angle">The angle, in degrees, to get the direction vector from.</param>
+    /// <returns></returns>
+    public static Vector2 ToDirection(this float angle)
+    {
+        float x = Mathf.Cos(angle * Mathf.Deg2Rad);
+        float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+
+        return new Vector2(x, y); // No need to normalize, because maths!
+    }
 }
