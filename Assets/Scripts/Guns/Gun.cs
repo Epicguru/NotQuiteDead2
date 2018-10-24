@@ -177,11 +177,13 @@ public class Gun : MonoBehaviour
     private float DetermineFinalAngle(Vector2 target)
     {
         Vector2 center = transform.position;
+
         float regularAngle = AngleFromTo(center, InputManager.MousePos); // The base angle that the projectile would be spawned at just to point in the general direction of fire.
         float muzzleAngle = AngleFromTo(Muzzle.transform.position, target);
-        float min = regularAngle - MAX_DEVIATION;
-        float max = regularAngle + MAX_DEVIATION;
-        return Mathf.Clamp(muzzleAngle, min, max);
+
+        float final = Mathf.MoveTowardsAngle(regularAngle, muzzleAngle, MAX_DEVIATION);
+
+        return final;
     }
 
     private Vector2 DetermineFinalTargetPos()
