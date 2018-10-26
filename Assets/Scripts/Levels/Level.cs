@@ -1,8 +1,9 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-[CreateAssetMenu(fileName = "Resources/Levels/Level", menuName = "Level")]
+[CreateAssetMenu(fileName = "Level", menuName = "Level/New Level")]
 public class Level : ScriptableObject
 {
     public static Dictionary<byte, Level> Loaded = new Dictionary<byte, Level>();
@@ -17,7 +18,32 @@ public class Level : ScriptableObject
     [Tooltip("The unique internal ID of this level.")]
     public byte ID = 0;
     [Tooltip("The name of the Unity scene associated with this level.")]
-    public string SceneName = "None";
+    public string SceneName;
+
+    public Scene Scene
+    {
+        get
+        {
+            if(_scene.name != SceneName)
+            {
+                _scene = SceneManager.GetSceneByName(SceneName);
+            }
+            return _scene;
+        }
+    }
+    private Scene _scene;
+
+    /// <summary>
+    /// Is the level currently active? A level is considered to be active when the scene associated with it
+    /// is the current loaded and active scene.
+    /// </summary>
+    public bool IsActive
+    {
+        get
+        {
+            return SceneManager.GetActiveScene() == Scene;
+        }
+    }
 
     /// <summary>
     /// Doesn't actually load all levels, just the data associated with them.

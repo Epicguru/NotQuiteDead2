@@ -9,9 +9,21 @@ public static class AnimationUtils
     public const string CREATE_ANIMATION_OVERRIDES = "Assets/Animation/Create Animation Overrides";
 
     [MenuItem(CREATE_ANIMATION_OVERRIDES)]
-    public static void CreateOverrides()
+    private static void CreateOverrides()
     {
         AnimatorOverrideController obj = Selection.activeObject as AnimatorOverrideController;
+        CreateOverrides(obj);
+    }
+
+    [MenuItem("CONTEXT/AnimatorOverrideController/Create Animation Overrides")]
+    private static void ContextCreateOverrides(MenuCommand cmd)
+    {
+        var x = cmd.context;
+        CreateOverrides(x as AnimatorOverrideController);
+    }
+
+    public static void CreateOverrides(AnimatorOverrideController obj)
+    {
         string current = GetCurrentSelectionFolder();
         List<string> paths = new List<string>();
         List<KeyValuePair<AnimationClip, AnimationClip>> overrides = new List<KeyValuePair<AnimationClip, AnimationClip>>();

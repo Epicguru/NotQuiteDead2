@@ -3,6 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(CharacterDirection))]
 [RequireComponent(typeof(CharacterMovement))]
+[RequireComponent(typeof(Health))]
 public class Character : MonoBehaviour
 {
     // A character is a humanoid actor in the world.
@@ -46,6 +47,17 @@ public class Character : MonoBehaviour
     }
     private CharacterHandManager _hands;
 
+    public Health Health
+    {
+        get
+        {
+            if (_health == null)
+                _health = GetComponent<Health>();
+            return _health;
+        }
+    }
+    private Health _health;
+
     public Item ToEquip;
 
     public bool HasHandManager
@@ -81,6 +93,17 @@ public class Character : MonoBehaviour
         get
         {
             return Manipulator != null;
+        }
+    }
+
+    /// <summary>
+    /// The same as Character.Health.IsDead
+    /// </summary>
+    public bool IsDead
+    {
+        get
+        {
+            return Health.IsDead;
         }
     }
 }
