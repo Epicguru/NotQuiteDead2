@@ -11,6 +11,13 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        RefreshObjectivesList();
+    }
+
+    public void RefreshObjectivesList()
+    {
+        Objectives.Clear();
+        Objectives.AddRange(GetComponentsInChildren<LevelObjective>());
     }
 
     private void OnDestroy()

@@ -20,16 +20,20 @@ public class LevelObjectiveEditor : EditorWindow
     private static List<Type> types = new List<Type>();
     private static void LoadTypes()
     {
-        Assembly a = Assembly.GetAssembly(typeof(LevelObjective));
+        Type ty = typeof(LevelObjective);
+        Assembly a = Assembly.GetAssembly(ty);
         var found = from t in a.GetTypes().AsParallel()
-                    where !t.IsAbstract && t.IsSubclassOf(typeof(LevelObjective))
+                    where !t.IsAbstract && t.IsSubclassOf(ty)
                     select t;
 
-
+        types.Clear();
+        foreach (var item in found)
+        {
+            types.Add(item);
+        }
     }
 
-
-    [MenuItem("Level/Objectives/New...")]
+    [MenuItem("Level/New Objective...")]
     private static void OpenCreateMenu()
     {
         var lm = FindLevelManager();
@@ -40,13 +44,45 @@ public class LevelObjectiveEditor : EditorWindow
         }
         Debug.Log("New thingy to be added, yay... " + lm);
 
+        LoadTypes();
+
         var window = ScriptableObject.CreateInstance<LevelObjectiveEditor>();
         window.position = new Rect(0, 0, 200, 300);
-        window.Show();
+        window.ShowUtility();
     }
 
+    private Vector2 scroll;
     private void OnGUI()
     {
         EditorGUILayout.LabelField("Add new level objective", EditorStyles.boldLabel);
+        EditorGUILayout.Separator();
+        scroll = EditorGUILayout.BeginScrollView(scroll);
+        foreach (var t in types)
+        {
+            bool triggered = GUILayout.Button(t.FullName);
+            if (triggered)
+            {
+                AddType(t);
+                this.Close();
+            }
+        }
+        EditorGUILayout.EndScrollView();
+    }
+
+    private void AddType(Type t)
+    {
+        if (t == null)
+            return;
+
+        var parent = FindLevelManager();
+        if(parent == null)
+        {
+            EditorUtility.DisplayDialog("Error", "No Level Manager GameObject found in the scene.", "Ok");
+            return;
+        }
+
+        GameObject go = new GameObject(t.Name, t);
+        go.transform.SetParent(parent.transform, false);
+        go.transform.localPosition = Vector3.zero;
     }
 }

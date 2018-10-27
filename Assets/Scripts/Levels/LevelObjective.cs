@@ -2,6 +2,7 @@
 using UnityEngine;
 
 [System.Serializable]
+[ExecuteInEditMode]
 public abstract class LevelObjective : MonoBehaviour
 {
     [Tooltip("Is the objective optional to complete the level?")]
@@ -45,5 +46,24 @@ public abstract class LevelObjective : MonoBehaviour
     {
         float p = GetProgress();
         return "Objective ({0}): {1}, {2}%".Form(GetType().Name, IsComplete() ? "complete" : "not complete", p < 0f ? "ongoing" : Mathf.FloorToInt(p * 100f).ToString());
+    }
+
+    private void OnEnable()
+    {
+        var lm = GetComponentInParent<LevelManager>();
+        if (lm == null)
+            return;
+        if (!lm.Objectives.Contains(this))
+            lm.Objectives.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        var lm = GetComponentInParent<LevelManager>();
+        if (lm == null)
+            return;
+
+        if (lm.Objectives.Contains(this))
+            lm.Objectives.Remove(this);
     }
 }
