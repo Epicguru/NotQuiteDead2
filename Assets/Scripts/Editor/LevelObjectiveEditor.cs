@@ -33,8 +33,8 @@ public class LevelObjectiveEditor : EditorWindow
         }
     }
 
-    [MenuItem("Level/New Objective...")]
-    private static void OpenCreateMenu()
+    [MenuItem("GameObject/New Objective...", false, 10)]
+    private static void OpenCreateMenu(MenuCommand cmd)
     {
         var lm = FindLevelManager();
         if(lm == null)
@@ -42,12 +42,10 @@ public class LevelObjectiveEditor : EditorWindow
             Debug.LogError("No level manager found, you need to create one in the scene!");
             return;
         }
-        Debug.Log("New thingy to be added, yay... " + lm);
 
         LoadTypes();
 
         var window = ScriptableObject.CreateInstance<LevelObjectiveEditor>();
-        window.position = new Rect(0, 0, 200, 300);
         window.ShowUtility();
     }
 
@@ -81,8 +79,37 @@ public class LevelObjectiveEditor : EditorWindow
             return;
         }
 
-        GameObject go = new GameObject(t.Name, t);
-        go.transform.SetParent(parent.transform, false);
-        go.transform.localPosition = Vector3.zero;
+        GameObject spawned = EditorUtility.CreateGameObjectWithHideFlags(t.Name, HideFlags.None, t);
+
+        GameObjectUtility.SetParentAndAlign(spawned, parent.gameObject);
+        Undo.RegisterCreatedObjectUndo(spawned, "Create level objective (" + t.Name + ")");
+
+        var selected = Selection.activeObject;
+        CompoundLevelObjective compound = null;
+        if(selected != null)
+        {
+            if(selected is GameObject)
+            {
+                var go = selected as GameObject;
+                var found = go.GetComponent<CompoundLevelObjective>();
+                if (found != null)
+                    compound = found;
+            }
+        }
+
+        var comp = (LevelObjective)spawned.GetComponent(t);
+
+        if(compound == null)
+        {
+            if(!parent.Objectives.Contains(comp))
+                parent.Objectives.Add(comp);
+        }
+        else
+        {
+            if (!compound.Requirements.Contains(comp))
+                compound.Requirements.Add(comp);
+            GameObjectUtility.SetParentAndAlign(spawned, compound.gameObject);
+        }
+        Selection.activeObject = spawned;
     }
 }

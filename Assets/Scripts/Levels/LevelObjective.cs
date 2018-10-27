@@ -34,27 +34,11 @@ public abstract class LevelObjective : MonoBehaviour
     /// <returns></returns>
     public abstract string GetPrompt();
 
-    /// <summary>
-    /// Can be used to draw gizmos for the objective, to make debugging easier.
-    /// </summary>
-    public virtual void DrawGizmos()
-    {
-
-    }
-
     public override string ToString()
     {
         float p = GetProgress();
-        return "Objective ({0}): {1}, {2}%".Form(GetType().Name, IsComplete() ? "complete" : "not complete", p < 0f ? "ongoing" : Mathf.FloorToInt(p * 100f).ToString());
-    }
-
-    private void OnEnable()
-    {
-        var lm = GetComponentInParent<LevelManager>();
-        if (lm == null)
-            return;
-        if (!lm.Objectives.Contains(this))
-            lm.Objectives.Add(this);
+        bool comp = IsComplete();
+        return name.Trim() + " ({0}): {1}, {2}".Form(GetType().Name, comp ? "complete" : "not complete", comp ? "" : p < 0f ? "ongoing" : Mathf.FloorToInt(p * 100f).ToString() + "%");
     }
 
     private void OnDestroy()

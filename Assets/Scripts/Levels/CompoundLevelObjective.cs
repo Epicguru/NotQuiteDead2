@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public class CompundLevelObjective : LevelObjective
+[ExecuteInEditMode]
+public class CompoundLevelObjective : LevelObjective
 {
+    [HideInInspector]
     public List<LevelObjective> Requirements = new List<LevelObjective>();
 
     [Tooltip("If true, the objectives don't have any specfic order and can be completed independently of each other." +
