@@ -123,11 +123,8 @@ public class Projectile : MonoBehaviour
                         // Have one less bounce.
                         remainingBounces--;
 
-                        var r = GetRigidbody(hit.transform);
-                        if (r != null)
-                        {
-                            r.AddForceAtPosition(Direction * Damage * 0.1f, hit.point, ForceMode2D.Impulse);
-                        }
+                        // Apply knockback effect.
+                        AddImpactForce(hit);
 
                         SendMessage("UponProjectileBounce", hit, SendMessageOptions.DontRequireReceiver);
                         interactions++;
@@ -172,6 +169,10 @@ public class Projectile : MonoBehaviour
                             float d = GetDamage();
                             h.DealDamage(d, ArmourPenetration);
                             damaged.Add(h);
+
+                            // Apply knockback effect.
+                            AddImpactForce(hit);
+
                             SendMessage("UponProjectileDamage", hit, SendMessageOptions.DontRequireReceiver);
                         }
 
@@ -202,6 +203,9 @@ public class Projectile : MonoBehaviour
                             float d = GetDamage();
                             h.DealDamage(d, ArmourPenetration);
 
+                            // Apply knockback effect.
+                            AddImpactForce(hit);
+
                             SendMessage("UponProjectilePenetrate", hit, SendMessageOptions.DontRequireReceiver);
                             SendMessage("UponProjectileDamage", hit, SendMessageOptions.DontRequireReceiver);
 
@@ -221,6 +225,15 @@ public class Projectile : MonoBehaviour
 
         transform.position = currentPos;
         Direction = currentDirection;
+    }
+
+    private void AddImpactForce(RaycastHit2D hit)
+    {
+        var r = GetRigidbody(hit.transform);
+        if (r != null)
+        {
+            r.AddForceAtPosition(Direction * Damage * 0.1f, hit.point, ForceMode2D.Impulse);
+        }
     }
 
     private float GetDamage()

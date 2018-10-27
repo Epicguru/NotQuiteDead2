@@ -32,7 +32,7 @@ public class Health : MonoBehaviour
         {
             return _currentHealth;
         }
-        private set
+        protected set
         {
             _currentHealth = Mathf.Clamp(value, 0f, MaxHealth);
         }
@@ -46,7 +46,7 @@ public class Health : MonoBehaviour
         {
             return _currentArmour;
         }
-        private set
+        protected set
         {
             _currentArmour = Mathf.Clamp(value, 0f, MaxArmour);
         }
@@ -151,7 +151,7 @@ public class Health : MonoBehaviour
     /// <param name="baseDamage">The base damage value. With no armour, or 1 armour penetration, this will be the damage dealt to the health directly.</param>
     /// <param name="armourPen">With 1 armour penetration, ignores armour. With 0 armour penetration, will not damage health until armour is destroyed, which could happen in a single hit given enough base damage.</param>
     /// <returns>A vector 3 where the X component is the damage dealt to the health, the Y component is the damage dealt to armour, and the Z component is the damage left over, which would indicate that the character is dead.</returns>
-    public Vector3 DealDamage(float baseDamage, float armourPen)
+    public virtual Vector3 DealDamage(float baseDamage, float armourPen)
     {
         /* 
          * Base rules:
