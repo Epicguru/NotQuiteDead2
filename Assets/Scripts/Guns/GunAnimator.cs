@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Gun))]
 public class GunAnimator : MonoBehaviour
 {
     public Animator Anim

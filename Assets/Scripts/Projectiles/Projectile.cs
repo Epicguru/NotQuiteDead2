@@ -232,7 +232,7 @@ public class Projectile : MonoBehaviour
         var r = GetRigidbody(hit.transform);
         if (r != null)
         {
-            r.AddForceAtPosition(Direction * Damage * 0.1f, hit.point, ForceMode2D.Impulse);
+            r.AddForceAtPosition(Direction * Damage * 0.15f, hit.point, ForceMode2D.Impulse);
         }
     }
 

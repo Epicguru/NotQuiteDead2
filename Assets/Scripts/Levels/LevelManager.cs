@@ -7,8 +7,35 @@ public class LevelManager : MonoBehaviour
 {
     private static LevelManager instance;
 
+    public static LevelObjective CurrentObjective
+    {
+        get
+        {
+            if (instance == null)
+                return null;
+
+            return instance.Current;
+        }
+    }
+
+    [HideInInspector]
     public List<LevelObjective> Objectives = new List<LevelObjective>();
-    public LevelObjective Current;
+    public LevelObjective Current
+    {
+        get
+        {
+            return _current;
+        }
+        private set
+        {
+            _current = value;
+        }
+    }
+    [SerializeField]
+    [ReadOnly]
+    private LevelObjective _current;
+    [ReadOnly]
+    public bool LevelComplete = false;
 
     public string Overview
     {
@@ -36,18 +63,52 @@ public class LevelManager : MonoBehaviour
     private void Update()
     {
         UpdateOverview();
+        UpdateCurrentObj();
+    }
+
+    private void UpdateCurrentObj()
+    {
+        if (LevelComplete)
+            return;        
+
+        if (Current != null && Current.IsComplete())
+        {
+            Current = null;
+        }
+
+        if (Current == null)
+        {
+            if (Objectives.Count == 0)
+            {
+                LevelComplete = true;
+                return;
+            }
+            else
+            {
+                Current = Objectives[0];
+                Objectives.RemoveAt(0);
+            }
+        }
     }
 
     private void UpdateOverview()
     {
+        if(Objectives.Count == 0 && Current == null)
+        {
+            Overview = "No remaining objectives.";
+            return;
+        }
+
         const char WHITESPACE = '\t';
         str.Clear();
         pending.Clear();
         int indent = 0;
 
+        if (Current != null)
+            pending.Add(Current);
         pending.AddRange(Objectives);
 
-        LevelObjective current = Objectives[0];
+        LevelObjective current = pending[0];
         while(pending.Count > 0)
         {
             str.Append(WHITESPACE, indent);
