@@ -12,7 +12,7 @@ public class ObjGoToPoint : LevelObjective
     public float Range = 5f;
     [Tooltip("If true, then the Prompt string is formatted with the remaining distance in meters." +
              "For example, do 'Go to the door. {0}m away.' to display 'Go to the door. 20m away.'")]
-    public bool DisplayProximity = true;
+    public bool Format = true;
 
     private bool completed;
 
@@ -39,8 +39,8 @@ public class ObjGoToPoint : LevelObjective
 
     public override string GetPrompt()
     {
-        if (DisplayProximity)
-            return Prompt.Form(DistanceToCompletion.ToString("N1"));
+        if (Format)
+            return Prompt.Form(DistanceToCompletion.ToString("N0"));
         else
             return Prompt;
     }

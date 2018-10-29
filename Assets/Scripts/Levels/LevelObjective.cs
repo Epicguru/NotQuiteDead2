@@ -5,9 +5,6 @@ using UnityEngine;
 [ExecuteInEditMode]
 public abstract class LevelObjective : MonoBehaviour
 {
-    [Tooltip("Is the objective optional to complete the level?")]
-    public bool Optional = false;
-
     /// <summary>
     /// Should return true whenever the objective has been completed. This method will only be called
     /// when in the correct level, and only when that level is completely loaded.
