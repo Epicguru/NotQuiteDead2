@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     {
         get
         {
+            if (Instance == null)
+                return null;
             return Instance.Manipulator.Target;
         }
     }

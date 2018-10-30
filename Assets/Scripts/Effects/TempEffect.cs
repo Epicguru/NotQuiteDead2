@@ -129,5 +129,7 @@ public class TempEffect : MonoBehaviour
 
 public enum EffectPrefab : ushort
 {
-    MUZZLE_FLASH
+    MUZZLE_FLASH,
+    HIT_METAL,
+    HIT_DIRT
 }

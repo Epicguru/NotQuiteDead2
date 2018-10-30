@@ -6,7 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(GunAnimator))]
 public class Gun : MonoBehaviour
 {
-    public const float SRF_RANGE = 20f;
     public const float MAX_DEVIATION = 20f; 
 
     public GunAnimator Anim
@@ -329,8 +328,6 @@ public class Gun : MonoBehaviour
         Gizmos.DrawLine(transform.position, finalTarget);
         Gizmos.color = Color.black;
         Gizmos.DrawLine(transform.position, InputManager.MousePos);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, SRF_RANGE);
 
         if (Muzzle == null)
             return;

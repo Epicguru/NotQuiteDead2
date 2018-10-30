@@ -18,7 +18,7 @@ public static class Commands
         Loaded.Clear();
 
         Assembly a = typeof(Commands).Assembly;
-        Debug.Log("Searching for custom commands and variables in assembly '{0}'".Form(a));
+        Debug.Log("Searching for custom commands and variables in assembly '{0}'".Form(a.FullName));
 
         // Partition on the type list initially.
         var def = typeof(DebugCommandAttribute);
