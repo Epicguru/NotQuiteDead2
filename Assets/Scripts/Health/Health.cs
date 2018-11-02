@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Contains information for a single character about their Health state, including current HP, max HP and armour.
@@ -32,7 +33,7 @@ public class Health : MonoBehaviour
         {
             return _currentHealth;
         }
-        private set
+        protected set
         {
             _currentHealth = Mathf.Clamp(value, 0f, MaxHealth);
         }
@@ -46,7 +47,7 @@ public class Health : MonoBehaviour
         {
             return _currentArmour;
         }
-        private set
+        protected set
         {
             _currentArmour = Mathf.Clamp(value, 0f, MaxArmour);
         }
@@ -68,6 +69,9 @@ public class Health : MonoBehaviour
     }
     [SerializeField]
     private float _maxArmour;
+
+    [HideInInspector]
+    public UnityEvent UponDeath = new UnityEvent();
 
     public void Reset(float maxHealth, float health, float maxArmour, float armour)
     {
@@ -163,7 +167,7 @@ public class Health : MonoBehaviour
         if (baseDamage <= 0f)
             return Vector2.zero;
         if (Invunerable)
-            return new Vector3(0f, 0f, Mathf.Min(baseDamage, 0f));
+            return new Vector3(0f, 0f, 0f);
         
         armourPen = Mathf.Clamp01(armourPen);
 
@@ -190,7 +194,26 @@ public class Health : MonoBehaviour
             damage -= d2h;
         }
 
-        return new Vector3(damageToHealth, damageToArmour, damage);
+        var calculated = new Vector3(damageToHealth, damageToArmour, damage);
+        var final = PostDealDamage(calculated, baseDamage, armourPen);
+
+        if(CurrentHealth <= 0f)
+        {
+            if(final.x > 0f)
+            {
+                if(UponDeath != null)
+                {
+                    UponDeath.Invoke();
+                }
+            }
+        }
+
+        return final;
+    }
+
+    protected virtual Vector3 PostDealDamage(Vector3 calculated, float baseDamage, float armourPen)
+    {
+        return calculated;
     }
 
     /// <summary>

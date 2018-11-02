@@ -57,3 +57,6 @@ TagManager:
   - name: Effects
     uniqueID: 2495329543
     locked: 0
+  - name: World Space UI
+    uniqueID: 1823556985
+    locked: 0
